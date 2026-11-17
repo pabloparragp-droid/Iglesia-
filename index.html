@@ -1,8 +1,16 @@
-<!DOCTYPE html><html lang="es"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"><title>Mi iglesia</title><link rel="manifest" href="manifest.webmanifest"><meta name="theme-color" content="#1565C0"><link rel="icon" href="icon-192.png"><link rel="apple-touch-icon" href="icon-192.png"><style>
-:root{--bg:#EEF4FC;--card:#fff;--ink:#1F2430;--mute:#59606E;--b:#1565C0;--g:#2F9E5B;--o:#E07B12;--line:#D6DDE8;--soft:#E3EDFA;--acc:#1565C0;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Mi iglesia</title>
+<link rel="manifest" href="manifest.webmanifest">
+<meta name="theme-color" content="#1565C0">
+<style>
+:root{--bg:#EEF4FC;--card:#fff;--ink:#1F2430;--mute:#59606E;--b:#1565C0;--g:#2F9E5B;--o:#E07B12;--line:#D6DDE8;--soft:#E3EDFA;--acc:#1565C0}
 @media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#14171C;--card:#1D222A;--ink:#EAEFF7;--mute:#A3ADBD;--line:#2E3642;--soft:#252C36;--acc:#7DB2F0}}
 :root[data-theme="dark"]{--bg:#14171C;--card:#1D222A;--ink:#EAEFF7;--mute:#A3ADBD;--line:#2E3642;--soft:#252C36;--acc:#7DB2F0}
-html{scroll-padding-top:env(safe-area-inset-top,0px)}*{box-sizing:border-box}
+*{box-sizing:border-box}
 body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.5 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
 main{max-width:640px;margin:0 auto;padding:0 14px 90px}
 h1,h2,h3{font-family:Georgia,"Times New Roman",serif;margin:0;line-height:1.25}
@@ -32,22 +40,32 @@ label{display:block;font-weight:600;margin:10px 0 4px;font-size:14px}
 .toast{position:fixed;left:50%;transform:translateX(-50%);bottom:76px;background:var(--ink);color:var(--bg);padding:10px 16px;border-radius:12px;font-size:14px;z-index:9}
 details{margin:8px 0}summary{cursor:pointer;font-weight:600;color:var(--acc)}
 :focus-visible{outline:3px solid #E0A000;outline-offset:2px}
-
 .who{display:flex;justify-content:space-between;align-items:center;gap:8px;font-size:14px;color:var(--mute)}
-</style></head><body><main><header><h1>Mi iglesia</h1><p>Registro compartido y seguro.</p><div class="who" id="who"></div></header><div id="app"><p class="note">Cargando...</p></div></main><nav class="nav" id="nav" style="display:none"></nav>
+</style>
+</head>
+<body>
+<main>
+<header>
+<h1>Mi iglesia</h1>
+<p>Registro compartido y seguro.</p>
+<div class="who" id="who"></div>
+</header>
+<div id="app"><p class="note">Cargando...</p></div>
+</main>
+<nav class="nav" id="nav" style="display:none"></nav>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.js"></script>
 <script>
 var SB=supabase.createClient("https://qszdcipapiiqtzryhnzl.supabase.co","sb_publishable_bQQXZdbBeMrD-kYbVJGT0A_UEtRHNnZ");
 var ST=["Visitante","Nuevo creyente","Discípulo","Miembro","Servidor","Líder","Discipulador","Pastor"],COL={"Visitante":"#E07B12","Nuevo creyente":"#2F9E5B","Discípulo":"#1565C0","Miembro":"#00897B","Servidor":"#8E4FC7","Líder":"#B26A00","Discipulador":"#D6336C","Pastor":"#37474F"},CELLS=[],CE=[];
 var RS=[{n:"Piedras y ruinas",m:"Arqueología",c:"#8A5A2B",e:"🏺",R:[{q:"¿De quién nombro la «casa»?",c:["Me hallaron en 1993, en el norte de Israel.","Mi texto está en arameo y lo grabó un rey enemigo de Israel.","Soy la primera mención, fuera de la Biblia, de la dinastía de un rey de Judá."],o:["Salomón","David","Omri","Ezequías"],a:1,x:"Es la estela de Tel Dan (siglo IX a.C.), que menciona la «casa de David».",v:"2 Samuel 7:16",va:"Dios prometió a David una casa, es decir, una dinastía firme. Que un texto de sus enemigos la nombre muestra que esa dinastía era real y conocida."},{q:"¿Qué obra de ingeniería soy?",c:["Me excavaron hacia el final del siglo VIII a.C.","Dos equipos cavaron desde extremos opuestos y se encontraron en el medio de la roca.","Llevo agua de la fuente de Gihón a un estanque dentro de Jerusalén, en unos 530 metros."],o:["Muralla de Nehemías","Túnel de Ezequías","Pozo de Jacob","Estanque de Betesda"],a:1,x:"Es el túnel de Ezequías, que aseguró agua a Jerusalén ante el asedio asirio.",v:"2 Reyes 20:20",va:"El texto recuerda que Ezequías hizo el estanque y el conducto para traer agua a la ciudad. La arqueología identifica esa obra en Jerusalén."}]},{n:"Mapas y caminos",m:"Geografía",c:"#2F6EA5",e:"🗺️",R:[{q:"¿Qué lugar soy?",c:["Estoy a unos 430 metros bajo el nivel del mar.","El río Jordán desemboca en mí, pero no tengo salida de agua.","Génesis me llama con otro nombre, el Mar Salado."],o:["Mar de Galilea","Mar Rojo","Mar Muerto","Mar Mediterráneo"],a:2,x:"Es el Mar Muerto, el punto más bajo en tierra firme del planeta.",v:"Génesis 14:3",va:"El texto ubica el valle de Sidim donde está el Mar Salado, nombre bíblico de este mar. Los relatos bíblicos ocurren en lugares reales."},{q:"¿Qué camino soy?",c:["Se desciende por mí unos mil metros en menos de 30 kilómetros.","Cruzo el desierto de Judea y tenía fama de peligroso.","Jesús me eligió como escenario de una parábola sobre el prójimo."],o:["Nazaret a Caná","Belén a Hebrón","Jerusalén a Jericó","Damasco a Tiro"],a:2,x:"Es el camino de Jerusalén a Jericó, de la parábola del buen samaritano.",v:"Lucas 10:30",va:"Jesús habla de alguien que «descendía» de Jerusalén a Jericó. Sus oyentes conocían ese camino y su riesgo, y por eso la parábola les llegaba."}]},{n:"Costumbres y cultura",m:"Antropología",c:"#C2185B",e:"🏺",R:[{q:"¿Qué gesto de hospitalidad soy?",c:["Las sandalias dejaban los pies expuestos al polvo del camino.","Por lo general lo hacía el siervo de menor rango.","Jesús me practicó con sus discípulos la noche antes de la cruz."],o:["Besar la mano","Lavar los pies","Partir el pan","Ungir la cabeza"],a:1,x:"El lavamiento de pies era tarea del siervo más humilde.",v:"Juan 13:14",va:"Jesús tomó el lugar del siervo y mandó hacer lo mismo unos con otros. El servicio por amor es la señal de su cuerpo."},{q:"¿En cuántas partes dividían la noche los romanos?",c:["Se llamaban vigilias y marcaban los turnos de guardia.","Marcos las nombra: tarde, medianoche, canto del gallo y mañana.","Jesús llegó caminando sobre el mar en la última de ellas."],o:["Dos","Tres","Cuatro","Siete"],a:2,x:"Eran cuatro vigilias. La última iba aproximadamente de 3 a 6 de la madrugada.",v:"Marcos 6:48",va:"Marcos dice que Jesús vino a los discípulos en la cuarta vigilia, cuando llevaban horas remando contra el viento."}]},{n:"Mente y cuerpo",m:"Neurociencia",c:"#7A45B8",e:"🧠",nt:"La ciencia describe cómo funciona lo creado; la Biblia revela quién lo creó y para qué. Aquí admiramos, no probamos la fe con un laboratorio.",R:[{q:"¿Qué capacidad del cerebro soy?",c:["Permito que tus conexiones neuronales se reorganicen con la práctica.","Se resume así: las neuronas que se activan juntas se conectan.","Pablo habló de ser transformados por la renovación del entendimiento."],o:["Neuroplasticidad","Amnesia","Sinestesia","Insomnio"],a:0,x:"Es la neuroplasticidad: el cerebro cambia con lo que repetimos, piensa y practica.",v:"Romanos 12:2",va:"Pablo pide ser transformados por la renovación de la mente. Meditar y practicar la Palabra forma hábitos nuevos de pensar y de vivir."},{q:"¿Qué necesidad de tu cerebro soy?",c:["Mientras estoy presente, el cerebro consolida lo aprendido.","En estudios, sobre todo con animales, se ha visto que ayudo a limpiar desechos del cerebro.","Un salmo dice que Dios me da a sus amados."],o:["Ayuno","Sueño","Silencio","Canto"],a:1,x:"Es el sueño: descansar es una necesidad que Dios dio y no es pereza.",v:"Salmo 127:2",va:"El salmista dice que Dios da el sueño a sus amados. Descansar es confiar, porque no todo depende de nuestro esfuerzo."}]},{n:"Manuscritos y lenguas",m:"Texto bíblico",c:"#2F9E5B",e:"📜",R:[{q:"¿Qué hallazgo soy?",c:["Me descubrieron desde 1947 en cuevas cerca de Qumrán.","Incluyo copias de casi todos los libros del Antiguo Testamento.","Mi copia de Isaías es mil años más antigua que las que se tenían antes."],o:["Piedra de Rosetta","Código de Hammurabi","Papiro de Oxirrinco","Rollos del Mar Muerto"],a:3,x:"Son los Rollos del Mar Muerto, que mostraron una transmisión muy fiel del texto.",v:"Isaías 40:8",va:"La palabra de nuestro Dios permanece para siempre. Que los manuscritos se hayan conservado con tanta fidelidad respalda esa confianza."},{q:"¿Qué traducción soy?",c:["Mi nombre significa «setenta».","Me hicieron en Alejandría, Egipto, desde el siglo III a.C.","Muchas citas del Antiguo Testamento en el Nuevo siguen mi versión griega."],o:["Vulgata","Peshitta","Targum","Septuaginta"],a:3,x:"Es la Septuaginta, la traducción griega del Antiguo Testamento.",v:"Hechos 17:11",va:"Los de Berea examinaban las Escrituras cada día. Conocer cómo llegó el texto hasta nosotros nos anima a estudiarlo con ganas."}]}];
-var S={tab:"ini",im:null,rd:null,rm:null,mm:null,ft:null,fm:null,rec:false,pw:false,q:"",f:"Todos",sel:null,tb:null,lv:1,ia:null,cm:"or",pn:false,tn:false,T:{},rs:null,ri:0,cl:1,bad:[],ok:false,ev:"Culto dominical"},U=null,ME=null,P=[],AT=[],EQ=[],AN=[],PR=[],TE=[],AR=[],AM=[],MR=[],RP=[],IC=[],EC=[],FN=[],R0={},$=function(i){return document.getElementById(i)};
+var S={tab:"ini",q:"",f:"Todos",sel:null,tb:null,lv:1,ia:null,cm:"or",pn:false,tn:false,T:{},rs:null,ri:0,cl:1,bad:[],ok:false,ev:"Culto dominical",ft:null},U=null,ME=null,P=[],AT=[],EQ=[],AN=[],PR=[],TE=[],R0={},$=function(i){return document.getElementById(i)};
 function esc(s){return String(s==null?"":s).replace(/[&<>"]/g,function(c){return{"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]})}
 function toast(t){var d=document.createElement("div");d.className="toast";d.textContent=t;document.body.appendChild(d);setTimeout(function(){d.remove()},2600)}
 function ini(n){return n.split(" ").map(function(w){return w[0]}).slice(0,2).join("")}
 function today(){return new Date().toLocaleDateString("en-CA")}
 function wk(d){return Math.floor((new Date(today())-new Date(d))/6048e5)}
 function row(p,fn){return '<div class="card"><button class="row" style="border:0;background:none;padding:0" onclick="'+fn+'"><span class="av" style="background:'+COL[p.stage]+'">'+esc(ini(p.name))+'</span><span class="grow"><b>'+esc(p.name)+'</b><small>'+esc(p.cell||"Sin célula")+(p.lvl?" · "+esc(p.lvl):"")+'</small></span><span class="pill" style="background:'+COL[p.stage]+'">'+p.stage+'</span></button></div>'}
-function authv(){return'<div class="card"><h3>Entrar</h3><label>Correo</label><input id="em" type="email" autocomplete="username"><label>Contraseña (mínimo 6 caracteres)</label><input id="pw" type="password" autocomplete="current-password"><label>Tu nombre (solo al crear cuenta)</label><input id="nm"><button class="btn" onclick="auth(0)">Entrar</button><button class="btn alt" onclick="auth(1)">Crear cuenta</button><button class="btn alt" onclick="forgot()">Olvidé mi contraseña</button><p class="note">La primera cuenta creada es la del pastor. Las demás son de líderes y el pastor les asigna su célula.</p></div>'}
+function authv(){return'<div class="card"><h3>Entrar</h3><label>Correo</label><input id="em" type="email" autocomplete="username"><label>Contraseña (mínimo 6 caracteres)</label><input id="pw" type="password" autocomplete="current-password"><label>Tu nombre (solo al crear cuenta)</label><input id="nm"><button class="btn" onclick="auth(0)">Entrar</button><button class="btn alt" onclick="auth(1)">Crear cuenta</button><p class="note">La primera cuenta creada es la del pastor. Las demás son de líderes y el pastor les asigna su célula.</p></div>'}
 async function auth(n){var e=$("em").value.trim(),p=$("pw").value,r;if(!e||p.length<6){toast("Escribe el correo y una contraseña de 6 o más caracteres");return}
 r=n?await SB.auth.signUp({email:e,password:p,options:{data:{name:$("nm").value.trim()}}}):await SB.auth.signInWithPassword({email:e,password:p});
 if(r.error){toast(r.error.message);return}
@@ -55,36 +73,139 @@ if(n&&!r.data.session){toast("Revisa tu correo para confirmar la cuenta");return
 await boot()}
 async function out(){await SB.auth.signOut();ME=null;U=null;P=[];draw()}
 async function boot(){var s=await SB.auth.getSession();U=s.data.session&&s.data.session.user;if(!U){ME=null;draw();return}
-var r=await SB.from("profiles").select("*").eq("id",U.id).single();ME=r.data||{role:"pendiente",cell:null,name:""};if(ME.role!=="pendiente"){$("app").innerHTML='<p class="note">Cargando…</p>';await load()}draw();checkSub()}
-async function load(){var d=new Date(Date.now()-42*864e5).toLocaleDateString("en-CA"),pa=ME.role==="pastor"||ME.role==="lider",pd=ME.role==="discipulador",none=Promise.resolve({data:[]});
-var R=await Promise.all([SB.from("people_all").select("*").order("name"),SB.from("attendance").select("person_id,event_date,event,present").gte("event_date",d),SB.from("retos").select("key,pts"),
-pa?SB.from("people").select("id,tel,note"):pd?SB.from("people_tel").select("*"):none,SB.from("attendance_report").select("*"),SB.from("attendance_monthly").select("*"),SB.from("cells").select("*").order("name"),
-SB.from("announcements").select("*").order("event_date",{ascending:true}),SB.from("prayers").select("*").order("created_at",{ascending:false}),SB.from("testimonies").select("*").order("created_at",{ascending:false}),ME.role==="pastor"?SB.from("profiles").select("*").order("name"):none,SB.from("monthly_reports").select("*"),SB.from("reports_public").select("*"),ME.role==="pastor"?SB.from("income_categories").select("*").order("name"):none,ME.role==="pastor"?SB.from("expense_categories").select("*").order("name"):none,ME.role==="pastor"?SB.from("finance_entries").select("*").order("entry_date",{ascending:false}):none]);
-if(R[0].error)toast("Error al cargar: "+R[0].error.message);
-P=R[0].data||[];AT=R[1].data||[];R0={};(R[2].data||[]).forEach(function(x){R0[x.key]=x.pts});
-var x=R[3].data||[],mp={};
-if(pa){x.forEach(function(r){mp[r.id]=r});P.forEach(function(p){var y=mp[p.id];if(y){p.tel=y.tel;p.note=y.note}})}
-else if(pd){x.forEach(function(r){mp[r.id]=r.tel});P.forEach(function(p){if(mp[p.id]!==undefined)p.tel=mp[p.id]})}
-AR=R[4].data||[];AM=R[5].data||[];if(!R[6].error){CE=R[6].data||[];CELLS=CE.map(function(c){return c.name})}
-AN=R[7].data||[];PR=R[8].data||[];TE=R[9].data||[];if(ME.role==="pastor")EQ=R[10].data||[];MR=R[11].data||[];RP=R[12].data||[];if(ME.role==="pastor"){IC=R[13].data||[];EC=R[14].data||[];FN=R[15].data||[]}setT()}
-function setT(){var t=today();S.T={};AT.forEach(function(x){if(x.event_date===t&&x.event===S.ev&&x.present)S.T[x.person_id]=true})}
-function reg(){if(S.sel!==null)return ED()?form():rdet();var l=P.filter(function(p){return(S.f==="Todos"||p.stage===S.f)&&p.name.toLowerCase().indexOf(S.q.toLowerCase())>-1});
-var h='<input id="q" type="search" placeholder="Buscar por nombre" value="'+esc(S.q)+'"><div class="chips">'+["Todos"].concat(ST).map(function(s){return'<button class="chip" aria-pressed="'+(S.f===s)+'" onclick="S.f=\''+s+'\';draw()">'+s+'</button>'}).join("")+'</div>';
-h+=l.length?l.map(function(p){return row(p,"S.sel="+p.id+";draw()")}).join(""):'<p class="note">Nadie coincide o aún no hay personas registradas.</p>';
-return h+(ED()?'<button class="btn" onclick="S.sel=0;draw()">Registrar persona</button>':'<p class="note">Directorio de solo lectura.</p>')}
-function form(){var p=S.sel?P.filter(function(x){return x.id===S.sel})[0]:{name:"",tel:"",stage:"Visitante",cell:ME.role==="pastor"?"":ME.cell,lvl:"",bap:false,note:""};
-var o=function(a,v){return a.map(function(x){return'<option'+(x===v?" selected":"")+'>'+x+'</option>'}).join("")};
-return'<div class="card"><h3>'+(S.sel?"Ficha de "+esc(p.name):"Nueva persona")+'</h3><label>Nombre</label><input id="fn" value="'+esc(p.name)+'"><label>Teléfono</label><input id="ft" value="'+esc(p.tel)+'" inputmode="tel"><label>Etapa</label><select id="fs">'+o(ST,p.stage)+'</select><label>Célula</label><select id="fc"><option value="">Sin célula</option>'+o(ME.role==="pastor"?CELLS:(ME.cell?[ME.cell]:[]),p.cell)+'</select><label>Avance en el discipulado</label><input id="fl" value="'+esc(p.lvl)+'" placeholder="Ej. Nivel 1 · Paso 3"><label>Bautismo</label><select id="fb"><option value="1"'+(p.bap?" selected":"")+'>Bautizado</option><option value="0"'+(p.bap?"":" selected")+'>Sin bautizar</option></select><label>Nota del líder (privada)</label><textarea id="fo" rows="3">'+esc(p.note)+'</textarea><button class="btn" onclick="savep()">Guardar ficha</button><button class="btn alt" onclick="S.sel=null;draw()">Volver a la lista</button></div>'}
-async function savep(){var n=$("fn").value.trim();if(!n){toast("Escribe el nombre para guardar");return}
-var d={name:n,tel:$("ft").value,stage:$("fs").value,cell:$("fc").value||null,lvl:$("fl").value,bap:$("fb").value==="1",note:$("fo").value},r=S.sel?await SB.from("people").update(d).eq("id",S.sel):await SB.from("people").insert(d);
-if(r.error){toast("No se pudo guardar: "+r.error.message);return}
-await load();S.sel=null;toast("Ficha guardada");draw()}
-function setev(v){S.ev=v;setT();draw()}
-var EVR={pastor:["Culto dominical","Célula","Discipulado"],coordinador:["Culto dominical"],lider:["Célula"]};
-function alist(){return ME.role==="lider"?P.filter(function(p){return p.cell===ME.cell}):P}
-function asis(){var evs=EVR[ME.role]||[];if(evs.indexOf(S.ev)<0){S.ev=evs[0];setT()}var L=alist(),n=L.filter(function(p){return S.T[p.id]}).length;
-return'<div class="card"><h3>Asistencia de hoy</h3><p class="note">Toca el botón de cada persona que llegó. Estos datos alimentan el informe mensual.</p><label>Reunión</label><select onchange="setev(this.value)">'+evs.map(function(e){return'<option'+(e===S.ev?" selected":"")+'>'+e+'</option>'}).join("")+'</select></div>'+L.map(function(p){return'<div class="card row"><span class="av" style="background:'+COL[p.stage]+'">'+esc(ini(p.name))+'</span><span class="grow"><b>'+esc(p.name)+'</b><small>'+esc(p.cell||"Sin célula")+'</small></span><button class="tog" aria-pressed="'+!!S.T[p.id]+'" onclick="S.T['+p.id+']=!S.T['+p.id+'];draw()">'+(S.T[p.id]?"Presente":"Marcar")+'</button></div>'}).join("")+'<p class="note">'+n+' de '+L.length+' presentes</p><button class="btn" onclick="saveasis()">Guardar asistencia</button>'}
-async function saveasis(){var L=alist();if(!L.length){toast("Aún no hay personas");return}var t=today(),rows=L.map(function(p){return{person_id:p.id,event_date:t,event:S.ev,present:!!S.T[p.id]}});
-var r=await SB.from("attendance").upsert(rows,{onConflict:"person_id,event_date,event"});if(r.error){toast("Error: "+r.error.message);return}await load();toast("Asistencia guardada");draw()}
-function panel(){var l=P,t=today(),pr={},wc=[0,0,0,0,0],ws=[{},{},{},{},{}],rec={};
-AT.forEach(function(a){if(!a.present)return;va
+var r=await SB.from("profiles").select("*").eq("id",U.id).single();ME=r.data||{role:"lider",cell:null,name:""};await load();draw()}
+
+// ===== MÓDULO DE FINANZAS =====
+var INC_CATS=[], EXP_CATS=[], TRANS=[], FIN_LOADED=false;
+
+async function loadFinance() {
+  var ic = await SB.from("income_categories").select("*").order("name");
+  var ec = await SB.from("expense_categories").select("*").order("name");
+  var tr = await SB.from("transactions").select("*, income_categories(name, color), expense_categories(name, color)").order("date", {ascending: false});
+  if (!ic.error) INC_CATS = ic.data || [];
+  if (!ec.error) EXP_CATS = ec.data || [];
+  if (!tr.error) TRANS = tr.data || [];
+  FIN_LOADED = true;
+}
+
+function finanzas() {
+  if (!FIN_LOADED) { loadFinance(); }
+  var mes = new Date().getMonth() + 1;
+  var anio = new Date().getFullYear();
+  var transMes = TRANS.filter(function(t) {
+    var d = new Date(t.date);
+    return d.getMonth() + 1 === mes && d.getFullYear() === anio;
+  });
+  var totalIngresos = transMes.filter(function(t) { return t.type === 'income'; }).reduce(function(s, t) { return s + parseFloat(t.amount); }, 0);
+  var totalEgresos = transMes.filter(function(t) { return t.type === 'expense'; }).reduce(function(s, t) { return s + parseFloat(t.amount); }, 0);
+  var balance = totalIngresos - totalEgresos;
+  var html = '<div class="card"><h3>💰 Finanzas - ' + ["Enero","Febrero","Marzo","Abril","Mayo","Junio","Julio","Agosto","Septiembre","Octubre","Noviembre","Diciembre"][mes-1] + ' ' + anio + '</h3>';
+  html += '<div class="stats">';
+  html += '<div class="stat" style="background:#2F9E5B"><b>$' + Math.round(totalIngresos).toLocaleString() + '</b>Ingresos</div>';
+  html += '<div class="stat" style="background:#E07B12"><b>$' + Math.round(totalEgresos).toLocaleString() + '</b>Egresos</div>';
+  html += '<div class="stat" style="background:' + (balance >= 0 ? '#1565C0' : '#D6336C') + '"><b>$' + Math.round(balance).toLocaleString() + '</b>Balance</div>';
+  html += '</div></div>';
+  html += '<button class="btn" onclick="S.ft=\'income\';draw()">+ Registrar ingreso</button>';
+  html += '<button class="btn alt" onclick="S.ft=\'expense\';draw()">- Registrar egreso</button>';
+  html += '<h3 style="margin:20px 0 10px">Transacciones del mes</h3>';
+  if (transMes.length === 0) {
+    html += '<p class="note">No hay transacciones este mes.</p>';
+  } else {
+    transMes.forEach(function(t) {
+      var cat = t.type === 'income' ? t.income_categories : t.expense_categories;
+      var color = cat ? cat.color : '#999';
+      var nombre = cat ? cat.name : 'Sin categoría';
+      var signo = t.type === 'income' ? '+' : '-';
+      var colorTexto = t.type === 'income' ? '#2F9E5B' : '#E07B12';
+      html += '<div class="card" style="display:flex;align-items:center;gap:10px">';
+      html += '<div style="width:4px;height:40px;background:' + color + ';border-radius:2px"></div>';
+      html += '<div class="grow"><b>' + nombre + '</b><br><small>' + (t.description || '') + ' · ' + t.date + '</small></div>';
+      html += '<b style="color:' + colorTexto + ';font-size:18px">' + signo + '$' + Math.round(parseFloat(t.amount)).toLocaleString() + '</b>';
+      html += '<button class="chip" onclick="delTrans(' + t.id + ')" style="margin-left:8px">🗑️</button>';
+      html += '</div>';
+    });
+  }
+  html += '<button class="btn alt" onclick="exportReport()">📥 Exportar informe CSV</button>';
+  return html;
+}
+
+function formTrans() {
+  var tipo = S.ft;
+  var cats = tipo === 'income' ? INC_CATS : EXP_CATS;
+  var html = '<div class="card"><h3>' + (tipo === 'income' ? 'Registrar ingreso' : 'Registrar egreso') + '</h3>';
+  html += '<label>Categoría</label><select id="tc">';
+  cats.forEach(function(c) {
+    html += '<option value="' + c.id + '">' + c.name + '</option>';
+  });
+  html += '</select>';
+  html += '<label>Monto</label><input id="ta" type="number" step="0.01" placeholder="0.00">';
+  html += '<label>Descripción (opcional)</label><input id="td" placeholder="Ej. Diezmo de Juan Pérez">';
+  html += '<label>Fecha</label><input id="tf" type="date" value="' + today() + '">';
+  html += '<button class="btn" onclick="saveTrans()">Guardar</button>';
+  html += '<button class="btn alt" onclick="S.ft=null;draw()">Cancelar</button>';
+  html += '</div>';
+  return html;
+}
+
+async function saveTrans() {
+  var catId = $("tc").value;
+  var amount = $("ta").value;
+  var desc = $("td").value;
+  var date = $("tf").value;
+  if (!amount || amount <= 0) { toast("Ingresa un monto válido"); return; }
+  if (!date) { toast("Selecciona una fecha"); return; }
+  var data = {
+    type: S.ft,
+    category_id: parseInt(catId),
+    amount: parseFloat(amount),
+    description: desc,
+    date: date,
+    created_by: U.id
+  };
+  var r = await SB.from("transactions").insert(data);
+  if (r.error) { toast("Error: " + r.error.message); return; }
+  FIN_LOADED = false;
+  await loadFinance();
+  S.ft = null;
+  toast("Transacción registrada");
+  draw();
+}
+
+async function delTrans(id) {
+  if (!confirm("¿Eliminar esta transacción?")) return;
+  var r = await SB.from("transactions").delete().eq("id", id);
+  if (r.error) { toast("Error: " + r.error.message); return; }
+  FIN_LOADED = false;
+  await loadFinance();
+  toast("Transacción eliminada");
+  draw();
+}
+
+function exportReport() {
+  var mes = new Date().getMonth() + 1;
+  var anio = new Date().getFullYear();
+  var transMes = TRANS.filter(function(t) {
+    var d = new Date(t.date);
+    return d.getMonth() + 1 === mes && d.getFullYear() === anio;
+  });
+  var totalIngresos = transMes.filter(function(t) { return t.type === 'income'; }).reduce(function(s, t) { return s + parseFloat(t.amount); }, 0);
+  var totalEgresos = transMes.filter(function(t) { return t.type === 'expense'; }).reduce(function(s, t) { return s + parseFloat(t.amount); }, 0);
+  var csv = 'Tipo,Categoría,Monto,Descripción,Fecha\n';
+  transMes.forEach(function(t) {
+    var cat = t.type === 'income' ? t.income_categories.name : t.expense_categories.name;
+    csv += (t.type === 'income' ? 'Ingreso' : 'Egreso') + ',' + cat + ',' + t.amount + ',"' + (t.description || '') + '",' + t.date + '\n';
+  });
+  csv += '\nTotal Ingresos,,' + totalIngresos + ',,\n';
+  csv += 'Total Egresos,,' + totalEgresos + ',,\n';
+  csv += 'Balance,,' + (totalIngresos - totalEgresos) + ',,\n';
+  var blob = new Blob([csv], { type: 'text/csv' });
+  var url = URL.createObjectURL(blob);
+  var a = document.createElement('a');
+  a.href = url;
+  a.download = 'finanzas_' + anio + '_' + mes + '.csv';
+  a.click();
+}
+
+async function load(){var d=new Date(Date.now()-42*864e5).toLocaleDateString("en-CA");
+var a=await SB.from(ME.role==="servidor"?"people_light":"people").select("*").order("name"),b=await SB.from("attendance").select("person_id,event_date,event,present").gte("event_date",d),c=await SB.from("retos").select("key,pts");
+if(a.error)toast("Error al cargar: "+a.err
