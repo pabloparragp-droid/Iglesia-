@@ -53,8 +53,33 @@ if(r.error){toast(r.error.message);return}
 if(n&&!r.data.session){toast("Revisa tu correo para confirmar la cuenta");return}
 await boot()}
 async function out(){await SB.auth.signOut();ME=null;U=null;P=[];DP=null;draw()}
-async function boot(){var s=await SB.auth.getSession();U=s.data.session&&s.data.session.user;if(!U){ME=null;draw();return}
-var r=await SB.from("profiles").select("*").eq("id",U.id).single();ME=r.data||{role:"pendiente",cell:null,name:""};if(ME.role!=="pendiente"){$("app").innerHTML='<p class="note">Cargando…</p>';await load()}draw();checkSub()}
+async function boot(){
+  try {
+    var s = await Promise.race([
+      SB.auth.getSession(),
+      new Promise(function(_, rej){ setTimeout(function(){ rej(new Error("Timeout")); }, 5000); })
+    ]);
+    U = s && s.data && s.data.session ? s.data.session.user : null;
+  } catch(e) {
+    U = null;
+  }
+  
+  if(!U){ ME=null; draw(); return; }
+
+  try {
+    var r = await SB.from("profiles").select("*").eq("id", U.id).maybeSingle();
+    ME = (r && r.data) ? r.data : {role: "pendiente", cell: null, name: U.user_metadata && U.user_metadata.name ? U.user_metadata.name : ""};
+  } catch(e) {
+    ME = {role: "pendiente", cell: null, name: ""};
+  }
+
+  if(ME.role !== "pendiente"){
+    $("app").innerHTML = '<p class="note">Cargando…</p>';
+    try { await load(); } catch(err) { console.error(err); }
+  }
+  draw();
+  checkSub();
+}
 async function load(){var d=new Date(Date.now()-42*864e5).toLocaleDateString("en-CA"),pa=ME.role==="pastor"||ME.role==="lider",pd=ME.role==="discipulador",none=Promise.resolve({data:[]});
 try{
 var R=await Promise.all([SB.from("people_all").select("*").order("name"),SB.from("attendance").select("person_id,event_date,event,present").gte("event_date",d),SB.from("retos").select("key,pts"),
