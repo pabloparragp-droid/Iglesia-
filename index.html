@@ -75,7 +75,7 @@ DL=(R[16]&&!R[16].error)?(R[16].data||[]):[];DP=(R[17]&&!R[17].error)?(R[17].dat
 setT()}
 function setT(){var t=today();S.T={};AT.forEach(function(x){if(x.event_date===t&&x.event===S.ev&&x.present)S.T[x.person_id]=true})}
 function reg(){if(S.sel!==null)return ED()?form():rdet();var l=P.filter(function(p){return(S.f==="Todos"||p.stage===S.f)&&p.name.toLowerCase().indexOf(S.q.toLowerCase())>-1});
-var h='<input id="q" type="search" placeholder="Buscar por nombre" value="'+esc(S.q)+'"><div class="chips">'+["Todos"].concat(ST).map(function(s){return'<button class="chip" aria-pressed="'+(S.f===s)+'" onclick="S.f=''+s+'';draw()">'+s+'</button>'}).join("")+'</div>';
+var h='<input id="q" type="search" placeholder="Buscar por nombre" value="'+esc(S.q)+'"><div class="chips">'+["Todos"].concat(ST).map(function(s){return'<button class="chip" aria-pressed="'+(S.f===s)+'" onclick="S.f=\'"+s+"\';draw()">'+s+'</button>'}).join("")+'</div>';
 h+=l.length?l.map(function(p){return row(p,"S.sel="+p.id+";draw()")}).join(""):'<p class="note">Nadie coincide o aún no hay personas registradas.</p>';
 return h+(ED()?'<button class="btn" onclick="S.sel=0;draw()">Registrar persona</button>':'<p class="note">Directorio de solo lectura.</p>')}
 function form(){var p=S.sel?P.filter(function(x){return x.id===S.sel})[0]:{name:"",tel:"",stage:"Visitante",cell:ME.role==="pastor"?"":ME.cell,lvl:"",bap:false,note:""};
@@ -220,7 +220,7 @@ function renderDiscipuladoHub(embedded){
     else if(doneCount>0)h+='<div style="margin-top:8px"><span class="badge">🌱 Discípulo en marcha ('+doneCount+'/'+stepsOnly.length+')</span></div>';
   }
   if(ME.role==="pastor"){
-    h+='<button class="btn alt" onclick="S.dl_view='editor';S.dl_ed=null;draw()">✏️ Administrar / Subir Lecciones (Pastor)</button>';
+    h+='<button class="btn alt" onclick="S.dl_view=\'editor\';S.dl_ed=null;draw()">✏️ Administrar / Subir Lecciones (Pastor)</button>';
   }
   h+='</div>';
 
@@ -234,7 +234,7 @@ function renderDiscipuladoHub(embedded){
     var stText=baptized?"Disponible para lectura":(done?"Completado ✓":(unlocked?"Habilitado · Listo para presentar":"Bloqueado (aprueba el paso anterior)"));
     var icon=l.is_final?"🎓":(done?"✅":(unlocked?"📖":"🔒"));
     var bg=l.is_final?"#D6336C":(done?"#2F9E5B":(unlocked?"#1565C0":"#90A4AE"));
-    h+='<div class="card"><button class="row" style="border:0;background:none;padding:0;opacity:'+(unlocked?1:.55)+'" onclick="'+(unlocked?'S.dl_open='+l.id+';S.dl_ans={};draw()':'toast('Aprueba el paso anterior para habilitar este')')+'">';
+    h+='<div class="card"><button class="row" style="border:0;background:none;padding:0;opacity:'+(unlocked?1:.55)+'" onclick="'+(unlocked?'S.dl_open='+l.id+';S.dl_ans={};draw()':'toast(\'Aprueba el paso anterior para habilitar este\')')+'">';
     h+='<span class="av" style="background:'+bg+'">'+icon+'</span>';
     h+='<span class="grow"><b>'+(l.is_final?esc(l.title):"Paso "+l.step+": "+esc(l.title))+'</b><small>'+stText+'</small></span>';
     h+='<span class="pill" style="background:'+bg+'">'+(l.is_final?"Final":(done?"Listo":(unlocked?"Abrir":"Bloqueado")))+'</span>';
@@ -269,7 +269,7 @@ function syncEditorDraft(){
   });
 }
 function renderLessonEditor(){
-  var h='<button class="btn alt" style="margin:8px 0" onclick="S.dl_view='lessons';S.dl_ed=null;draw()">← Volver a Lecciones Nivel 1</button>';
+  var h='<button class="btn alt" style="margin:8px 0" onclick="S.dl_view=\'lessons\';S.dl_ed=null;draw()">← Volver a Lecciones Nivel 1</button>';
   if(S.dl_ed===null){
     var list=n1Lessons();
     h+='<div class="card"><h3>✏️ Editor de Lecciones · Nivel 1</h3><p class="note">Aquí puedes subir, ordenar o editar cada paso y sus preguntas de autoexamen. Los cambios se reflejan de inmediato.</p><button class="btn" onclick="openLessonEditor(0)">+ Nueva lección / paso</button></div>';
@@ -297,7 +297,7 @@ function renderLessonEditor(){
     h+='<label>Respuesta correcta</label><select id="ed_a_'+qi+'">'+q.o.map(function(_,oi){return'<option value="'+oi+'"'+(q.a===oi?" selected":"")+'>Opción '+(oi+1)+'</option>'}).join("")+'</select>';
     h+='</div>';
   });
-  h+='<button class="btn alt" onclick="syncEditorDraft();S.dl_q.push({q:'',o:['','',''],a:0});draw()">+ Agregar otra pregunta</button>';
+  h+='<button class="btn alt" onclick="syncEditorDraft();S.dl_q.push({q:\'\',o:[\'\',\'\',\'\'],a:0});draw()">+ Agregar otra pregunta</button>';
   h+='</div>';
 
   h+='<button class="btn" onclick="saveLessonEditor()">Guardar lección</button>';
@@ -342,7 +342,7 @@ function tablero(){
   if(S.dl_view==="editor"&&ME.role==="pastor")return renderLessonEditor();
   if(S.dl_view==="lessons")return renderDiscipuladoHub(true);
   if(S.tb)return tform();
-  var B=P.filter(function(p){return p.level}),h='<div class="card"><h3>Tablero de discipulado</h3><p class="note">Un paso por semana. Revisa primero las tarjetas rojas y naranjas.'+(ME.role==="discipulador"?" Las tarjetas con ★ son tus discípulos.":"")+'</p><button class="btn alt" onclick="S.dl_view='lessons';S.dl_open=null;draw()">📖 Lecciones Nivel 1 (Consulta'+(ME.role==="pastor"?' y Editor':'')+')</button></div><div class="stats">'+SO.map(function(k){return'<div class="stat" style="background:'+SC[k][0]+'"><b>'+B.filter(function(p){return p.status===k}).length+'</b>'+SC[k][1]+'</div>'}).join("")+'</div><div class="chips">'+LV.map(function(n,i){return'<button class="chip" aria-pressed="'+(S.lv===i+1)+'" onclick="S.lv='+(i+1)+';draw()">'+n.split(" ·")[0]+' ('+B.filter(function(p){return p.level===i+1}).length+')</button>'}).join("")+'</div>';
+  var B=P.filter(function(p){return p.level}),h='<div class="card"><h3>Tablero de discipulado</h3><p class="note">Un paso por semana. Revisa primero las tarjetas rojas y naranjas.'+(ME.role==="discipulador"?" Las tarjetas con ★ son tus discípulos.":"")+'</p><button class="btn alt" onclick="S.dl_view=\'lessons\';S.dl_open=null;draw()">📖 Lecciones Nivel 1 (Consulta'+(ME.role==="pastor"?' y Editor':'')+')</button></div><div class="stats">'+SO.map(function(k){return'<div class="stat" style="background:'+SC[k][0]+'"><b>'+B.filter(function(p){return p.status===k}).length+'</b>'+SC[k][1]+'</div>'}).join("")+'</div><div class="chips">'+LV.map(function(n,i){return'<button class="chip" aria-pressed="'+(S.lv===i+1)+'" onclick="S.lv='+(i+1)+';draw()">'+n.split(" ·")[0]+' ('+B.filter(function(p){return p.level===i+1}).length+')</button>'}).join("")+'</div>';
 var l=B.filter(function(p){return p.level===S.lv}).sort(function(a,b){return SO.indexOf(a.status)-SO.indexOf(b.status)});
 h+=l.length?l.map(function(p){return'<div class="card"><button class="row" style="border:0;background:none;padding:0" onclick="S.tb='+p.id+';draw()"><span class="av" style="background:'+SC[p.status][0]+'">'+esc(ini(p.name))+'</span><span class="grow"><b>'+(ME.role==="discipulador"&&canMove(p)?"★ ":"")+esc(p.name)+'</b><small>Paso '+p.step+(MX[p.level]?" de "+MX[p.level]:"")+(p.companion?" · con "+esc(p.companion):"")+'</small></span><span class="pill" style="background:'+SC[p.status][0]+'">'+SC[p.status][1]+'</span></button>'+(canMove(p)&&(p.status==="llamada"||p.status==="atrasado")?wab(p,p.status):"")+'</div>'}).join(""):'<p class="note">Nadie en este nivel todavía.</p>';
 var o=ED()?P.filter(function(p){return!p.level&&(ME.role==="pastor"||p.cell===ME.cell)}):[];
@@ -361,8 +361,8 @@ await load();S.tb=null;if(m===1)S.lv=d.level;toast(m===1?"¡Subió de nivel!":"G
 async function tadd(){var r=await SB.from("people").update({level:1,step:1,status:"al_dia",lvl:"Nivel 1 · Paso 1"}).eq("id",+$("ta").value);if(r.error){toast("Error: "+r.error.message);return}await load();S.lv=1;toast("Agregado al Nivel 1");draw()}
 function celulas(){var pa=ME.role==="pastor";if(S.ce!=null)return cdet(pa);
 var h='<div class="card"><h3>Células de cuidado</h3><p class="note">Toca una célula para ver sus participantes.</p></div>';
-h+=CE.length?CE.map(function(c){var m=P.filter(function(p){return p.cell===c.name});return'<div class="card"><button class="row" style="border:0;background:none;padding:0" onclick="S.ce=''+esc(c.name)+'';draw()"><span class="av" style="background:#00897B">'+esc(ini(c.name))+'</span><span class="grow"><b>'+esc(c.name)+'</b><small>Líder: '+esc(c.leader||"sin asignar")+' · Anfitrión: '+esc(c.host||"sin asignar")+'</small></span><span class="pill" style="background:#1565C0">'+m.length+'</span></button></div>'}).join(""):'<p class="note">Aún no hay células registradas.</p>';
-return h+(pa?'<button class="btn" onclick="S.ce='__new';draw()">Nueva célula</button>':'')}
+h+=CE.length?CE.map(function(c){var m=P.filter(function(p){return p.cell===c.name});return'<div class="card"><button class="row" style="border:0;background:none;padding:0" onclick="S.ce=\'"+esc(c.name)+"\';draw()"><span class="av" style="background:#00897B">'+esc(ini(c.name))+'</span><span class="grow"><b>'+esc(c.name)+'</b><small>Líder: '+esc(c.leader||"sin asignar")+' · Anfitrión: '+esc(c.host||"sin asignar")+'</small></span><span class="pill" style="background:#1565C0">'+m.length+'</span></button></div>'}).join(""):'<p class="note">Aún no hay células registradas.</p>';
+return h+(pa?'<button class="btn" onclick="S.ce=\'__new\';draw()">Nueva célula</button>':'')}
 function cdet(pa){var nw=S.ce==="__new",c=nw?{name:"",leader:"",host:""}:CE.filter(function(x){return x.name===S.ce})[0];if(!c){S.ce=null;return celulas()}
 var m=P.filter(function(p){return p.cell===c.name}),o=function(v){return'<option value="">Sin asignar</option>'+P.map(function(p){return'<option'+(p.name===v?" selected":"")+'>'+esc(p.name)+'</option>'}).join("")};
 var h='<button class="btn alt" style="margin:8px 0" onclick="S.ce=null;draw()">Volver a las células</button><div class="card"><h3>'+(nw?"Nueva célula":esc(c.name))+'</h3>';
@@ -371,7 +371,7 @@ else h+='<p class="note">Líder: '+esc(c.leader||"sin asignar")+' · Anfitrión:
 h+='</div>';if(nw)return h;
 var ev=AT.filter(function(a){return a.event==="Célula"&&a.present&&m.some(function(p){return p.id===a.person_id})}),ld=ev.reduce(function(x,a){return a.event_date>x?a.event_date:x},""),n=ev.filter(function(a){return a.event_date===ld}).length;
 h+='<div class="card"><b>Última reunión registrada</b><p class="note">'+(ld?ld+": asistieron "+n+" de "+m.length:"Aún no hay asistencia de célula. Se toma en la pestaña Asistencia, eligiendo Célula.")+'</p></div><h3 style="margin:12px 0 4px">Participantes ('+m.length+')</h3>';
-h+=m.length?m.map(function(p){return row(p,"S.sel="+p.id+";S.tab='reg';draw()")}).join(""):'<p class="note">Aún no hay participantes.</p>';
+h+=m.length?m.map(function(p){return row(p,"S.sel="+p.id+";S.tab=\'reg\';draw()")}).join(""):'<p class="note">Aún no hay participantes.</p>';
 var sc=P.filter(function(p){return!p.cell});
 if(pa&&sc.length)h+='<div class="card"><h3>Agregar participante</h3><select id="cp">'+sc.map(function(p){return'<option value="'+p.id+'">'+esc(p.name)+'</option>'}).join("")+'</select><button class="btn" onclick="cadd()">Agregar a esta célula</button></div>';
 return h}
@@ -382,9 +382,7 @@ async function cadd(){var r=await SB.from("people").update({cell:S.ce}).eq("id",
 var MS=["Enero","Febrero","Marzo","Abril","Mayo","Junio","Julio","Agosto","Septiembre","Octubre","Noviembre","Diciembre"],PV={pastor:"Solo el pastor",celula:"Mi célula",iglesia:"Toda la iglesia"};
 function fd(d){return new Date(d+"T12:00:00").toLocaleDateString("es-CO",{weekday:"short",day:"numeric",month:"short"})}
 function cane(a){return ME.role==="pastor"||(ME.role==="lider"&&ME.cell&&a.audience===ME.cell)}
-function acard(a){var w="https://wa.me/?text="+encodeURIComponent(a.title+(a.event_date?"
-"+fd(a.event_date)+(a.event_time?" · "+a.event_time:"")+(a.place?" · "+a.place:""):"")+(a.body?"
-"+a.body:""));
+function acard(a){var w="https://wa.me/?text="+encodeURIComponent(a.title+(a.event_date?"\n"+fd(a.event_date)+(a.event_time?" · "+a.event_time:"")+(a.place?" · "+a.place:""):"")+(a.body?"\n"+a.body:""));
 return'<div class="card"><b>'+esc(a.title)+'</b>'+(a.audience!=="todos"?' <span class="pill" style="background:#00897B">'+esc(a.audience)+'</span>':'')+(a.annual?' <span class="pill" style="background:#E07B12">Del año</span>':'')+(a.event_date?'<p class="note">'+fd(a.event_date)+(a.event_time?" · "+esc(a.event_time):"")+(a.place?" · "+esc(a.place):"")+'</p>':'')+(a.body?'<p>'+esc(a.body)+'</p>':'')+'<a class="btn alt" style="display:block;text-align:center;text-decoration:none" href="'+w+'" target="_blank" rel="noopener">Compartir por WhatsApp</a>'+(cane(a)?'<button class="btn alt" onclick="S.ia='+a.id+';draw()">Editar</button>':'')+'</div>'}
 function inicio(){if(S.ia!=null)return aform();var can=ME.role==="pastor"||(ME.role==="lider"&&ME.cell),t=today(),lim=new Date(Date.now()+14*864e5).toLocaleDateString("en-CA"),yr=t.slice(0,4);
 var prox=AN.filter(function(a){return a.kind==="evento"&&a.event_date>=t&&a.event_date<=lim}),av=AN.filter(function(a){return a.kind==="anuncio"}).sort(function(a,b){return b.created_at>a.created_at?1:-1}).slice(0,8),an=AN.filter(function(a){return a.annual&&a.event_date&&a.event_date.slice(0,4)===yr});
@@ -401,7 +399,7 @@ if((d.kind==="evento"||d.annual)&&!d.event_date){toast("Elige la fecha");return}
 var r=S.ia?await SB.from("announcements").update(d).eq("id",S.ia):await SB.from("announcements").insert(d);
 if(r.error){toast("No se pudo guardar: "+r.error.message);return}await load();S.ia=null;toast("Publicado");draw()}
 async function adel(){if(!confirm("¿Eliminar esta publicación?"))return;var r=await SB.from("announcements").delete().eq("id",S.ia);if(r.error){toast("Error: "+r.error.message);return}await load();S.ia=null;draw()}
-function comunidad(){return'<div class="chips"><button class="chip" aria-pressed="'+(S.cm==="or")+'" onclick="S.cm='or';S.pn=false;S.tn=false;draw()">🙏 Oración</button><button class="chip" aria-pressed="'+(S.cm==="te")+'" onclick="S.cm='te';S.pn=false;S.tn=false;draw()">✨ Testimonios</button></div>'+(S.cm==="or"?oracion():testim())}
+function comunidad(){return'<div class="chips"><button class="chip" aria-pressed="'+(S.cm==="or")+'" onclick="S.cm=\'or\';S.pn=false;S.tn=false;draw()">🙏 Oración</button><button class="chip" aria-pressed="'+(S.cm==="te")+'" onclick="S.cm=\'te\';S.pn=false;S.tn=false;draw()">✨ Testimonios</button></div>'+(S.cm==="or"?oracion():testim())}
 function oracion(){if(S.pn)return'<div class="card"><h3>Nueva petición</h3><label>Mi petición</label><textarea id="pb" rows="4"></textarea><label>¿Por quién oramos?</label><input id="pf" placeholder="Yo, mi familia, un nombre..."><label>¿Quién puede verla?</label><select id="pv"><option value="pastor">Solo el pastor</option>'+(ME.cell?'<option value="celula">Mi célula</option>':'')+'<option value="iglesia">Toda la iglesia</option></select><button class="btn" onclick="psave()">Enviar petición</button><button class="btn alt" onclick="S.pn=false;draw()">Cancelar</button></div>';
 var l=PR.slice().sort(function(a,b){return a.answered-b.answered});
 return'<button class="btn" onclick="S.pn=true;draw()">Nueva petición de oración</button>'+(l.length?l.map(function(p){var ed=p.author_id===U.id||ME.role==="pastor";return'<div class="card"><b>'+esc(p.for_whom||"Petición")+'</b> <span class="pill" style="background:'+(p.answered?"#2F9E5B":"#1565C0")+'">'+(p.answered?"Respondida":PV[p.privacy])+'</span><p>'+esc(p.body)+'</p><p class="note">'+esc(p.author_name||"")+'</p>'+(ed?'<button class="btn alt" onclick="pans('+p.id+','+!p.answered+')">'+(p.answered?"Reabrir":"Marcar como respondida")+'</button><button class="btn alt" onclick="pdel('+p.id+')">Eliminar</button>':'')+'</div>'}).join(""):'<p class="note">Aún no hay peticiones.</p>')}
@@ -427,21 +425,7 @@ function informe(){var ms=[],cur=today().slice(0,7)+"-01";AR.forEach(function(r)
 var m=S.im,g=function(e){return AR.filter(function(r){return r.month===m&&r.event===e})[0]||{sessions:0,present_total:0}},av=function(x){return x.sessions?Math.round(x.present_total/x.sessions):0},cu=g("Culto dominical"),ce=g("Célula"),
 cl=AM.filter(function(r){return r.month===m&&r.event==="Célula"}).sort(function(a,b){return a.cell>b.cell?1:-1}),nm=MS[+m.slice(5,7)-1]+" "+m.slice(0,4),
 vis=P.filter(function(p){return p.stage==="Visitante"}).length,bap=P.filter(function(p){return p.bap}).length;
-var tx="Informe de "+nm+"
-
-Culto dominical
-- Domingos registrados: "+cu.sessions+"
-- Asistencia total: "+cu.present_total+"
-- Promedio por domingo: "+av(cu)+"
-
-Células
-"+(cl.length?cl.map(function(r){return"- "+r.cell+": "+r.sessions+" reuniones, asistencia total "+r.present_total+", promedio "+av(r)}).join("
-"):"- Sin asistencia de células registrada")+"
-
-Congregación
-- Personas registradas: "+P.length+"
-- Visitantes: "+vis+"
-- Bautizados: "+bap;
+var tx="Informe de "+nm+"\n\nCulto dominical\n- Domingos registrados: "+cu.sessions+"\n- Asistencia total: "+cu.present_total+"\n- Promedio por domingo: "+av(cu)+"\n\nCélulas\n"+(cl.length?cl.map(function(r){return"- "+r.cell+": "+r.sessions+" reuniones, asistencia total "+r.present_total+", promedio "+av(r)}).join("\n"):"- Sin asistencia de células registrada")+"\n\nCongregación\n- Personas registradas: "+P.length+"\n- Visitantes: "+vis+"\n- Bautizados: "+bap;
 return'<div class="card"><h3>Informe mensual</h3><label>Mes</label><select onchange="S.im=this.value;draw()">'+ms.map(function(x){return'<option value="'+x+'"'+(x===m?" selected":"")+'>'+MS[+x.slice(5,7)-1]+" "+x.slice(0,4)+'</option>'}).join("")+'</select></div><div class="stats"><div class="stat" style="background:#1565C0"><b>'+cu.present_total+'</b>Asistencia a cultos</div><div class="stat" style="background:#2F9E5B"><b>'+av(cu)+'</b>Promedio por domingo</div><div class="stat" style="background:#8E4FC7"><b>'+ce.present_total+'</b>Asistencia a células</div><div class="stat" style="background:#E07B12"><b>'+cu.sessions+'</b>Domingos registrados</div></div><div class="card"><h3>Células</h3>'+(cl.length?cl.map(function(r){return'<p style="margin:6px 0"><b>'+esc(r.cell)+'</b>: '+r.sessions+' reuniones · total '+r.present_total+' · promedio '+av(r)+'</p>'}).join(""):'<p class="note">Aún no hay asistencia de células en este mes.</p>')+'</div><a class="btn" style="display:block;text-align:center;text-decoration:none;background:#25D366" href="https://wa.me/?text='+encodeURIComponent(tx)+'" target="_blank" rel="noopener">Compartir informe por WhatsApp</a>'}
 function pwform(){return'<div class="card"><h3>'+(S.rec?"Crea tu nueva contraseña":"Cambiar contraseña")+'</h3><label>Nueva contraseña (mínimo 6 caracteres)</label><input id="n1" type="password" autocomplete="new-password"><label>Repite la contraseña</label><input id="n2" type="password" autocomplete="new-password"><button class="btn" onclick="setpw()">Guardar contraseña</button>'+(S.rec?'':'<button class="btn alt" onclick="S.pw=false;draw()">Cancelar</button>')+'</div>'}
 async function setpw(){var a=$("n1").value,b=$("n2").value;if(a.length<6){toast("Usa 6 o más caracteres");return}if(a!==b){toast("Las contraseñas no coinciden");return}
@@ -471,7 +455,7 @@ else if(r==="coordinador"){var g=AR.filter(function(x){return x.month===m&&x.eve
 return o}
 function rendicion(){if(!S.rd||(S.rd==="mi"&&!LBL[ME.role])||(S.rd==="rev"&&ME.role!=="pastor"))S.rd=LBL[ME.role]?"mi":"gen";
 var ch=[];if(LBL[ME.role])ch.push(["mi","Mi informe"]);ch.push(["gen","Informe general"]);if(ME.role==="pastor")ch.push(["rev","Por revisar"]);
-return'<div class="chips">'+ch.map(function(c){return'<button class="chip" aria-pressed="'+(S.rd===c[0])+'" onclick="S.rd=''+c[0]+'';draw()">'+c[1]+'</button>'}).join("")+'</div>'+(S.rd==="mi"?rmi():S.rd==="gen"?rgen():rrev())}
+return'<div class="chips">'+ch.map(function(c){return'<button class="chip" aria-pressed="'+(S.rd===c[0])+'" onclick="S.rd=\'"+c[0]+"\';draw()">'+c[1]+'</button>'}).join("")+'</div>'+(S.rd==="mi"?rmi():S.rd==="gen"?rgen():rrev())}
 function rmi(){var L=LBL[ME.role],m=S.mm||repM();S.mm=m;var ex=MR.filter(function(x){return x.month===m&&x.user_id===U.id})[0]||{},au=autoD(m);
 var pre=function(i){return ex["n"+i]!=null?ex["n"+i]:(i===1?(au.reuniones!=null?au.reuniones:(au.domingos!=null?au.domingos:0)):0)};
 var at=[];if(au.reuniones!=null)at.push("Reuniones de célula registradas: "+au.reuniones+" · asistencia total "+au.asistencia);if(au.discipulos!=null)at.push("Discípulos a tu cargo: "+au.discipulos+" · atrasados o por visitar: "+au.atrasados);if(au.domingos!=null)at.push("Domingos registrados: "+au.domingos+" · asistencia total "+au.asistencia);
@@ -485,26 +469,7 @@ function rgen(){var m=S.rm||repM();S.rm=m;var rp=RP.filter(function(x){return x.
 li=by("lider"),di=by("discipulador"),co=by("coordinador"),g=function(e){return AR.filter(function(r){return r.month===m&&r.event===e})[0]||{sessions:0,present_total:0}},cu=g("Culto dominical"),ce=g("Célula"),av=function(x){return x.sessions?Math.round(x.present_total/x.sessions):0},
 dec=sm(rp,"n3"),vis=sm(li,"n2")+sm(co,"n2"),vst=sm(rp,"n4"),nV=P.filter(function(p){return p.stage==="Visitante"}).length,nB=P.filter(function(p){return p.bap}).length;
 var resp=ME.role==="pastor"?EQ.filter(function(q){return q.role==="lider"||q.role==="discipulador"||q.role==="coordinador"}).length:0;
-var tx="Informe general de "+mname(m)+"
-
-Asistencia
-- Culto dominical: "+cu.sessions+" domingos, total "+cu.present_total+", promedio "+av(cu)+"
-- Células: asistencia total "+ce.present_total+"
-
-Crecimiento
-- Personas que recibieron a Cristo: "+dec+"
-- Visitantes nuevos reportados: "+vis+"
-- Personas visitadas o llamadas: "+vst+"
-
-Discipulado
-- Encuentros realizados: "+sm(di,"n1")+"
-- Discípulos que avanzaron: "+sm(di,"n5")+"
-
-Células
-"+(li.length?li.map(function(r){return"- "+(r.cell||"Célula")+": "+r.n1+" reuniones, "+r.n2+" visitantes nuevos"}).join("
-"):"- Sin informes de células")+"
-
-Informes recibidos: "+rp.length;
+var tx="Informe general de "+mname(m)+"\n\nAsistencia\n- Culto dominical: "+cu.sessions+" domingos, total "+cu.present_total+", promedio "+av(cu)+"\n- Células: asistencia total "+ce.present_total+"\n\nCrecimiento\n- Personas que recibieron a Cristo: "+dec+"\n- Visitantes nuevos reportados: "+vis+"\n- Personas visitadas o llamadas: "+vst+"\n\nDiscipulado\n- Encuentros realizados: "+sm(di,"n1")+"\n- Discípulos que avanzaron: "+sm(di,"n5")+"\n\nCélulas\n"+(li.length?li.map(function(r){return"- "+(r.cell||"Célula")+": "+r.n1+" reuniones, "+r.n2+" visitantes nuevos"}).join("\n"):"- Sin informes de células")+"\n\nInformes recibidos: "+rp.length;
 var h='<div class="card"><h3>Informe general</h3><label>Mes</label>'+msel(m,"S.rm=this.value;draw()")+'<p class="note">Reúne los informes de los responsables y la asistencia. No incluye nombres, dificultades ni notas privadas.</p></div>'
 +'<div class="stats"><div class="stat" style="background:#1565C0"><b>'+cu.present_total+'</b>Asistencia a cultos</div><div class="stat" style="background:#2F9E5B"><b>'+dec+'</b>Recibieron a Cristo</div><div class="stat" style="background:#8E4FC7"><b>'+vis+'</b>Visitantes nuevos</div><div class="stat" style="background:#E07B12"><b>'+vst+'</b>Visitas y llamadas</div></div>'
 +'<div class="card"><h3>Células</h3>'+(li.length?li.map(function(r){var a=r.auto||{};return'<p style="margin:8px 0"><b>'+esc(r.cell||"Célula")+'</b><br>'+r.n1+' reuniones · asistencia total '+(a.asistencia||0)+' · '+r.n2+' visitantes nuevos · '+r.n3+' decisiones'+(r.wins?'<br><i>'+esc(r.wins)+'</i>':'')+'</p>'}).join(""):'<p class="note">Aún no hay informes de células este mes.</p>')+'</div>'
@@ -522,7 +487,7 @@ function fcat(e){var inc=e.type==="income",l=inc?IC:EC,id=inc?e.income_category_
 function fmon(){var ms=[today().slice(0,7)];FN.forEach(function(e){var k=e.entry_date.slice(0,7);if(ms.indexOf(k)<0)ms.push(k)});return ms.sort().reverse()}
 function finanzas(){if(S.ft)return fform();var ms=fmon(),m=S.fm&&ms.indexOf(S.fm)>-1?S.fm:ms[0];S.fm=m;
 var l=FN.filter(function(e){return e.entry_date.slice(0,7)===m}),ti=0,te=0;l.forEach(function(e){if(e.type==="income")ti+=+e.amount;else te+=+e.amount});
-var h='<div class="card"><h3>💰 Finanzas</h3><label>Mes</label><select onchange="S.fm=this.value;draw()">'+ms.map(function(x){return'<option value="'+x+'"'+(x===m?" selected":"")+'>'+MS[+x.slice(5,7)-1]+" "+x.slice(0,4)+'</option>'}).join("")+'</select><p class="note">Solo el pastor ve esta sección.</p></div><div class="stats"><div class="stat" style="background:#2F9E5B"><b>'+FM(ti)+'</b>Ingresos</div><div class="stat" style="background:#E07B12"><b>'+FM(te)+'</b>Egresos</div><div class="stat" style="background:'+(ti-te>=0?"#1565C0":"#D6336C")+'"><b>'+FM(ti-te)+'</b>Balance</div></div><button class="btn" onclick="S.ft='income';draw()">+ Registrar ingreso</button><button class="btn alt" onclick="S.ft='expense';draw()">- Registrar egreso</button><h3 style="margin:16px 0 6px">Movimientos del mes</h3>';
+var h='<div class="card"><h3>💰 Finanzas</h3><label>Mes</label><select onchange="S.fm=this.value;draw()">'+ms.map(function(x){return'<option value="'+x+'"'+(x===m?" selected":"")+'>'+MS[+x.slice(5,7)-1]+" "+x.slice(0,4)+'</option>'}).join("")+'</select><p class="note">Solo el pastor ve esta sección.</p></div><div class="stats"><div class="stat" style="background:#2F9E5B"><b>'+FM(ti)+'</b>Ingresos</div><div class="stat" style="background:#E07B12"><b>'+FM(te)+'</b>Egresos</div><div class="stat" style="background:'+(ti-te>=0?"#1565C0":"#D6336C")+'"><b>'+FM(ti-te)+'</b>Balance</div></div><button class="btn" onclick="S.ft=\'income\';draw()">+ Registrar ingreso</button><button class="btn alt" onclick="S.ft=\'expense\';draw()">- Registrar egreso</button><h3 style="margin:16px 0 6px">Movimientos del mes</h3>';
 h+=l.length?l.map(function(e){var c=fcat(e),inc=e.type==="income";return'<div class="card row"><span style="width:4px;height:40px;border-radius:2px;background:'+esc(c.color||"#999")+';flex:none"></span><span class="grow"><b>'+esc(c.name)+'</b><small>'+esc(e.description||"")+' · '+e.entry_date+'</small></span><b style="color:'+(inc?"#2F9E5B":"#E07B12")+'">'+(inc?"+":"-")+FM(+e.amount)+'</b><button class="chip" onclick="fdel('+e.id+')">🗑️</button></div>'}).join(""):'<p class="note">No hay movimientos este mes.</p>';
 return h+'<button class="btn alt" onclick="fcsv()">📥 Exportar el mes (CSV)</button>'}
 function fform(){var inc=S.ft==="income",cs=inc?IC:EC;
@@ -531,18 +496,12 @@ async function fsave(){var a=parseFloat($("fn_a").value),f=$("fn_f").value,c=par
 var d={type:S.ft,amount:a,description:$("fn_d").value.trim(),entry_date:f};d[S.ft==="income"?"income_category_id":"expense_category_id"]=c;
 var r=await SB.from("finance_entries").insert(d);if(r.error){toast("No se pudo guardar: "+r.error.message);return}await load();S.ft=null;S.fm=f.slice(0,7);toast("Movimiento registrado");draw()}
 async function fdel(id){if(!confirm("¿Eliminar este movimiento?"))return;var r=await SB.from("finance_entries").delete().eq("id",id);if(r.error){toast("Error: "+r.error.message);return}await load();draw()}
-function fcsv(){var m=S.fm,l=FN.filter(function(e){return e.entry_date.slice(0,7)===m}),q=function(s){return'"'+String(s==null?"":s).replace(/"/g,'""')+'"'},c="Tipo,Categoría,Monto,Descripción,Fecha
-",ti=0,te=0;
-l.forEach(function(e){c+=[q(e.type==="income"?"Ingreso":"Egreso"),q(fcat(e).name),e.amount,q(e.description),e.entry_date].join(",")+"
-";if(e.type==="income")ti+=+e.amount;else te+=+e.amount});
-c+="
-Total ingresos,,"+ti+"
-Total egresos,,"+te+"
-Balance,,"+(ti-te)+"
-";
-var a=document.createElement("a");a.href=URL.createObjectURL(new Blob(["﻿"+c],{type:"text/csv;charset=utf-8"}));a.download="finanzas_"+m+".csv";a.click()}
+function fcsv(){var m=S.fm,l=FN.filter(function(e){return e.entry_date.slice(0,7)===m}),q=function(s){return'"'+String(s==null?"":s).replace(/"/g,'""')+'"'},c="Tipo,Categoría,Monto,Descripción,Fecha\n",ti=0,te=0;
+l.forEach(function(e){c+=[q(e.type==="income"?"Ingreso":"Egreso"),q(fcat(e).name),e.amount,q(e.description),e.entry_date].join(",")+"\n";if(e.type==="income")ti+=+e.amount;else te+=+e.amount});
+c+="\nTotal ingresos,,"+ti+"\nTotal egresos,,"+te+"\nBalance,,"+(ti-te)+"\n";
+var a=document.createElement("a");a.href=URL.createObjectURL(new Blob(["\ufeff"+c],{type:"text/csv;charset=utf-8"}));a.download="finanzas_"+m+".csv";a.click()}
 function equipo(){var o=function(a,v){return a.map(function(x){return'<option'+(x===v?" selected":"")+'>'+x+'</option>'}).join("")};
-return'<div class="card"><h3>Equipo de líderes</h3><p class="note">Asigna a cada líder su célula. Quien crea una cuenta aparece aquí como líder sin célula. Todo el que tenga un rol ve el directorio sin teléfonos ni notas. Solo los coordinadores (máximo 2) toman la asistencia del culto, y cada líder la de su célula. Cada discipulador mueve solo a los discípulos que le asignes en el Tablero. Las cuentas nuevas quedan en Pendiente y no ven nada hasta que les des un rol.</p></div>'+EQ.map(function(q){var me=q.id===U.id;return'<div class="card"><b>'+esc(q.name||"Sin nombre")+(me?" (tú)":"")+'</b><label>Rol</label><select id="qr'+q.id+'"'+(me?" disabled":"")+'>'+RO.map(function(r){return'<option value="'+r[0]+'"'+(q.role===r[0]?" selected":"")+'>'+r[1]+'</option>'}).join("")+'</select><label>Célula</label><select id="qc'+q.id+'"><option value="">Sin célula</option>'+o(CELLS,q.cell)+'</select><button class="btn" onclick="saveq(''+q.id+'')">Guardar</button></div>'}).join("")}
+return'<div class="card"><h3>Equipo de líderes</h3><p class="note">Asigna a cada líder su célula. Quien crea una cuenta aparece aquí como líder sin célula. Todo el que tenga un rol ve el directorio sin teléfonos ni notas. Solo los coordinadores (máximo 2) toman la asistencia del culto, y cada líder la de su célula. Cada discipulador mueve solo a los discípulos que le asignes en el Tablero. Las cuentas nuevas quedan en Pendiente y no ven nada hasta que les des un rol.</p></div>'+EQ.map(function(q){var me=q.id===U.id;return'<div class="card"><b>'+esc(q.name||"Sin nombre")+(me?" (tú)":"")+'</b><label>Rol</label><select id="qr'+q.id+'"'+(me?" disabled":"")+'>'+RO.map(function(r){return'<option value="'+r[0]+'"'+(q.role===r[0]?" selected":"")+'>'+r[1]+'</option>'}).join("")+'</select><label>Célula</label><select id="qc'+q.id+'"><option value="">Sin célula</option>'+o(CELLS,q.cell)+'</select><button class="btn" onclick="saveq(\'"+q.id+"\')">Guardar</button></div>'}).join("")}
 async function saveq(id){var r=await SB.from("profiles").update({role:$("qr"+id).value,cell:$("qc"+id).value||null}).eq("id",id);if(r.error){toast(r.error.message.indexOf("max_coordinadores")>-1?"Ya hay 2 coordinadores. Cambia primero el rol de uno de ellos.":"No se pudo guardar: "+r.error.message);return}await load();toast("Equipo actualizado");draw()}
 function draw(){var T=[["ini","🏠","Inicio"],["reg","👥","Registro"],["asis","✅","Asistencia"],["panel","📊","Panel"],["cel","🏘️","Células"],["tabl","🗂️","Tablero"],["inf","📄","Informe"],["rend","📝","Rendición"],["com","🙌","Comunidad"],["retos","🧩","Retos"],["fin","💰","Finanzas"]];T.push(["equipo","⚙️","Equipo"]);
 $("who").innerHTML=ME?'<span>'+esc(ME.name||U.email)+' · '+(ME.role==="lider"?"Líder"+(ME.cell?" de "+esc(ME.cell):" (sin célula asignada)"):({pastor:"Pastor",discipulador:"Discipulador",servidor:"Servidor",coordinador:"Coordinador",discipulo:"Discípulo",pendiente:"Pendiente de aprobación"}[ME.role]||ME.role))+'</span><span><button class="chip" onclick="S.pw=true;draw()">Contraseña</button> <button class="chip" onclick="out()">Salir</button></span>':"";
@@ -551,7 +510,7 @@ if(S.rec||(S.pw&&ME)){$("nav").style.display="none";$("app").innerHTML=pwform();
 if(!ME){$("app").innerHTML=authv();return}
 if(ME.role==="pendiente"){$("nav").style.display="none";$("app").innerHTML='<div class="card"><h3>Tu cuenta espera aprobación</h3><p>El pastor debe asignarte un rol para que puedas ver la información de la iglesia. Cuando lo haga, toca Salir y vuelve a entrar.</p></div>';return}
 var al=RT[ME.role]||[];if(al.indexOf(S.tab)<0)S.tab=al[0];
-$("nav").innerHTML=T.filter(function(t){return al.indexOf(t[0])>-1}).map(function(t){return'<button aria-current="'+(S.tab===t[0])+'" onclick="S.tab=''+t[0]+'';S.sel=null;S.tb=null;S.ce=null;S.ia=null;S.pn=false;S.tn=false;S.ft=null;S.dl_view=null;S.dl_open=null;S.dl_ed=null;draw()"><span>'+t[1]+'</span>'+t[2]+'</button>'}).join("");
+$("nav").innerHTML=T.filter(function(t){return al.indexOf(t[0])>-1}).map(function(t){return'<button aria-current="'+(S.tab===t[0])+'" onclick="S.tab=\'"+t[0]+"\';S.sel=null;S.tb=null;S.ce=null;S.ia=null;S.pn=false;S.tn=false;S.ft=null;S.dl_view=null;S.dl_open=null;S.dl_ed=null;draw()"><span>'+t[1]+'</span>'+t[2]+'</button>'}).join("");
 $("app").innerHTML=S.tab==="reg"?reg():S.tab==="asis"?asis():S.tab==="ini"?inicio():S.tab==="inf"?informe():S.tab==="rend"?rendicion():S.tab==="fin"&&ME.role==="pastor"?finanzas():S.tab==="com"?comunidad():S.tab==="cel"?celulas():S.tab==="tabl"?tablero():S.tab==="retos"?retos():S.tab==="equipo"&&ME.role==="pastor"?equipo():panel();
 var q=$("q");if(q)q.oninput=function(){S.q=q.value;var p=q.selectionStart;draw();var n=$("q");n.focus();n.setSelectionRange(p,p)}}
 if(location.hash.indexOf("type=recovery")>-1)S.rec=true;
