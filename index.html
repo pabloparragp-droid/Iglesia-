@@ -56,16 +56,17 @@ async function out(){await SB.auth.signOut();ME=null;U=null;P=[];DP=null;draw()}
 async function boot(){var s=await SB.auth.getSession();U=s.data.session&&s.data.session.user;if(!U){ME=null;draw();return}
 var r=await SB.from("profiles").select("*").eq("id",U.id).single();ME=r.data||{role:"pendiente",cell:null,name:""};if(ME.role!=="pendiente"){$("app").innerHTML='<p class="note">Cargando…</p>';await load()}draw();checkSub()}
 async function load(){var d=new Date(Date.now()-42*864e5).toLocaleDateString("en-CA"),pa=ME.role==="pastor"||ME.role==="lider",pd=ME.role==="discipulador",none=Promise.resolve({data:[]});
+try{
 var R=await Promise.all([SB.from("people_all").select("*").order("name"),SB.from("attendance").select("person_id,event_date,event,present").gte("event_date",d),SB.from("retos").select("key,pts"),
 pa?SB.from("people").select("id,tel,note"):pd?SB.from("people_tel").select("*"):none,SB.from("attendance_report").select("*"),SB.from("attendance_monthly").select("*"),SB.from("cells").select("*").order("name"),
 SB.from("announcements").select("*").order("event_date",{ascending:true}),SB.from("prayers").select("*").order("created_at",{ascending:false}),SB.from("testimonies").select("*").order("created_at",{ascending:false}),ME.role==="pastor"?SB.from("profiles").select("*").order("name"):none,SB.from("monthly_reports").select("*"),SB.from("reports_public").select("*"),ME.role==="pastor"?SB.from("income_categories").select("*").order("name"):none,ME.role==="pastor"?SB.from("expense_categories").select("*").order("name"):none,ME.role==="pastor"?SB.from("finance_entries").select("*").order("entry_date",{ascending:false}):none]);
-if(R[0].error)toast("Error al cargar: "+R[0].error.message);
-P=R[0].data||[];AT=R[1].data||[];R0={};(R[2].data||[]).forEach(function(x){R0[x.key]=x.pts});
-var x=R[3].data||[],mp={};
+P=R[0]&&R[0].data?R[0].data:[];AT=R[1]&&R[1].data?R[1].data:[];R0={};if(R[2]&&R[2].data)(R[2].data||[]).forEach(function(x){R0[x.key]=x.pts});
+var x=R[3]&&R[3].data?R[3].data:[],mp={};
 if(pa){x.forEach(function(r){mp[r.id]=r});P.forEach(function(p){var y=mp[p.id];if(y){p.tel=y.tel;p.note=y.note}})}
 else if(pd){x.forEach(function(r){mp[r.id]=r.tel});P.forEach(function(p){if(mp[p.id]!==undefined)p.tel=mp[p.id]})}
-AR=R[4].data||[];AM=R[5].data||[];if(!R[6].error){CE=R[6].data||[];CELLS=CE.map(function(c){return c.name})}
-AN=R[7].data||[];PR=R[8].data||[];TE=R[9].data||[];if(ME.role==="pastor")EQ=R[10].data||[];MR=R[11].data||[];RP=R[12].data||[];if(ME.role==="pastor"){IC=R[13].data||[];EC=R[14].data||[];FN=R[15].data||[]}
+AR=R[4]&&R[4].data?R[4].data:[];AM=R[5]&&R[5].data?R[5].data:[];if(R[6]&&!R[6].error){CE=R[6].data||[];CELLS=CE.map(function(c){return c.name})}
+AN=R[7]&&R[7].data?R[7].data:[];PR=R[8]&&R[8].data?R[8].data:[];TE=R[9]&&R[9].data?R[9].data:[];if(ME.role==="pastor"&&R[10]&&!R[10].error)EQ=R[10].data||[];MR=R[11]&&R[11].data?R[11].data:[];RP=R[12]&&R[12].data?R[12].data:[];if(ME.role==="pastor"){IC=R[13]&&!R[13].error?R[13].data||[]:[];EC=R[14]&&!R[14].error?R[14].data||[]:[];FN=R[15]&&!R[15].error?R[15].data||[]:[]}
+}catch(err){console.error(err)}
 try{var dpRes=await SB.from("disciple_progress").select("*").eq("user_id",U.id).eq("level",1).maybeSingle();DP=(dpRes&&dpRes.data)?dpRes.data:{user_id:U.id,level:1,completed_steps:[],final_exam_passed:false,badges:[]}}catch(e){DP={user_id:U.id,level:1,completed_steps:[],final_exam_passed:false,badges:[]}}
 setT()}
 function setT(){var t=today();S.T={};AT.forEach(function(x){if(x.event_date===t&&x.event===S.ev&&x.present)S.T[x.person_id]=true})}
