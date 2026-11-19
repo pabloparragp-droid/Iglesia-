@@ -61,6 +61,25 @@ details{margin:8px 0}summary{cursor:pointer;font-weight:600;color:var(--acc)}
 .qopt[aria-checked="true"]{border-color:var(--b);background:var(--soft);font-weight:600}
 .grid2{display:grid;grid-template-columns:1fr 1fr;gap:8px}
 .grad-card{border:3px solid #D4AF37;background:linear-gradient(145deg,#FFFDF5 0%,#F3E5AB 100%);color:#1F2430;border-radius:18px;padding:20px 16px;text-align:center;box-shadow:0 8px 24px rgba(212,175,55,.25);margin:12px 0}
+
+/* ===== ESTILOS DE GRÁFICOS VARIADOS Y PLANO CARTESIANO ===== */
+.chart-box{width:100%;overflow-x:auto;margin:8px 0}
+.chart-box svg{width:100%;height:auto;display:block;overflow:visible}
+.chart-leg{display:flex;flex-wrap:wrap;gap:8px 14px;font-size:12px;margin-top:8px;color:var(--mute)}
+.chart-leg span{display:inline-flex;align-items:center;gap:5px}
+.chart-leg i{width:10px;height:10px;border-radius:3px;display:inline-block}
+.lvl-fold{border:1px solid var(--line);border-radius:14px;margin:8px 0;background:var(--bg);overflow:hidden}
+.lvl-fold summary{list-style:none;padding:11px 14px;display:flex;align-items:center;justify-content:space-between;gap:8px;font:700 14px system-ui,sans-serif;color:var(--ink);background:var(--card);cursor:pointer}
+.lvl-fold summary::-webkit-details-marker{display:none}
+.lvl-fold[open] summary{border-bottom:1px solid var(--line);background:var(--soft);color:var(--acc)}
+.lvl-fold-body{padding:10px 12px}
+.step-chip{display:inline-flex;align-items:center;gap:5px;padding:5px 10px;border-radius:999px;font-size:12px;font-weight:600;border:1px solid var(--line);background:var(--card);color:var(--ink);margin:3px;cursor:pointer}
+.step-chip:hover{border-color:var(--b)}
+.donut-wrap{display:flex;align-items:center;gap:14px;flex-wrap:wrap;justify-content:center;margin:8px 0}
+.picto-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:8px;margin-top:8px}
+.picto-item{background:var(--bg);border:1px solid var(--line);border-radius:12px;padding:10px;text-align:center}
+.picto-icons{font-size:16px;letter-spacing:1px;line-height:1.3;margin:4px 0;min-height:22px}
+
 @media print{
   body{background:#fff!important;color:#000!important}
   .nav,.hdr-top,.who,.no-print,.btn,.chip,.chips{display:none!important}
@@ -74,7 +93,7 @@ details{margin:8px 0}summary{cursor:pointer;font-weight:600;color:var(--acc)}
 var SB=supabase.createClient("https://qszdcipapiiqtzryhnzl.supabase.co","sb_publishable_bQQXZdbBeMrD-kYbVJGT0A_UEtRHNnZ");
 var ST=["Visitante","Nuevo creyente","Discípulo","Miembro","Servidor","Líder","Discipulador","Pastor"],COL={"Visitante":"#E07B12","Nuevo creyente":"#2F9E5B","Discípulo":"#1565C0","Miembro":"#00897B","Servidor":"#8E4FC7","Líder":"#B26A00","Discipulador":"#D6336C","Pastor":"#37474F"},CELLS=[],CE=[];
 var RS=[{n:"Piedras y ruinas",m:"Arqueología",c:"#8A5A2B",e:"🏺",R:[{q:"¿De quién nombro la «casa»?",c:["Me hallaron en 1993, en el norte de Israel.","Mi texto está en arameo y lo grabó un rey enemigo de Israel.","Soy la primera mención, fuera de la Biblia, de la dinastía de un rey de Judá."],o:["Salomón","David","Omri","Ezequías"],a:1,x:"Es la estela de Tel Dan (siglo IX a.C.), que menciona la «casa de David».",v:"2 Samuel 7:16",va:"Dios prometió a David una casa, es decir, una dinastía firme. Que un texto de sus enemigos la nombre muestra que esa dinastía era real y conocida."},{q:"¿Qué obra de ingeniería soy?",c:["Me excavaron hacia el final del siglo VIII a.C.","Dos equipos cavaron desde extremos opuestos y se encontraron en el medio de la roca.","Llevo agua de la fuente de Gihón a un estanque dentro de Jerusalén, en unos 530 metros."],o:["Muralla de Nehemías","Túnel de Ezequías","Pozo de Jacob","Estanque de Betesda"],a:1,x:"Es el túnel de Ezequías, que aseguró agua a Jerusalén ante el asedio asirio.",v:"2 Reyes 20:20",va:"El texto recuerda que Ezequías hizo el estanque y el conducto para traer agua a la ciudad. La arqueología identifica esa obra en Jerusalén."}]},{n:"Mapas y caminos",m:"Geografía",c:"#2F6EA5",e:"🗺️",R:[{q:"¿Qué lugar soy?",c:["Estoy a unos 430 metros bajo el nivel del mar.","El río Jordán desemboca en mí, pero no tengo salida de agua.","Génesis me llama con otro nombre, el Mar Salado."],o:["Mar de Galilea","Mar Rojo","Mar Muerto","Mar Mediterráneo"],a:2,x:"Es el Mar Muerto, el punto más bajo en tierra firme del planeta.",v:"Génesis 14:3",va:"El texto ubica el valle de Sidim donde está el Mar Salado, nombre bíblico de este mar. Los relatos bíblicos ocurren en lugares reales."},{q:"¿Qué camino soy?",c:["Se desciende por mí unos mil metros en menos de 30 kilómetros.","Cruzo el desierto de Judea y tenía fama de peligroso.","Jesús me eligió como escenario de una parábola sobre el prójimo."],o:["Nazaret a Caná","Belén a Hebrón","Jerusalén a Jericó","Damasco a Tiro"],a:2,x:"Es el camino de Jerusalén a Jericó, de la parábola del buen samaritano.",v:"Lucas 10:30",va:"Jesús habla de alguien que «descendía» de Jerusalén a Jericó. Sus oyentes conocían ese camino y su riesgo, y por eso la parábola les llegaba."}]},{n:"Costumbres y cultura",m:"Antropología",c:"#C2185B",e:"🏺",R:[{q:"¿Qué gesto de hospitalidad soy?",c:["Las sandalias dejaban los pies expuestos al polvo del camino.","Por lo general lo hacía el siervo de menor rango.","Jesús me practicó con sus discípulos la noche antes de la cruz."],o:["Besar la mano","Lavar los pies","Partir el pan","Ungir la cabeza"],a:1,x:"El lavamiento de pies era tarea del siervo más humilde.",v:"Juan 13:14",va:"Jesús tomó el lugar del siervo y mandó hacer lo mismo unos con otros. El servicio por amor es la señal de su cuerpo."},{q:"¿En cuántas partes dividían la noche los romanos?",c:["Se llamaban vigilias y marcaban los turnos de guardia.","Marcos las nombra: tarde, medianoche, canto del gallo y mañana.","Jesús llegó caminando sobre el mar en la última de ellas."],o:["Dos","Tres","Cuatro","Siete"],a:2,x:"Eran cuatro vigilias. La última iba aproximadamente de 3 a 6 de la madrugada.",v:"Marcos 6:48",va:"Marcos dice que Jesús vino a los discípulos en la cuarta vigilia, cuando llevaban horas remando contra el viento."}]},{n:"Mente y cuerpo",m:"Neurociencia",c:"#7A45B8",e:"🧠",nt:"La ciencia describe cómo funciona lo creado; la Biblia revela quién lo creó y para qué. Aquí admiramos, no probamos la fe con un laboratorio.",R:[{q:"¿Qué capacidad del cerebro soy?",c:["Permito que tus conexiones neuronales se reorganicen con la práctica.","Se resume así: las neuronas que se activan juntas se conectan.","Pablo habló de ser transformados por la renovación del entendimiento."],o:["Neuroplasticidad","Amnesia","Sinestesia","Insomnio"],a:0,x:"Es la neuroplasticidad: el cerebro cambia con lo que repetimos, piensa y practica.",v:"Romanos 12:2",va:"Pablo pide ser transformados por la renovación de la mente. Meditar y practicar la Palabra forma hábitos nuevos de pensar y de vivir."},{q:"¿Qué necesidad de tu cerebro soy?",c:["Mientras estoy presente, el cerebro consolida lo aprendido.","En estudios, sobre todo con animales, se ha visto que ayudo a limpiar desechos del cerebro.","Un salmo dice que Dios me da a sus amados."],o:["Ayuno","Sueño","Silencio","Canto"],a:1,x:"Es el sueño: descansar es una necesidad que Dios dio y no es pereza.",v:"Salmo 127:2",va:"El salmista dice que Dios da el sueño a sus amados. Descansar es confiar, porque no todo depende de nuestro esfuerzo."}]},{n:"Manuscritos y lenguas",m:"Texto bíblico",c:"#2F9E5B",e:"📜",R:[{q:"¿Qué hallazgo soy?",c:["Me descubrieron desde 1947 en cuevas cerca de Qumrán.","Incluyo copias de casi todos los libros del Antiguo Testamento.","Mi copia de Isaías es mil años más antigua que las que se tenían antes."],o:["Piedra de Rosetta","Código de Hammurabi","Papiro de Oxirrinco","Rollos del Mar Muerto"],a:3,x:"Son los Rollos del Mar Muerto, que mostraron una transmisión muy fiel del texto.",v:"Isaías 40:8",va:"La palabra de nuestro Dios permanece para siempre. Que los manuscritos se hayan conservado con tanta fidelidad respalda esa confianza."},{q:"¿Qué traducción soy?",c:["Mi nombre significa «setenta».","Me hicieron en Alejandría, Egipto, desde el siglo III a.C.","Muchas citas del Antiguo Testamento en el Nuevo siguen mi versión griega."],o:["Vulgata","Peshitta","Targum","Septuaginta"],a:3,x:"Es la Septuaginta, la traducción griega del Antiguo Testamento.",v:"Hechos 17:11",va:"Los de Berea examinaban las Escrituras cada día. Conocer cómo llegó el texto hasta nosotros nos anima a estudiarlo con ganas."}]}];
-var S={tab:"ini",im:null,rd:null,rm:null,mm:null,ft:null,fm:null,fy:"all",rec:false,pw:false,q:"",aq:"",f:"Todos",fc:"Todas",fb:"Todos",sel:null,tb:null,lv:1,ia:null,cm:"or",pn:false,tn:false,T:{},rs:null,ri:0,cl:1,bad:[],ok:false,ev:"Culto dominical",dl_view:null,dl_open:null,dl_ans:{},dl_ed:null,dl_q:[],am:"lista",gd:null,more:false,pcell:"Todas",prayed:{},grad_name:""},U=null,ME=null,P=[],AT=[],EQ=[],AN=[],PR=[],TE=[],AR=[],AM=[],MR=[],RP=[],IC=[],EC=[],FN=[],DL=[],DP=[],AG=[],AGM=[],R0={},$=function(i){return document.getElementById(i)};
+var S={tab:"ini",im:null,rd:null,rm:null,mm:null,ft:null,fm:null,fy:"all",rec:false,pw:false,q:"",aq:"",f:"Todos",fc:"Todas",fb:"Todos",sel:null,tb:null,lv:1,ia:null,cm:"or",pn:false,tn:false,T:{},rs:null,ri:0,cl:1,bad:[],ok:false,ev:"Culto dominical",dl_view:null,dl_open:null,dl_ans:{},dl_ed:null,dl_q:[],am:"lista",gd:null,more:false,pcell:"Todas",prayed:{},grad_name:"",tb_fold:{1:true}},U=null,ME=null,P=[],AT=[],EQ=[],AN=[],PR=[],TE=[],AR=[],AM=[],MR=[],RP=[],IC=[],EC=[],FN=[],DL=[],DP=[],AG=[],AGM=[],R0={},$=function(i){return document.getElementById(i)};
 
 // ===== TEMA CLARO / OSCURO =====
 function getTheme(){return localStorage.getItem("iccvgd_theme")||(window.matchMedia&&window.matchMedia("(prefers-color-scheme:dark)").matches?"dark":"light")}
@@ -92,6 +111,153 @@ function ini(n){return n.split(" ").map(function(w){return w[0]}).slice(0,2).joi
 function today(){return new Date().toLocaleDateString("en-CA")}
 function wk(d){return Math.floor((new Date(today())-new Date(d))/6048e5)}
 function row(p,fn){return '<div class="card"><button class="row" style="border:0;background:none;padding:0" onclick="'+fn+'"><span class="av" style="background:'+COL[p.stage]+'">'+esc(ini(p.name))+'</span><span class="grow"><b>'+esc(p.name)+'</b><small>'+esc(p.cell||"Sin célula")+(p.lvl?" · "+esc(p.lvl):"")+'</small></span><span class="pill" style="background:'+COL[p.stage]+'">'+p.stage+'</span></button></div>'}
+
+// ===== MOTOR DE GRÁFICOS SVG VARIADOS =====
+// 1. Plano Cartesiano de Columnas Agrupadas por Niveles (Tablero Discipulado)
+function svgCartesianDiscipulado(B){
+  var W=580,H=230,padL=34,padR=14,padT=22,padB=44;
+  var plotW=W-padL-padR,plotH=H-padT-padB;
+  var maxY=12;
+  var lvls=[
+    {lv:1,label:"Nivel 1",mx:8,c:"#1565C0"},
+    {lv:2,label:"Nivel 2",mx:12,c:"#2F9E5B"},
+    {lv:3,label:"Nivel 3",mx:12,c:"#8E4FC7"},
+    {lv:4,label:"Nivel 4",mx:12,c:"#E07B12"},
+    {lv:5,label:"Ministerio",mx:12,c:"#D6336C"}
+  ];
+  var gW=plotW/lvls.length;
+  var svg='<div class="chart-box"><svg viewBox="0 0 '+W+' '+H+'" role="img" aria-label="Plano cartesiano de avance por niveles y lecciones">';
+  // Rejilla cartesiana horizontal (Y = número de lecciones 0..12)
+  for(var y=0;y<=maxY;y+=2){
+    var py=padT+plotH-(y/maxY)*plotH;
+    svg+='<line x1="'+padL+'" y1="'+py+'" x2="'+(W-padR)+'" y2="'+py+'" stroke="var(--line)" stroke-dasharray="'+(y===0?'':'3,3')+'" stroke-width="'+(y===0?'1.5':'1')+'"/>';
+    svg+='<text x="'+(padL-6)+'" y="'+(py+4)+'" text-anchor="end" font-size="10" fill="var(--mute)">'+y+'</text>';
+  }
+  // Eje Y vertical
+  svg+='<line x1="'+padL+'" y1="'+padT+'" x2="'+padL+'" y2="'+(padT+plotH)+'" stroke="var(--mute)" stroke-width="1.5"/>';
+  svg+='<text x="10" y="'+(padT+plotH/2)+'" transform="rotate(-90 10 '+(padT+plotH/2)+')" text-anchor="middle" font-size="10" font-weight="700" fill="var(--mute)">Lecciones / Pasos</text>';
+
+  // Grupos por nivel en el eje X
+  lvls.forEach(function(g,gi){
+    var gx=padL+gi*gW;
+    // Separador vertical de grupo
+    if(gi>0)svg+='<line x1="'+gx+'" y1="'+padT+'" x2="'+gx+'" y2="'+(padT+plotH)+'" stroke="var(--line)" stroke-width="1"/>';
+    var items=B.filter(function(p){return p.level===g.lv}).sort(function(a,b){return(b.step||1)-(a.step||1)});
+    // Barra de referencia de meta del nivel (fondo tenue)
+    var refH=(g.mx/maxY)*plotH;
+    svg+='<rect x="'+(gx+6)+'" y="'+(padT+plotH-refH)+'" width="'+(gW-12)+'" height="'+refH+'" rx="6" fill="'+g.c+'" opacity="0.08"/>';
+    if(items.length){
+      var innerW=gW-16;
+      var colW=Math.min(22,Math.max(6,(innerW-(items.length-1)*3)/items.length));
+      var totalColsW=items.length*colW+(items.length-1)*3;
+      var startX=gx+(gW-totalColsW)/2;
+      items.forEach(function(p,pi){
+        var st=Math.min(maxY,Math.max(1,p.level>=5?12:(p.step||1)));
+        var ch=(st/maxY)*plotH;
+        var cx=startX+pi*(colW+3);
+        var cy=padT+plotH-ch;
+        var col=SC[p.status]?SC[p.status][0]:g.c;
+        svg+='<g style="cursor:pointer" onclick="S.tb='+p.id+';draw()"><title>'+esc(p.name)+' · Paso '+st+' de '+g.mx+'</title>';
+        svg+='<rect x="'+cx+'" y="'+cy+'" width="'+colW+'" height="'+ch+'" rx="4" fill="'+col+'"/>';
+        if(colW>=11)svg+='<text x="'+(cx+colW/2)+'" y="'+(cy-4)+'" text-anchor="middle" font-size="9" font-weight="700" fill="var(--ink)">'+st+'</text>';
+        svg+='</g>';
+      });
+    }else{
+      svg+='<text x="'+(gx+gW/2)+'" y="'+(padT+plotH-8)+'" text-anchor="middle" font-size="10" fill="var(--mute)">0</text>';
+    }
+    svg+='<text x="'+(gx+gW/2)+'" y="'+(padT+plotH+15)+'" text-anchor="middle" font-size="11" font-weight="700" fill="var(--ink)">'+g.label+'</text>';
+    svg+='<text x="'+(gx+gW/2)+'" y="'+(padT+plotH+28)+'" text-anchor="middle" font-size="10" fill="var(--mute)">('+items.length+' pers.)</text>';
+  });
+  svg+='</svg></div>';
+  return svg;
+}
+
+// 2. Gráfico de Área + Línea Suave (Tendencia de Asistencia Semanal en Panel)
+function svgAreaLineChart(labels,values,color){
+  var W=560,H=165,padL=32,padR=16,padT=20,padB=30;
+  var plotW=W-padL-padR,plotH=H-padT-padB;
+  var mx=Math.max.apply(null,values.concat([5]));
+  var pts=values.map(function(v,i){
+    var x=padL+(values.length>1?(i/(values.length-1))*plotW:plotW/2);
+    var y=padT+plotH-(v/mx)*plotH;
+    return{x:x,y:y,v:v,l:labels[i]};
+  });
+  var lineD=pts.map(function(p,i){return(i===0?"M":"L")+p.x.toFixed(1)+","+p.y.toFixed(1)}).join(" ");
+  var areaD=lineD+" L"+pts[pts.length-1].x.toFixed(1)+","+(padT+plotH)+" L"+pts[0].x.toFixed(1)+","+(padT+plotH)+" Z";
+  var svg='<div class="chart-box"><svg viewBox="0 0 '+W+' '+H+'"><defs><linearGradient id="areaGrad" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="'+color+'" stop-opacity="0.38"/><stop offset="100%" stop-color="'+color+'" stop-opacity="0.02"/></linearGradient></defs>';
+  for(var g=0;g<=3;g++){
+    var gy=padT+(g/3)*plotH,val=Math.round(mx*(1-g/3));
+    svg+='<line x1="'+padL+'" y1="'+gy+'" x2="'+(W-padR)+'" y2="'+gy+'" stroke="var(--line)" stroke-dasharray="3,3"/>';
+    svg+='<text x="'+(padL-6)+'" y="'+(gy+4)+'" text-anchor="end" font-size="10" fill="var(--mute)">'+val+'</text>';
+  }
+  svg+='<path d="'+areaD+'" fill="url(#areaGrad)"/>';
+  svg+='<path d="'+lineD+'" fill="none" stroke="'+color+'" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>';
+  pts.forEach(function(p){
+    svg+='<circle cx="'+p.x+'" cy="'+p.y+'" r="4.5" fill="var(--card)" stroke="'+color+'" stroke-width="2.5"/>';
+    svg+='<text x="'+p.x+'" y="'+(p.y-8)+'" text-anchor="middle" font-size="11" font-weight="700" fill="var(--ink)">'+p.v+'</text>';
+    svg+='<text x="'+p.x+'" y="'+(padT+plotH+18)+'" text-anchor="middle" font-size="10" fill="var(--mute)">'+esc(p.l)+'</text>';
+  });
+  svg+='</svg></div>';
+  return svg;
+}
+
+// 3. Gráfico de Columnas Agrupadas en Dos Series (Ingresos vs Egresos por Mes en Finanzas)
+function svgGroupedFinanceChart(months,incVals,expVals){
+  var W=560,H=185,padL=46,padR=14,padT=20,padB=32;
+  var plotW=W-padL-padR,plotH=H-padT-padB;
+  var mx=Math.max.apply(null,incVals.concat(expVals,[1000]));
+  var gW=plotW/months.length;
+  var svg='<div class="chart-box"><svg viewBox="0 0 '+W+' '+H+'">';
+  for(var g=0;g<=3;g++){
+    var gy=padT+(g/3)*plotH,val=Math.round((mx*(1-g/3))/1000);
+    svg+='<line x1="'+padL+'" y1="'+gy+'" x2="'+(W-padR)+'" y2="'+gy+'" stroke="var(--line)" stroke-dasharray="3,3"/>';
+    svg+='<text x="'+(padL-6)+'" y="'+(gy+4)+'" text-anchor="end" font-size="10" fill="var(--mute)">$'+val+'k</text>';
+  }
+  months.forEach(function(m,i){
+    var gx=padL+i*gW,cx=gx+gW/2;
+    var bw=Math.min(20,gW*0.32);
+    var h1=(incVals[i]/mx)*plotH,h2=(expVals[i]/mx)*plotH;
+    svg+='<rect x="'+(cx-bw-2)+'" y="'+(padT+plotH-h1)+'" width="'+bw+'" height="'+Math.max(2,h1)+'" rx="4" fill="#2F9E5B"><title>Ingresos: '+FM(incVals[i])+'</title></rect>';
+    svg+='<rect x="'+(cx+2)+'" y="'+(padT+plotH-h2)+'" width="'+bw+'" height="'+Math.max(2,h2)+'" rx="4" fill="#E07B12"><title>Egresos: '+FM(expVals[i])+'</title></rect>';
+    svg+='<text x="'+cx+'" y="'+(padT+plotH+18)+'" text-anchor="middle" font-size="10" font-weight="600" fill="var(--mute)">'+esc(m)+'</text>';
+  });
+  svg+='</svg></div><div class="chart-leg"><span><i style="background:#2F9E5B"></i>Ingresos</span><span><i style="background:#E07B12"></i>Egresos</span></div>';
+  return svg;
+}
+
+// 4. Gráfico de Sectores / Anillo (Donut Chart para Distribución de Grupos o Categorías)
+function svgDonutChart(items){
+  var tot=items.reduce(function(s,x){return s+x.val},0);
+  if(!tot)return'';
+  var R=54,cx=72,cy=72,circ=2*Math.PI*R,acc=0;
+  var svg='<div class="donut-wrap"><svg width="144" height="144" viewBox="0 0 144 144">';
+  items.forEach(function(it){
+    if(!it.val)return;
+    var dash=(it.val/tot)*circ;
+    svg+='<circle cx="'+cx+'" cy="'+cy+'" r="'+R+'" fill="none" stroke="'+it.color+'" stroke-width="22" stroke-dasharray="'+dash.toFixed(2)+' '+circ.toFixed(2)+'" stroke-dashoffset="'+(-acc).toFixed(2)+'" transform="rotate(-90 '+cx+' '+cy+')"/>';
+    acc+=dash;
+  });
+  svg+='<text x="'+cx+'" y="'+(cy-2)+'" text-anchor="middle" font-size="18" font-weight="700" fill="var(--ink)">'+tot+'</text>';
+  svg+='<text x="'+cx+'" y="'+(cy+13)+'" text-anchor="middle" font-size="10" fill="var(--mute)">Total</text></svg>';
+  svg+='<div style="flex:1;min-width:160px">';
+  items.forEach(function(it){
+    var pc=Math.round((it.val/tot)*100);
+    svg+='<div style="display:flex;justify-content:space-between;align-items:center;font-size:13px;padding:3px 0;border-bottom:1px solid var(--line)"><span><i style="display:inline-block;width:10px;height:10px;border-radius:50%;background:'+it.color+';margin-right:6px"></i>'+esc(it.label)+'</span><b>'+it.val+' ('+pc+'%)</b></div>';
+  });
+  svg+='</div></div>';
+  return svg;
+}
+
+// 5. Gráfico Radial de Progreso (Para Retos Bíblicos)
+function svgRadialGauge(pts,maxPts,label){
+  var R=48,cx=62,cy=62,circ=2*Math.PI*R,pct=Math.min(1,pts/maxPts),dash=pct*circ;
+  var svg='<div style="display:flex;align-items:center;gap:14px"><svg width="124" height="124" viewBox="0 0 124 124">';
+  svg+='<circle cx="'+cx+'" cy="'+cy+'" r="'+R+'" fill="none" stroke="var(--soft)" stroke-width="12"/>';
+  svg+='<circle cx="'+cx+'" cy="'+cy+'" r="'+R+'" fill="none" stroke="#2F9E5B" stroke-width="12" stroke-linecap="round" stroke-dasharray="'+dash.toFixed(2)+' '+circ.toFixed(2)+'" transform="rotate(-90 '+cx+' '+cy+')"/>';
+  svg+='<text x="'+cx+'" y="'+(cy+4)+'" text-anchor="middle" font-size="20" font-weight="700" fill="var(--ink)">'+Math.round(pct*100)+'%</text></svg>';
+  svg+='<div class="grow"><b style="font-size:17px">'+pts+' de '+maxPts+' puntos</b><p class="note" style="margin:4px 0">Rango actual: <b>'+esc(label)+'</b></p><p class="note">Resuelve acertijos con menos pistas para subir tu puntaje.</p></div></div>';
+  return svg;
+}
 
 function renderHeader(){
   var th=getTheme(),tIcon=th==="dark"?"☀️ Claro":"🌙 Oscuro";
@@ -128,7 +294,7 @@ AR=R[4].data||[];AM=R[5].data||[];if(!R[6].error){CE=R[6].data||[];CELLS=CE.map(
 AN=R[7].data||[];PR=R[8].data||[];TE=R[9].data||[];if(ME.role==="pastor")EQ=R[10].data||[];MR=R[11].data||[];RP=R[12].data||[];if(ME.role==="pastor"){IC=R[13].data||[];EC=R[14].data||[];FN=R[15].data||[]}DL=(R[16]&&!R[16].error)?(R[16].data||[]):[];DP=(R[17]&&!R[17].error)?(R[17].data||[]):[];AG=(R[18]&&!R[18].error)?(R[18].data||[]):[];AGM=(R[19]&&!R[19].error)?(R[19].data||[]):[];setT()}
 function setT(){var t=today();S.T={};AT.forEach(function(x){if(x.event_date===t&&x.event===S.ev&&x.present)S.T[x.person_id]=true})}
 
-// ===== REGISTRO Y DIRECTORIO (CON FILTROS COMBINADOS Y CSV) =====
+// ===== REGISTRO Y DIRECTORIO =====
 function filteredPeople(){
   return P.filter(function(p){
     var mQ=p.name.toLowerCase().indexOf(S.q.toLowerCase())>-1;
@@ -163,7 +329,7 @@ var d={name:n,tel:$("ft").value,stage:$("fs").value,cell:$("fc").value||null,lvl
 if(r.error){toast("No se pudo guardar: "+r.error.message);return}
 await load();S.sel=null;toast("Ficha guardada");draw()}
 
-// ===== ASISTENCIA (BUSCADOR, MARCAR TODOS, GRÁFICO CONTEO GENERAL Y ELIMINAR) =====
+// ===== ASISTENCIA (CON GRÁFICO DE SECTORES / DONUT Y PICTOGRAMAS POR GRUPO) =====
 function setev(v){S.ev=v;setT();draw()}
 var EVR={pastor:["Culto dominical","Célula","Discipulado"],coordinador:["Culto dominical"],lider:["Célula"]};
 function alist(){return ME.role==="lider"?P.filter(function(p){return p.cell===ME.cell}):P}
@@ -172,12 +338,13 @@ function toggleAllAsis(val){
   L.forEach(function(p){S.T[p.id]=val});
   draw();
 }
-var GR=[["damas","Damas","g1","#D6336C"],["caballeros","Caballeros","g2","#1565C0"],["ninos","Niños","g3","#E07B12"],["jovenes","Jóvenes","g4","#2F9E5B"],["ancianos","Ancianos","g5","#8E4FC7"]];
+var GR=[["damas","Damas","g1","#D6336C","👩"],["caballeros","Caballeros","g2","#1565C0","👨"],["ninos","Niños","g3","#E07B12","🧒"],["jovenes","Jóvenes","g4","#2F9E5B","🧑"],["ancianos","Ancianos","g5","#8E4FC7","🧓"]];
 function gtt(g){return(g.damas||0)+(g.caballeros||0)+(g.ninos||0)+(g.jovenes||0)+(g.ancianos||0)}
 function gtot(){var s=0;["g1","g2","g3","g4","g5"].forEach(function(i){s+=parseInt($(i).value)||0});$("gt").innerHTML=s}
 function gcu(m){var o={sessions:0,damas:0,caballeros:0,ninos:0,jovenes:0,ancianos:0,total:0};AGM.filter(function(r){return r.month===m&&r.event==="Culto dominical"}).forEach(function(r){o.sessions+=r.sessions;GR.forEach(function(g){o[g[0]]+=r[g[0]]||0});o.total+=r.total||0});return o}
 function gcard(m){var r=gcu(m);if(!r.sessions)return'';var av=function(x){return Math.round(x/r.sessions)};
-return'<div class="card"><h3>📊 Conteo general del culto</h3><p class="note">'+r.sessions+' domingos con conteo · total '+r.total+' · promedio '+av(r.total)+'</p><p>'+GR.map(function(g){return g[1]+': '+r[g[0]]+' (promedio '+av(r[g[0]])+')'}).join("<br>")+'</p></div>'}
+var items=GR.map(function(g){return{label:g[1],val:r[g[0]],color:g[3]}});
+return'<div class="card"><h3>🍩 Distribución del conteo general</h3><p class="note">'+r.sessions+' domingos con conteo · total '+r.total+' · promedio '+av(r.total)+'</p>'+svgDonutChart(items)+'</div>'}
 async function gdel(id){
   if(!confirm("¿Eliminar este conteo general?"))return;
   var r=await SB.from("attendance_general").delete().eq("id",id);
@@ -186,16 +353,19 @@ async function gdel(id){
 }
 function agen(){var t=S.gd||today(),ex=AG.filter(function(g){return g.event_date===t&&g.event==="Culto dominical"})[0]||{},tot=gtt(ex);
 var h='<div class="card"><h3>🔢 Conteo general del culto</h3><p class="note">Anota cuántas personas hay por grupo, sin nombres. Si ese mismo día tomaste asistencia por lista, usa solo una de las dos para no duplicar.</p><label>Fecha</label><input type="date" value="'+t+'" onchange="S.gd=this.value;draw()">';
-GR.forEach(function(g){h+='<label>'+g[1]+'</label><input id="'+g[2]+'" type="number" min="0" inputmode="numeric" value="'+(ex[g[0]]||0)+'" oninput="gtot()">'});
+GR.forEach(function(g){h+='<label>'+g[4]+' '+g[1]+'</label><input id="'+g[2]+'" type="number" min="0" inputmode="numeric" value="'+(ex[g[0]]||0)+'" oninput="gtot()">'});
 h+='<p><b>Total: <span id="gt">'+tot+'</span></b></p><label>Notas (opcional)</label><input id="gn" value="'+esc(ex.notes)+'"><button class="btn" onclick="gsave()">'+(ex.id?"Actualizar conteo":"Guardar conteo")+'</button></div>';
 if(AG.length){
-  var last=AG[0],ltot=gtt(last)||1;
-  h+='<div class="card"><h3>📊 Distribución del último conteo ('+fd(last.event_date)+')</h3><p class="note">Total registrado: <b>'+gtt(last)+'</b> personas</p>';
+  var last=AG[0];
+  var donutItems=GR.map(function(g){return{label:g[1],val:last[g[0]]||0,color:g[3]}});
+  h+='<div class="card"><h3>🍩 Sectores del último conteo ('+fd(last.event_date)+')</h3>'+svgDonutChart(donutItems);
+  h+='<div class="picto-grid">';
   GR.forEach(function(g){
-    var v=last[g[0]]||0,pc=Math.round(v/ltot*100);
-    h+='<div class="bar"><span>'+g[1]+'</span><i style="width:'+Math.max(4,Math.round(pc*0.55))+'%;background:'+g[3]+'"></i><span><b>'+v+'</b> ('+pc+'%)</span></div>';
+    var v=last[g[0]]||0,iconsCount=Math.min(10,Math.ceil(v/3)),iconsStr="";
+    for(var k=0;k<iconsCount;k++)iconsStr+=g[4];
+    h+='<div class="picto-item"><small><b>'+g[1]+'</b></small><div class="picto-icons">'+(iconsStr||"—")+'</div><b style="color:'+g[3]+'">'+v+'</b></div>';
   });
-  h+='</div>';
+  h+='</div></div>';
 }
 var rec=AG.slice(0,6);if(rec.length)h+='<h3 style="margin:14px 0 4px">🗓️ Últimos conteos</h3>'+rec.map(function(g){return'<div class="card"><div style="display:flex;justify-content:space-between;align-items:center"><b>'+fd(g.event_date)+' · total '+gtt(g)+'</b>'+(ME.role==="pastor"&&g.id?'<button class="chip" style="color:#D6336C;border-color:#D6336C" onclick="gdel('+g.id+')">🗑️ Borrar</button>':'')+'</div><p class="note">Damas '+g.damas+' · Caballeros '+g.caballeros+' · Niños '+g.ninos+' · Jóvenes '+g.jovenes+' · Ancianos '+g.ancianos+'</p></div>'}).join("");return h}
 async function gsave(){var t=S.gd||today(),v=function(i){return Math.max(0,parseInt($(i).value)||0)},d={event_date:t,event:"Culto dominical",damas:v("g1"),caballeros:v("g2"),ninos:v("g3"),jovenes:v("g4"),ancianos:v("g5"),notes:$("gn").value.trim()};
@@ -214,7 +384,7 @@ return h}
 async function saveasis(){var L=alist();if(!L.length){toast("Aún no hay personas");return}var t=today(),rows=L.map(function(p){return{person_id:p.id,event_date:t,event:S.ev,present:!!S.T[p.id]}});
 var r=await SB.from("attendance").upsert(rows,{onConflict:"person_id,event_date,event"});if(r.error){toast("Error: "+r.error.message);return}await load();toast("Asistencia guardada");draw()}
 
-// ===== PANEL PASTORAL (CON INDICADORES DE CONTEO GENERAL Y FILTRO POR CÉLULA) =====
+// ===== PANEL PASTORAL (CON GRÁFICO DE ÁREA + LÍNEA Y SECTORES) =====
 function panel(){
   var allP=P,l=S.pcell==="Todas"?allP:allP.filter(function(p){return p.cell===S.pcell});
   var ids={};l.forEach(function(p){ids[p.id]=1});
@@ -229,28 +399,42 @@ function panel(){
   var hoy=Object.keys(pr).length,bap=l.filter(function(p){return p.bap}).length,sc=l.filter(function(p){return!p.cell}),fal=l.filter(function(p){return!rec[p.id]&&Date.now()-new Date(p.created_at)>21*864e5});
   var h='<div class="card no-print"><h3>📊 Panel Pastoral</h3><label>Filtrar indicadores por célula</label><select onchange="S.pcell=this.value;draw()"><option value="Todas"'+(S.pcell==="Todas"?" selected":"")+'>Toda la congregación ('+allP.length+')</option>'+CELLS.map(function(c){return'<option value="'+esc(c)+'"'+(S.pcell===c?" selected":"")+'>Célula: '+esc(c)+'</option>'}).join("")+'</select></div>';
   h+='<div class="stats"><div class="stat" style="background:#1565C0"><b>'+l.length+'</b>Personas</div><div class="stat" style="background:#2F9E5B"><b>'+hoy+'</b>Presentes hoy</div><div class="stat" style="background:#8E4FC7"><b>'+bap+'</b>Bautizados</div><div class="stat" style="background:#E07B12"><b>'+sc.length+'</b>Sin célula</div></div>';
+
+  // Gráfico de Área + Línea para tendencia semanal de asistencia
+  var wLabels=[],wVals=[];
+  for(var w=4;w>=0;w--){wLabels.push(w?"Hace "+w+" sem":"Esta sem");wVals.push(wc[w])}
+  h+='<div class="card"><h3>📈 Tendencia de asistencia semanal</h3><p class="note">Evolución de asistentes únicos en las últimas 5 semanas</p>'+svgAreaLineChart(wLabels,wVals,"#1565C0")+'</div>';
+
   if(S.pcell==="Todas"&&AG.length){
     var lastG=AG[0];
-    h+='<div class="card"><h3>⛪ Último conteo general ('+fd(lastG.event_date)+')</h3><p class="note">Total en culto: <b>'+gtt(lastG)+'</b> · Damas '+lastG.damas+' · Caballeros '+lastG.caballeros+' · Jóvenes '+lastG.jovenes+' · Niños '+lastG.ninos+' · Ancianos '+lastG.ancianos+'</p></div>';
+    var donutG=GR.map(function(g){return{label:g[1],val:lastG[g[0]]||0,color:g[3]}});
+    h+='<div class="card"><h3>⛪ Último conteo general ('+fd(lastG.event_date)+')</h3>'+svgDonutChart(donutG)+'</div>';
   }
-  h+='<div class="card"><h3>📈 Personas por etapa</h3>';
+  h+='<div class="card"><h3>📊 Personas por etapa</h3>';
   var mx=Math.max.apply(null,ST.map(function(s){return l.filter(function(p){return p.stage===s}).length}).concat([1]));
   ST.forEach(function(s){var c=l.filter(function(p){return p.stage===s}).length;h+='<div class="bar"><span>'+s+'</span><i style="width:'+Math.round(c/mx*60)+'%;background:'+COL[s]+'"></i><span>'+c+'</span></div>'});
-  h+='</div><div class="card"><h3>📅 Asistencia por semana</h3><div class="cols">';
-  for(var w=4;w>=0;w--){var pc=l.length?Math.round(wc[w]/l.length*100):0;h+='<div>'+wc[w]+'<i style="height:'+pc+'%"></i>'+(w?"Hace "+w:"Esta")+'</div>'}
-  h+='</div></div><div class="card"><h3>💛 Para dar seguimiento</h3>';
+  h+='</div><div class="card"><h3>💛 Para dar seguimiento</h3>';
   var A=fal.map(function(p){return"<b>"+esc(p.name)+"</b> lleva 3 semanas sin asistir. Un mensaje o visita le haría bien."+(p.tel?wab(p,"falta"):"")}).concat(sc.map(function(p){return"<b>"+esc(p.name)+"</b> aún no tiene célula asignada."}));
   return h+(A.length?A.map(function(a){return'<div class="alert">'+a+'</div>'}).join(""):'<p class="note">Todo al día. Nadie necesita seguimiento urgente.</p>')+'</div>'
 }
 
-// ===== RETOS =====
+// ===== RETOS (CON GRÁFICO RADIAL DE PROGRESO + BARRAS POR ETAPA) =====
 function pts(){var t=0;for(var k in R0)t+=R0[k];return t}
 function sdone(s){return RS[s].R.filter(function(r,i){return R0[s+"-"+i]!==undefined}).length}
 function opn(s){return s===0||sdone(s-1)===RS[s-1].R.length}
 function go(s){if(!opn(s)){toast("Completa la etapa anterior para abrir esta");return}S.rs=s;var n=0;while(n<RS[s].R.length-1&&R0[s+"-"+n]!==undefined)n++;S.ri=n;S.cl=1;S.bad=[];S.ok=false;draw()}
 function pick(j){var r=RS[S.rs].R[S.ri],k=S.rs+"-"+S.ri;if(j===r.a){S.ok=true;if(R0[k]===undefined){R0[k]=Math.max(1,4-S.cl);SB.from("retos").upsert({user_id:U.id,key:k,pts:R0[k]})}}else{S.bad.push(j);toast("Esa no es. Pide otra pista o intenta de nuevo")}draw()}
 function nx(){var s=RS[S.rs];if(S.ri<s.R.length-1){S.ri++;S.cl=1;S.bad=[];S.ok=false}else{S.rs=null;toast("Etapa completada")}draw()}
-function retos(){if(S.rs===null){var t=pts(),ti=t>=20?"Erudito":t>=10?"Estudioso":"Explorador";var h='<div class="card"><h3>🧩 Camino del conocimiento</h3><p class="note">Cada etapa trae acertijos con pistas. Mientras menos pistas pidas, más puntos ganas.</p><b>'+t+' de 30 puntos · '+ti+'</b></div>';RS.forEach(function(s,i){var ok=opn(i);h+='<div class="card"><button class="row" style="border:0;background:none;padding:0;opacity:'+(ok?1:.55)+'" onclick="go('+i+')"><span class="av" style="background:'+s.c+'">'+(ok?s.e:"🔒")+'</span><span class="grow"><b>Etapa '+(i+1)+': '+s.n+'</b><small>'+s.m+' · '+sdone(i)+' de '+s.R.length+' resueltos</small></span></button></div>'});return h}
+function retos(){if(S.rs===null){
+  var t=pts(),ti=t>=20?"Erudito":t>=10?"Estudioso":"Explorador";
+  var h='<div class="card"><h3>🧩 Camino del conocimiento</h3>'+svgRadialGauge(t,30,ti);
+  h+='<div style="margin-top:10px;border-top:1px solid var(--line);padding-top:8px"><small class="note"><b>Avance por categoría bíblica:</b></small>';
+  RS.forEach(function(s,i){
+    var pEtapa=(R0[i+"-0"]||0)+(R0[i+"-1"]||0),pc=Math.round((pEtapa/6)*100);
+    h+='<div class="bar"><span>'+s.e+' '+s.m+'</span><i style="width:'+Math.max(4,Math.round(pc*0.5))+'%;background:'+s.c+'"></i><span><b>'+pEtapa+'/6</b> pts</span></div>';
+  });
+  h+='</div></div>';
+  RS.forEach(function(s,i){var ok=opn(i);h+='<div class="card"><button class="row" style="border:0;background:none;padding:0;opacity:'+(ok?1:.55)+'" onclick="go('+i+')"><span class="av" style="background:'+s.c+'">'+(ok?s.e:"🔒")+'</span><span class="grow"><b>Etapa '+(i+1)+': '+s.n+'</b><small>'+s.m+' · '+sdone(i)+' de '+s.R.length+' resueltos</small></span></button></div>'});return h}
 var s=RS[S.rs],r=s.R[S.ri],h='<button class="btn alt" style="margin:8px 0" onclick="S.rs=null;draw()">Volver al camino</button><div class="card"><h3>'+s.e+' '+s.n+'</h3>'+(s.nt?'<p class="note">'+esc(s.nt)+'</p>':'')+'<p><b>Acertijo '+(S.ri+1)+' de '+s.R.length+'</b></p><p>'+esc(r.q)+'</p>';
 r.c.forEach(function(c,i){if(i<S.cl)h+='<div class="alert">Pista '+(i+1)+': '+esc(c)+'</div>'});
 if(!S.ok&&S.cl<r.c.length)h+='<button class="btn alt" onclick="S.cl++;draw()">Pedir otra pista</button>';
@@ -258,7 +442,7 @@ h+='</div>';r.o.forEach(function(o,j){var bad=S.bad.indexOf(j)>-1;h+='<button cl
 if(S.ok)h+='<div class="card"><b>¡Correcto! +'+R0[S.rs+"-"+S.ri]+' puntos</b><p>'+esc(r.x)+'</p><details><summary>'+esc(r.v)+'</summary><p>'+esc(r.va)+'</p></details><button class="btn" onclick="nx()">'+(S.ri<s.R.length-1?"Siguiente acertijo":"Terminar etapa")+'</button></div>';
 return h}
 
-// ===== TABLERO DE DISCIPULADO (CON BARRAS DE PROGRESO INDIVIDUALES) =====
+// ===== TABLERO DE DISCIPULADO (PLANO CARTESIANO + BOTONES PLEGADOS POR NIVEL Y LECCIÓN) =====
 var LV=["Nivel 1 · Básico","Nivel 2 · Intermedio","Nivel 3 · Avanzado","Nivel 4 · Ministerio","Sirviendo en la iglesia"],MX={1:8,2:12,3:12,4:12},SC={al_dia:["#2F9E5B","Al día"],atrasado:["#E07B12","Atrasado"],llamada:["#D6336C","Llamar o visitar"],listo:["#1565C0","Listo para subir"]},SO=["llamada","atrasado","listo","al_dia"];
 var RT={pastor:["ini","reg","asis","panel","cel","tabl","inf","rend","com","retos","fin","equipo"],lider:["ini","reg","asis","panel","cel","tabl","inf","rend","com","retos"],coordinador:["ini","reg","asis","panel","cel","tabl","inf","rend","com","retos"],discipulador:["ini","reg","panel","cel","tabl","inf","rend","com","retos"],servidor:["ini","reg","panel","cel","tabl","inf","rend","com","retos"],discipulo:["ini","reg","panel","cel","tabl","inf","rend","com","retos"]};
 var CC="57",MSG={llamada:"Hola {n}, soy de la iglesia. Pensé en ti y quería saber cómo estás. ¿Puedo orar por ti o visitarte esta semana?",atrasado:"Hola {n}, ¿cómo estás? Noté que tu paso del discipulado se quedó atrás. ¿Cómo te puedo ayudar para ponerte al día? Estoy contigo.",listo:"¡Felicitaciones, {n}! Terminaste tu nivel y estás listo para el siguiente. ¿Hablamos esta semana para continuar?",al_dia:"Hola {n}, ¡sigue adelante! Estoy orando por ti. ¿Cómo vas con tu paso de esta semana?",falta:"Hola {n}, te extrañamos en la reunión. Pensé en ti y quería saber cómo estás.",cumple:"¡Feliz cumpleaños, {n}! 🎂🎉 Dios te bendiga abundantemente en este nuevo año de vida. De parte de tu familia de Iglesia ICCVGD."};
@@ -270,14 +454,59 @@ function tablero(){
 if(ME.role==="discipulo")return renderDiscipuladoHub(false);
 if(S.dl_view==="editor"&&ME.role==="pastor")return renderLessonEditor();
 if(S.dl_view==="lessons")return renderDiscipuladoHub(true);
-if(S.tb)return tform();var B=P.filter(function(p){return p.level}),h='<div class="card"><h3>🗂️ Tablero de discipulado</h3><p class="note">Un paso por semana. Revisa primero las tarjetas rojas y naranjas.'+(ME.role==="discipulador"?" Las tarjetas con ★ son tus discípulos.":"")+'</p><button class="btn alt" onclick="S.dl_view=\'lessons\';S.dl_open=null;draw()">📖 Lecciones Nivel 1 (Consulta'+(ME.role==="pastor"?' y Editor':'')+')</button></div><div class="stats">'+SO.map(function(k){return'<div class="stat" style="background:'+SC[k][0]+'"><b>'+B.filter(function(p){return p.status===k}).length+'</b>'+SC[k][1]+'</div>'}).join("")+'</div><div class="chips">'+LV.map(function(n,i){return'<button class="chip" aria-pressed="'+(S.lv===i+1)+'" onclick="S.lv='+(i+1)+';draw()">'+n.split(" ·")[0]+' ('+B.filter(function(p){return p.level===i+1}).length+')</button>'}).join("")+'</div>';
-var l=B.filter(function(p){return p.level===S.lv}).sort(function(a,b){return SO.indexOf(a.status)-SO.indexOf(b.status)});
-h+=l.length?l.map(function(p){
-  var totSteps=MX[p.level]||12,pct=p.level>=5?100:Math.min(100,Math.round((p.step/totSteps)*100));
-  return'<div class="card"><button class="row" style="border:0;background:none;padding:0" onclick="S.tb='+p.id+';draw()"><span class="av" style="background:'+SC[p.status][0]+'">'+esc(ini(p.name))+'</span><span class="grow"><b>'+(ME.role==="discipulador"&&canMove(p)?"★ ":"")+esc(p.name)+'</b><small>Paso '+p.step+(p.level<5?" de "+totSteps:"")+(p.companion?" · con "+esc(p.companion):"")+'</small></span><span class="pill" style="background:'+SC[p.status][0]+'">'+SC[p.status][1]+'</span></button><div class="pbar" style="margin:8px 0 2px"><i style="width:'+pct+'%;background:'+SC[p.status][0]+'"></i></div><div style="display:flex;justify-content:space-between;font-size:11px;color:var(--mute)"><span>Progreso del nivel</span><b>'+pct+'%</b></div>'+(canMove(p)&&(p.status==="llamada"||p.status==="atrasado")?wab(p,p.status):"")+'</div>'
-}).join(""):'<p class="note">Nadie en este nivel todavía.</p>';
+if(S.tb)return tform();
+
+var B=P.filter(function(p){return p.level});
+var h='<div class="card"><h3>🗂️ Tablero de discipulado</h3><p class="note">Un paso por semana. Revisa primero las tarjetas rojas y naranjas.'+(ME.role==="discipulador"?" Las tarjetas con ★ son tus discípulos.":"")+'</p><button class="btn alt" onclick="S.dl_view=\'lessons\';S.dl_open=null;draw()">📖 Lecciones Nivel 1 (Consulta'+(ME.role==="pastor"?' y Editor':'')+')</button></div>';
+
+// Estadísticas rápidas por estado
+h+='<div class="stats">'+SO.map(function(k){return'<div class="stat" style="background:'+SC[k][0]+'"><b>'+B.filter(function(p){return p.status===k}).length+'</b>'+SC[k][1]+'</div>'}).join("")+'</div>';
+
+// Plano cartesiano de columnas agrupadas por niveles (Eje Y = número de lecciones)
+h+='<div class="card"><h3>📐 Avance por niveles y lecciones</h3><p class="note">Cada columna representa un discípulo agrupado por su nivel; la altura indica la lección o paso actual (toca una columna para editar).</p>';
+h+=svgCartesianDiscipulado(B);
+h+='<div class="chart-leg"><span><i style="background:#2F9E5B"></i>Al día</span><span><i style="background:#E07B12"></i>Atrasado</span><span><i style="background:#D6336C"></i>Llamar/visitar</span><span><i style="background:#1565C0"></i>Listo para subir</span></div></div>';
+
+// Nombres plegados en botones (acordeones) por Nivel y sub-agrupados por Lección/Paso
+h+='<div class="card"><h3>📂 Discípulos plegados por nivel y lección</h3><p class="note">Toca un nivel para desplegar sus lecciones y ver quiénes están en cada paso.</p>';
+LV.forEach(function(lvName,idx){
+  var lvNum=idx+1;
+  var inLvl=B.filter(function(p){return p.level===lvNum}).sort(function(a,b){return(a.step||1)-(b.step||1)});
+  var isOpen=!!S.tb_fold[lvNum];
+  h+='<details class="lvl-fold"'+(isOpen?' open':'')+' ontoggle="S.tb_fold['+lvNum+']=this.open">';
+  h+='<summary><span>📘 '+lvName+'</span><span class="pill" style="background:'+(inLvl.length?'#1565C0':'#90A4AE')+'">'+inLvl.length+' discípulo'+(inLvl.length===1?'':'s')+'</span></summary>';
+  h+='<div class="lvl-fold-body">';
+  if(!inLvl.length){
+    h+='<p class="note">Nadie en este nivel todavía.</p>';
+  }else{
+    // Sub-agrupar por paso/lección dentro del nivel
+    var byStep={};
+    inLvl.forEach(function(p){var st=p.step||1;if(!byStep[st])byStep[st]=[];byStep[st].push(p)});
+    Object.keys(byStep).sort(function(a,b){return(+a)-(+b)}).forEach(function(st){
+      var grp=byStep[st];
+      h+='<details style="margin:6px 0;border:1px solid var(--line);border-radius:10px;background:var(--card)" open>';
+      h+='<summary style="padding:8px 10px;font-size:13px;display:flex;justify-content:space-between;align-items:center"><span>📖 '+(lvNum<5?'Lección / Paso '+st:'Servicio activo')+'</span><span class="pill" style="background:#00897B">'+grp.length+'</span></summary>';
+      h+='<div style="padding:6px 8px 8px">';
+      grp.forEach(function(p){
+        var stCol=SC[p.status][0],stLbl=SC[p.status][1];
+        h+='<div style="display:flex;align-items:center;justify-content:space-between;gap:6px;padding:6px 4px;border-bottom:1px solid var(--line)">';
+        h+='<button class="step-chip" style="margin:0;border-color:'+stCol+'" onclick="S.tb='+p.id+';draw()"><span style="width:8px;height:8px;border-radius:50%;background:'+stCol+';display:inline-block"></span><b>'+(ME.role==="discipulador"&&canMove(p)?"★ ":"")+esc(p.name)+'</b> · <small>'+stLbl+'</small></button>';
+        if(canMove(p)&&(p.status==="llamada"||p.status==="atrasado")&&p.tel){
+          var d=String(p.tel).replace(/\D/g,"");if(d.length===10)d=CC+d;
+          h+='<a class="chip" style="text-decoration:none;border-color:#25D366;color:#25D366;padding:4px 8px;font-size:12px" href="https://wa.me/'+d+'?text='+encodeURIComponent(MSG[p.status].replace("{n}",p.name.split(" ")[0]))+'" target="_blank" rel="noopener">💬</a>';
+        }
+        h+='</div>';
+      });
+      h+='</div></details>';
+    });
+  }
+  h+='</div></details>';
+});
+h+='</div>';
+
 var o=ED()?P.filter(function(p){return!p.level&&(ME.role==="pastor"||p.cell===ME.cell)}):[];
 return h+(o.length?'<div class="card"><h3>➕ Agregar al tablero</h3><select id="ta">'+o.map(function(p){return'<option value="'+p.id+'">'+esc(p.name)+'</option>'}).join("")+'</select><button class="btn" onclick="tadd()">Agregar al Nivel 1</button></div>':'')}
+
 function tform(){var p=P.filter(function(x){return x.id===S.tb})[0];if(!p){S.tb=null;return tablero()}
 if(!canMove(p))return'<div class="card"><h3>'+esc(p.name)+'</h3><p class="note">'+LV[p.level-1]+' · Paso '+p.step+(MX[p.level]?" de "+MX[p.level]:"")+'</p><p>Estado: '+SC[p.status][1]+'</p>'+(p.companion?'<p>Compañero: '+esc(p.companion)+'</p>':'')+(p.discipler_name?'<p>Discipulador: '+esc(p.discipler_name)+'</p>':'')+'<button class="btn alt" onclick="S.tb=null;draw()">Volver</button></div>';
 var mx=MX[p.level]||20,st=[];for(var i=1;i<=mx;i++)st.push(i);
@@ -288,10 +517,10 @@ var l=d.level===undefined?p.level:d.level;d.lvl=l?(l<5?"Nivel "+l+" · Paso "+d.
 if(ME.role==="pastor"&&$("tdi"))d.discipler_id=$("tdi").value||null;
 var r=ME.role==="discipulador"?await SB.rpc("move_disciple",{p_id:p.id,p_level:l,p_step:d.step,p_status:d.status,p_companion:d.companion,p_started:d.started,p_lvl:d.lvl}):await SB.from("people").update(d).eq("id",p.id);
 if(r.error){toast("No se pudo guardar: "+r.error.message);return}
-await load();S.tb=null;if(m===1)S.lv=d.level;toast(m===1?"¡Subió de nivel!":"Guardado");draw()}
-async function tadd(){var r=await SB.from("people").update({level:1,step:1,status:"al_dia",lvl:"Nivel 1 · Paso 1"}).eq("id",+$("ta").value);if(r.error){toast("Error: "+r.error.message);return}await load();S.lv=1;toast("Agregado al Nivel 1");draw()}
+await load();S.tb=null;if(m===1){S.lv=d.level;S.tb_fold[d.level]=true}toast(m===1?"¡Subió de nivel!":"Guardado");draw()}
+async function tadd(){var r=await SB.from("people").update({level:1,step:1,status:"al_dia",lvl:"Nivel 1 · Paso 1"}).eq("id",+$("ta").value);if(r.error){toast("Error: "+r.error.message);return}await load();S.lv=1;S.tb_fold[1]=true;toast("Agregado al Nivel 1");draw()}
 
-// ===== CÉLULAS DE CUIDADO (CON HISTORIAL DE ÚLTIMAS 5 REUNIONES) =====
+// ===== CÉLULAS DE CUIDADO =====
 function celulas(){var pa=ME.role==="pastor";if(S.ce!=null)return cdet(pa);
 var h='<div class="card"><h3>🏘️ Células de cuidado</h3><p class="note">Toca una célula para ver sus participantes e historial de reuniones.</p></div>';
 h+=CE.length?CE.map(function(c){var m=P.filter(function(p){return p.cell===c.name});return'<div class="card"><button class="row" style="border:0;background:none;padding:0" onclick="S.ce=\''+esc(c.name)+'\';draw()"><span class="av" style="background:#00897B">'+esc(ini(c.name))+'</span><span class="grow"><b>'+esc(c.name)+'</b><small>Líder: '+esc(c.leader||"sin asignar")+' · Anfitrión: '+esc(c.host||"sin asignar")+'</small></span><span class="pill" style="background:#1565C0">'+m.length+'</span></button></div>'}).join(""):'<p class="note">Aún no hay células registradas.</p>';
@@ -330,7 +559,7 @@ var r=nw?await SB.from("cells").insert(Object.assign({name:n},d)):await SB.from(
 if(r.error){toast("No se pudo guardar: "+r.error.message);return}await load();S.ce=n;toast("Célula guardada");draw()}
 async function cadd(){var r=await SB.from("people").update({cell:S.ce}).eq("id",+$("cp").value);if(r.error){toast("Error: "+r.error.message);return}await load();toast("Participante agregado");draw()}
 
-// ===== INICIO (CUMPLEAÑOS DEL MES Y ANUNCIOS DESTACADOS FIJADOS ARRIBA) =====
+// ===== INICIO =====
 var MS=["Enero","Febrero","Marzo","Abril","Mayo","Junio","Julio","Agosto","Septiembre","Octubre","Noviembre","Diciembre"],PV={pastor:"Solo el pastor",celula:"Mi célula",iglesia:"Toda la iglesia"};
 function fd(d){return new Date(d+"T12:00:00").toLocaleDateString("es-CO",{weekday:"short",day:"numeric",month:"short"})}
 function cane(a){return ME.role==="pastor"||(ME.role==="lider"&&ME.cell&&a.audience===ME.cell)}
@@ -383,7 +612,7 @@ var r=S.ia?await SB.from("announcements").update(d).eq("id",S.ia):await SB.from(
 if(r.error){toast("No se pudo guardar: "+r.error.message);return}await load();S.ia=null;toast("Publicado");draw()}
 async function adel(){if(!confirm("¿Eliminar esta publicación?"))return;var r=await SB.from("announcements").delete().eq("id",S.ia);if(r.error){toast("Error: "+r.error.message);return}await load();S.ia=null;draw()}
 
-// ===== COMUNIDAD (ORACIÓN CON BOTÓN "ESTOY ORANDO" + TESTIMONIOS) =====
+// ===== COMUNIDAD =====
 function comunidad(){return'<div class="chips"><button class="chip" aria-pressed="'+(S.cm==="or")+'" onclick="S.cm=\'or\';S.pn=false;S.tn=false;draw()">🙏 Oración</button><button class="chip" aria-pressed="'+(S.cm==="te")+'" onclick="S.cm=\'te\';S.pn=false;S.tn=false;draw()">✨ Testimonios</button></div>'+(S.cm==="or"?oracion():testim())}
 function oracion(){if(S.pn)return'<div class="card"><h3>🙏 Nueva petición</h3><label>Mi petición</label><textarea id="pb" rows="4"></textarea><label>¿Por quién oramos?</label><input id="pf" placeholder="Yo, mi familia, un nombre..."><label>¿Quién puede verla?</label><select id="pv"><option value="pastor">Solo el pastor</option>'+(ME.cell?'<option value="celula">Mi célula</option>':'')+'<option value="iglesia">Toda la iglesia</option></select><button class="btn" onclick="psave()">Enviar petición</button><button class="btn alt" onclick="S.pn=false;draw()">Cancelar</button></div>';
 var l=PR.slice().sort(function(a,b){return a.answered-b.answered});
@@ -408,7 +637,7 @@ var RO=[["pastor","Pastor"],["lider","Líder"],["coordinador","Coordinador"],["d
 function rdet(){var p=P.filter(function(x){return x.id===S.sel})[0];if(!p){S.sel=null;return reg()}
 return'<div class="card"><h3>'+esc(p.name)+'</h3><p class="note">'+p.stage+' · '+esc(p.cell||"Sin célula")+(p.lvl?" · "+esc(p.lvl):"")+'</p><p>Bautismo: '+(p.bap?"Bautizado":"Sin bautizar")+'</p>'+(p.tel?'<p>Teléfono: '+esc(p.tel)+'</p>'+wab(p,"al_dia"):'')+'<button class="btn alt" onclick="S.sel=null;draw()">Volver</button></div>'}
 
-// ===== INFORME MENSUAL (CON DESGLOSE POR GRUPOS EN WHATSAPP Y BOTÓN IMPRIMIR/PDF) =====
+// ===== INFORME MENSUAL =====
 function informe0(){var ms=[],cur=today().slice(0,7)+"-01";AR.forEach(function(r){if(ms.indexOf(r.month)<0)ms.push(r.month)});AGM.forEach(function(r){if(ms.indexOf(r.month)<0)ms.push(r.month)});if(ms.indexOf(cur)<0)ms.push(cur);ms.sort().reverse();if(!S.im||ms.indexOf(S.im)<0)S.im=ms[0];
 var m=S.im,g=function(e){return AR.filter(function(r){return r.month===m&&r.event===e})[0]||{sessions:0,present_total:0}},av=function(x){return x.sessions?Math.round(x.present_total/x.sessions):0},cu=g("Culto dominical"),ce=g("Célula"),
 cl=AM.filter(function(r){return r.month===m&&r.event==="Célula"}).sort(function(a,b){return a.cell>b.cell?1:-1}),nm=MS[+m.slice(5,7)-1]+" "+m.slice(0,4),
@@ -485,7 +714,7 @@ h+=pend.length?'<div class="card"><b>Faltan por enviar</b>'+pend.map(function(q)
 return h+l.map(function(x){var L=LBL[x.role]||[],ns=[];L.forEach(function(lb,i){if(lb)ns.push(lb+": "+x["n"+(i+1)])});
 return'<div class="card"><b>'+esc(x.author_name||"")+'</b> <span class="pill" style="background:#1565C0">'+(RN[x.role]||x.role)+(x.cell?" · "+esc(x.cell):"")+'</span><p class="note">'+ns.join("<br>")+'</p>'+(x.wins?'<p><b>Logros:</b> '+esc(x.wins)+'</p>':'')+(x.challenges?'<p><b>Dificultades:</b> '+esc(x.challenges)+'</p>':'')+(x.needs?'<p><b>Apoyo que necesita:</b> '+esc(x.needs)+'</p>':'')+(x.private_note?'<p><b>Nota privada:</b> '+esc(x.private_note)+'</p>':'')+'</div>'}).join("")}
 
-// ===== FINANZAS (FILTRO POR AÑO Y MES + RESUMEN VISUAL POR CATEGORÍAS) =====
+// ===== FINANZAS (COLUMNAS AGRUPADAS INGRESOS VS EGRESOS + ANILLOS POR CATEGORÍA) =====
 var FM=function(n){return"$"+Math.round(n).toLocaleString("es-CO")};
 function fcat(e){var inc=e.type==="income",l=inc?IC:EC,id=inc?e.income_category_id:e.expense_category_id;return l.filter(function(x){return x.id===id})[0]||{name:"Sin categoría",color:"#999"}}
 function fyears(){var ys=[today().slice(0,4)];FN.forEach(function(e){var y=e.entry_date.slice(0,4);if(ys.indexOf(y)<0)ys.push(y)});return ys.sort().reverse()}
@@ -503,24 +732,25 @@ var periodoLabel=S.fy!=="all"?"Año "+S.fy:MS[+m.slice(5,7)-1]+" "+m.slice(0,4);
 var h='<div class="card"><h3>💰 Finanzas · '+periodoLabel+'</h3><div class="grid2 no-print" style="margin-top:8px"><div><label style="margin-top:0">Vista por Mes</label><select onchange="S.fy=\'all\';S.fm=this.value;draw()">'+ms.map(function(x){return'<option value="'+x+'"'+(S.fy==="all"&&x===m?" selected":"")+'>'+MS[+x.slice(5,7)-1]+" "+x.slice(0,4)+'</option>'}).join("")+'</select></div><div><label style="margin-top:0">O Resumen Anual</label><select onchange="S.fy=this.value;draw()"><option value="all"'+(S.fy==="all"?" selected":"")+'>Ver por mes</option>'+ys.map(function(y){return'<option value="'+y+'"'+(S.fy===y?" selected":"")+'>Todo el año '+y+'</option>'}).join("")+'</select></div></div><p class="note">Solo el pastor ve esta sección.</p></div>';
 h+='<div class="stats"><div class="stat" style="background:#2F9E5B"><b>'+FM(ti)+'</b>Ingresos</div><div class="stat" style="background:#E07B12"><b>'+FM(te)+'</b>Egresos</div><div class="stat" style="background:'+(ti-te>=0?"#1565C0":"#D6336C")+';grid-column:span 2"><b>'+FM(ti-te)+'</b>Balance ('+periodoLabel+')</div></div>';
 
-// Resumen visual por categorías
+// Gráfico comparativo de columnas agrupadas (últimos 6 meses)
+var last6=ms.slice(0,6).reverse();
+if(last6.length){
+  var mLabels=last6.map(function(x){return MS[+x.slice(5,7)-1].slice(0,3)+" "+x.slice(2,4)});
+  var incArr=last6.map(function(x){return FN.filter(function(e){return e.type==="income"&&e.entry_date.slice(0,7)===x}).reduce(function(s,e){return s+(+e.amount)},0)});
+  var expArr=last6.map(function(x){return FN.filter(function(e){return e.type==="expense"&&e.entry_date.slice(0,7)===x}).reduce(function(s,e){return s+(+e.amount)},0)});
+  h+='<div class="card"><h3>📊 Comparativo Ingresos vs Egresos</h3><p class="note">Evolución de los últimos '+last6.length+' meses registrados</p>'+svgGroupedFinanceChart(mLabels,incArr,expArr)+'</div>';
+}
+
+// Gráfico de sectores / anillo por categorías
 var incKeys=Object.keys(byInc).sort(function(a,b){return byInc[b].sum-byInc[a].sum});
 var expKeys=Object.keys(byExp).sort(function(a,b){return byExp[b].sum-byExp[a].sum});
 if(incKeys.length||expKeys.length){
-  h+='<div class="card"><h3>📊 Resumen por categorías</h3>';
+  h+='<div class="card"><h3>🍩 Distribución por categorías</h3>';
   if(incKeys.length){
-    h+='<p class="note" style="margin-top:6px"><b>Ingresos por categoría</b></p>';
-    incKeys.forEach(function(k){
-      var pc=ti?Math.round(byInc[k].sum/ti*100):0;
-      h+='<div class="bar"><span>'+esc(k)+'</span><i style="width:'+Math.max(4,Math.round(pc*0.5))+'%;background:'+esc(byInc[k].color)+'"></i><span><b>'+FM(byInc[k].sum)+'</b> ('+pc+'%)</span></div>';
-    });
+    h+='<p class="note" style="margin-top:6px"><b>Ingresos por categoría</b></p>'+svgDonutChart(incKeys.map(function(k){return{label:k,val:Math.round(byInc[k].sum),color:byInc[k].color}}));
   }
   if(expKeys.length){
-    h+='<p class="note" style="margin-top:10px"><b>Egresos por categoría</b></p>';
-    expKeys.forEach(function(k){
-      var pc=te?Math.round(byExp[k].sum/te*100):0;
-      h+='<div class="bar"><span>'+esc(k)+'</span><i style="width:'+Math.max(4,Math.round(pc*0.5))+'%;background:'+esc(byExp[k].color)+'"></i><span><b>'+FM(byExp[k].sum)+'</b> ('+pc+'%)</span></div>';
-    });
+    h+='<p class="note" style="margin-top:10px"><b>Egresos por categoría</b></p>'+svgDonutChart(expKeys.map(function(k){return{label:k,val:Math.round(byExp[k].sum),color:byExp[k].color}}));
   }
   h+='</div>';
 }
