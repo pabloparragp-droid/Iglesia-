@@ -1,76 +1,91 @@
 <!DOCTYPE html><html lang="es"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"><title>Mi iglesia</title><link rel="manifest" href="manifest.webmanifest"><meta name="theme-color" content="#1565C0"><link rel="icon" href="icon-192.png"><link rel="apple-touch-icon" href="icon-192.png"><style>
-:root{--bg:#EEF4FC;--card:#fff;--ink:#1F2430;--mute:#59606E;--b:#1565C0;--g:#2F9E5B;--o:#E07B12;--line:#D6DDE8;--soft:#E3EDFA;--acc:#1565C0;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
-@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#14171C;--card:#1D222A;--ink:#EAEFF7;--mute:#A3ADBD;--line:#2E3642;--soft:#252C36;--acc:#7DB2F0}}
-:root[data-theme="dark"]{--bg:#14171C;--card:#1D222A;--ink:#EAEFF7;--mute:#A3ADBD;--line:#2E3642;--soft:#252C36;--acc:#7DB2F0}
-html{scroll-padding-top:env(safe-area-inset-top,0px)}*{box-sizing:border-box}
-body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.5 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
-main{max-width:640px;margin:0 auto;padding:0 14px 90px}
+:root{--bg:#EEF4FC;--card:#ffffff;--ink:#1A2232;--mute:#5A6578;--b:#1565C0;--g:#2F9E5B;--o:#E07B12;--line:#D6E0EE;--soft:#E3EDFA;--acc:#1565C0;--sh:0 4px 16px rgba(21,101,192,.07);--sh2:0 8px 24px rgba(21,101,192,.14);box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0F131A;--card:#181E28;--ink:#EEF3FA;--mute:#9AA6B8;--line:#283242;--soft:#202836;--acc:#7DB2F0;--sh:0 4px 18px rgba(0,0,0,.35);--sh2:0 8px 26px rgba(0,0,0,.5)}}
+:root[data-theme="dark"]{--bg:#0F131A;--card:#181E28;--ink:#EEF3FA;--mute:#9AA6B8;--line:#283242;--soft:#202836;--acc:#7DB2F0;--sh:0 4px 18px rgba(0,0,0,.35);--sh2:0 8px 26px rgba(0,0,0,.5)}
+html{scroll-padding-top:env(safe-area-inset-top,0px);-webkit-tap-highlight-color:transparent}*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.55 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;transition:background .25s ease,color .25s ease}
+main{max-width:640px;margin:0 auto;padding:12px 14px 98px}
 h1,h2,h3{font-family:Georgia,"Times New Roman",serif;margin:0;line-height:1.25}
-header.banner{background:linear-gradient(135deg,#1565C0 0%,#0D47A1 100%);color:#fff;border-radius:18px;padding:16px 18px;margin:12px 0 10px;box-shadow:0 6px 18px rgba(13,71,161,.22);position:relative}
-header.banner h1{font-size:22px;color:#fff;letter-spacing:-.2px;padding-right:42px}
-header.banner .bsub{margin:3px 0 8px;color:rgba(255,255,255,.88);font-size:13px;display:flex;align-items:center;gap:6px;flex-wrap:wrap}
-header.banner .who{color:rgba(255,255,255,.92);border-top:1px solid rgba(255,255,255,.18);padding-top:8px;margin-top:4px}
-header.banner .chip{border-color:rgba(255,255,255,.45);background:rgba(255,255,255,.14);color:#fff;padding:4px 10px;font-size:12px}
-.tbtn{position:absolute;top:14px;right:14px;border:1px solid rgba(255,255,255,.35);background:rgba(255,255,255,.16);color:#fff;border-radius:999px;width:36px;height:36px;display:grid;place-items:center;font-size:17px;cursor:pointer;transition:transform .15s,background .2s}
-.tbtn:active{transform:scale(.92)}
-select,input,textarea{font:inherit;color:var(--ink);background:var(--card);border:1px solid var(--line);border-radius:12px;padding:10px 12px;width:100%;transition:border-color .2s,box-shadow .2s}
-select:focus,input:focus,textarea:focus{border-color:var(--acc);box-shadow:0 0 0 3px rgba(21,101,192,.14);outline:none}
-.nav{position:fixed;left:0;right:0;bottom:0;background:var(--card);border-top:1px solid var(--line);box-shadow:0 -4px 16px rgba(0,0,0,.06);display:flex;overflow-x:auto;padding:4px 4px env(safe-area-inset-bottom,4px);z-index:5;gap:2px}
-.nav button{flex:1 0 auto;border:0;border-top:3px solid transparent;border-radius:12px;background:none;color:var(--mute);padding:7px 8px;font:600 12px system-ui,sans-serif;cursor:pointer;transition:background .18s,color .18s,transform .12s}
-.nav button:active{transform:scale(.95)}
-.nav button span{display:block;font-size:21px;margin-bottom:1px}
-.nav button[aria-current="true"]{color:var(--acc);background:var(--soft);border-top-color:var(--acc);font-weight:700}
-.chips{display:flex;gap:6px;overflow-x:auto;padding:8px 0}
-.chip{flex:none;border:1.5px solid var(--b);background:var(--card);color:var(--ink);border-radius:999px;padding:6px 13px;font:600 13px system-ui,sans-serif;cursor:pointer;transition:background .18s,color .18s,transform .12s}
-.chip:active{transform:scale(.96)}
-.chip[aria-pressed="true"]{background:var(--b);color:#fff;box-shadow:0 2px 8px rgba(21,101,192,.25)}
-.card{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:14px 15px;margin:9px 0;box-shadow:0 2px 8px rgba(15,23,42,.04);transition:box-shadow .2s,transform .15s}
-.row{display:flex;align-items:center;gap:10px;width:100%;text-align:left;font:inherit;color:inherit;cursor:pointer}
-.av{width:42px;height:42px;border-radius:50%;display:grid;place-items:center;color:#fff;font-weight:700;flex:none}
-.grow{flex:1;min-width:0}.grow b{display:block}.grow small{color:var(--mute)}
-.pill{font-size:12px;font-weight:700;color:#fff;border-radius:999px;padding:2px 9px;white-space:nowrap}
-.btn{border:0;border-radius:12px;padding:12px 16px;background:var(--b);color:#fff;font:700 15px system-ui,sans-serif;cursor:pointer;width:100%;margin-top:10px;box-shadow:0 3px 10px rgba(21,101,192,.22);transition:transform .14s,opacity .18s,box-shadow .18s}
-.btn:active{transform:scale(.98);opacity:.92}
+h3{font-size:19px;letter-spacing:-.2px}
+
+/* Encabezado Banner Renovado */
+.hero{background:linear-gradient(135deg,#0D47A1 0%,#1565C0 55%,#1E88E5 100%);color:#fff;border-radius:20px;padding:18px 18px 16px;margin:4px 0 14px;box-shadow:0 10px 26px rgba(21,101,192,.26);position:relative;overflow:hidden}
+.hero::after{content:"";position:absolute;right:-28px;top:-28px;width:130px;height:130px;border-radius:50%;background:rgba(255,255,255,.08);pointer-events:none}
+.hero-top{display:flex;justify-content:space-between;align-items:flex-start;gap:10px;position:relative;z-index:2}
+.hero h1{font-size:25px;color:#fff;display:flex;align-items:center;gap:8px;text-shadow:0 1px 3px rgba(0,0,0,.15)}
+.hero-sub{margin:3px 0 0;color:rgba(255,255,255,.88);font-size:13.5px}
+.hero-date{display:inline-block;margin-top:8px;background:rgba(255,255,255,.16);backdrop-filter:blur(6px);padding:4px 11px;border-radius:999px;font-size:12.5px;font-weight:600;color:#fff;letter-spacing:.2px}
+.hero-actions{display:flex;align-items:center;gap:6px;position:relative}
+.icon-btn{width:38px;height:38px;border-radius:12px;border:1px solid rgba(255,255,255,.25);background:rgba(255,255,255,.15);color:#fff;font-size:18px;display:grid;place-items:center;cursor:pointer;transition:transform .15s ease,background .2s ease}
+.icon-btn:active{transform:scale(.92)}
+.icon-btn:hover{background:rgba(255,255,255,.26)}
+
+/* Menú desplegable de tres puntos */
+.menu-wrap{position:relative}
+.dropdown{position:absolute;right:0;top:44px;min-width:225px;background:var(--card);color:var(--ink);border:1px solid var(--line);border-radius:16px;padding:6px;box-shadow:0 14px 34px rgba(0,0,0,.22);z-index:30;display:none;animation:popIn .16s ease-out}
+.dropdown.open{display:block}
+@keyframes popIn{from{opacity:0;transform:translateY(-6px) scale(.97)}to{opacity:1;transform:translateY(0) scale(1)}}
+.dropdown button{display:flex;align-items:center;gap:10px;width:100%;border:0;background:none;color:var(--ink);padding:11px 12px;border-radius:11px;font:600 14px system-ui,sans-serif;text-align:left;cursor:pointer;transition:background .15s}
+.dropdown button:hover,.dropdown button:active{background:var(--soft)}
+.dropdown hr{border:0;border-top:1px solid var(--line);margin:4px 6px}
+
+.who{display:flex;justify-content:space-between;align-items:center;gap:8px;font-size:13.5px;color:rgba(255,255,255,.94);margin-top:12px;padding-top:10px;border-top:1px solid rgba(255,255,255,.18);position:relative;z-index:1}
+.who .role-tag{background:rgba(255,255,255,.18);padding:3px 10px;border-radius:999px;font-weight:600;font-size:12.5px}
+
+/* Entradas y controles */
+select,input,textarea{font:inherit;color:var(--ink);background:var(--card);border:1.5px solid var(--line);border-radius:12px;padding:11px 13px;width:100%;transition:border-color .2s,box-shadow .2s}
+select:focus,input:focus,textarea:focus{outline:none;border-color:var(--b);box-shadow:0 0 0 3px rgba(21,101,192,.16)}
+
+/* Barra de navegación inferior con píldora activa */
+.nav{position:fixed;left:0;right:0;bottom:0;background:var(--card);border-top:1px solid var(--line);display:flex;overflow-x:auto;padding:6px 6px calc(6px + env(safe-area-inset-bottom,0px));z-index:15;box-shadow:0 -4px 20px rgba(0,0,0,.06);gap:2px}
+.nav button{flex:1 0 auto;min-width:64px;border:0;background:none;color:var(--mute);padding:6px 8px;border-radius:14px;font:600 12px system-ui,sans-serif;cursor:pointer;transition:all .2s ease;display:flex;flex-direction:column;align-items:center;gap:2px}
+.nav button span{display:grid;place-items:center;font-size:20px;width:44px;height:28px;border-radius:999px;transition:all .22s cubic-bezier(.34,1.56,.64,1)}
+.nav button:active{transform:scale(.93)}
+.nav button[aria-current="true"]{color:var(--acc);font-weight:700}
+.nav button[aria-current="true"] span{background:var(--soft);transform:translateY(-1px) scale(1.06);box-shadow:0 2px 8px rgba(21,101,192,.18)}
+
+/* Chips, tarjetas y botones modernos */
+.chips{display:flex;gap:7px;overflow-x:auto;padding:8px 2px}
+.chip{flex:none;border:1.5px solid var(--b);background:var(--card);color:var(--ink);border-radius:999px;padding:7px 14px;font:600 13.5px system-ui,sans-serif;cursor:pointer;transition:all .18s ease;box-shadow:0 2px 6px rgba(0,0,0,.03)}
+.chip:active{transform:scale(.95)}
+.chip[aria-pressed="true"]{background:linear-gradient(135deg,#1565C0,#1E88E5);border-color:transparent;color:#fff;box-shadow:0 4px 12px rgba(21,101,192,.28)}
+.card{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:14px 16px;margin:10px 0;box-shadow:var(--sh);transition:transform .16s ease,box-shadow .2s ease}
+.row{display:flex;align-items:center;gap:11px;width:100%;text-align:left;font:inherit;color:inherit;cursor:pointer;transition:transform .14s ease}
+.row:active{transform:scale(.985)}
+.av{width:44px;height:44px;border-radius:14px;display:grid;place-items:center;color:#fff;font-weight:700;flex:none;box-shadow:0 3px 10px rgba(0,0,0,.14)}
+.grow{flex:1;min-width:0}.grow b{display:block;font-size:15.5px}.grow small{color:var(--mute);font-size:13px}
+.pill{font-size:11.5px;font-weight:700;color:#fff;border-radius:999px;padding:3px 10px;white-space:nowrap;box-shadow:0 2px 6px rgba(0,0,0,.12)}
+.btn{border:0;border-radius:14px;padding:13px 18px;background:linear-gradient(135deg,#1565C0 0%,#1976D2 100%);color:#fff;font:700 15.5px system-ui,sans-serif;cursor:pointer;width:100%;margin-top:10px;box-shadow:0 5px 15px rgba(21,101,192,.25);transition:transform .15s ease,box-shadow .2s ease,filter .2s ease}
+.btn:hover{filter:brightness(1.04);box-shadow:0 7px 20px rgba(21,101,192,.32)}
+.btn:active{transform:scale(.975);box-shadow:0 2px 8px rgba(21,101,192,.2)}
 .btn.alt{background:var(--soft);color:var(--ink);box-shadow:none;border:1px solid var(--line)}
-.btn.danger{background:#FDECEC;color:#C62828;border:1px solid #F5C2C2;box-shadow:none}
-:root[data-theme="dark"] .btn.danger{background:#3A1D22;color:#FF8A80;border-color:#5C2B32}
-.stats{display:grid;grid-template-columns:1fr 1fr;gap:9px}.stat{border-radius:15px;padding:13px;color:#fff;box-shadow:0 4px 12px rgba(0,0,0,.1)}.stat b{font:700 28px Georgia,serif;display:block}
-.sbar{display:flex;height:12px;border-radius:999px;overflow:hidden;background:var(--soft);margin:8px 0 6px}
-.sbar i{display:block;height:100%;transition:width .3s}
-.leg{display:flex;flex-wrap:wrap;gap:6px 10px;font-size:12px;color:var(--mute)}
-.leg span{display:inline-flex;align-items:center;gap:4px}
-.leg b{display:inline-block;width:8px;height:8px;border-radius:50%}
-.bar{display:flex;align-items:center;gap:8px;margin:6px 0;font-size:14px}.bar i{display:block;height:16px;border-radius:8px;min-width:4px}.bar span:first-child{width:104px;flex:none}
+.btn.alt:hover{filter:none;background:var(--line)}
+.stats{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:8px 0}.stat{border-radius:16px;padding:14px;color:#fff;box-shadow:0 6px 16px rgba(0,0,0,.12)}.stat b{font:700 30px Georgia,serif;display:block}
+.bar{display:flex;align-items:center;gap:8px;margin:7px 0;font-size:14px}.bar i{display:block;height:16px;border-radius:8px;min-width:4px}.bar span:first-child{width:104px;flex:none}
 .cols{display:flex;align-items:flex-end;gap:10px;height:110px}.cols div{flex:1;text-align:center;font-size:12px;display:flex;flex-direction:column;justify-content:flex-end;height:100%}.cols i{display:block;background:var(--b);border-radius:8px 8px 0 0}
-.alert{border-left:5px solid var(--o);padding:6px 10px;margin:6px 0;background:var(--soft);border-radius:4px 10px 10px 4px;font-size:14px}
-.tog{border:2px solid var(--line);background:var(--card);color:var(--ink);border-radius:999px;padding:8px 14px;font:700 14px system-ui,sans-serif;cursor:pointer;flex:none}
-.tog[aria-pressed="true"]{background:var(--g);border-color:var(--g);color:#fff}
-label{display:block;font-weight:600;margin:10px 0 4px;font-size:14px}
-.note{color:var(--mute);font-size:13px;margin:4px 0}
-.toast{position:fixed;left:50%;transform:translateX(-50%);bottom:76px;background:var(--ink);color:var(--bg);padding:10px 16px;border-radius:12px;font-size:14px;z-index:9}
+.alert{border-left:5px solid var(--o);padding:8px 12px;margin:7px 0;background:var(--soft);border-radius:6px 12px 12px 6px;font-size:14px}
+.tog{border:2px solid var(--line);background:var(--card);color:var(--ink);border-radius:999px;padding:8px 15px;font:700 13.5px system-ui,sans-serif;cursor:pointer;flex:none;transition:all .18s ease}
+.tog:active{transform:scale(.94)}
+.tog[aria-pressed="true"]{background:var(--g);border-color:var(--g);color:#fff;box-shadow:0 3px 10px rgba(47,158,91,.3)}
+label{display:block;font-weight:600;margin:11px 0 5px;font-size:14px}
+.note{color:var(--mute);font-size:13.5px;margin:4px 0}
+.toast{position:fixed;left:50%;transform:translateX(-50%);bottom:84px;background:var(--ink);color:var(--bg);padding:11px 18px;border-radius:14px;font-size:14px;font-weight:600;z-index:40;box-shadow:0 10px 26px rgba(0,0,0,.28)}
 details{margin:8px 0}summary{cursor:pointer;font-weight:600;color:var(--acc)}
 :focus-visible{outline:3px solid #E0A000;outline-offset:2px}
 
-.who{display:flex;justify-content:space-between;align-items:center;gap:8px;font-size:14px;color:var(--mute)}
 .pbar{width:100%;height:10px;background:var(--soft);border-radius:999px;overflow:hidden;margin:8px 0}.pbar i{display:block;height:100%;background:var(--g);transition:width .3s}
 .badge{display:inline-flex;align-items:center;gap:6px;background:var(--soft);border:1px solid var(--line);padding:6px 12px;border-radius:999px;font-size:13px;font-weight:700;margin:4px 4px 0 0}
 .lbody{line-height:1.65;margin:12px 0}.lbody p{margin:8px 0}.lbody blockquote{border-left:4px solid var(--acc);margin:10px 0;padding:6px 12px;background:var(--soft);border-radius:0 8px 8px 0;font-style:italic}
-.qopt{display:block;width:100%;text-align:left;padding:11px 13px;margin:6px 0;border:2px solid var(--line);border-radius:10px;background:var(--card);color:var(--ink);font:inherit;cursor:pointer}
+.qopt{display:block;width:100%;text-align:left;padding:12px 14px;margin:7px 0;border:2px solid var(--line);border-radius:12px;background:var(--card);color:var(--ink);font:inherit;cursor:pointer;transition:all .16s ease}
+.qopt:active{transform:scale(.985)}
 .qopt[aria-checked="true"]{border-color:var(--b);background:var(--soft);font-weight:600}
-</style></head><body><main><header class="banner"><button class="tbtn" id="tbtn" onclick="toggleTheme()" title="Cambiar tema" aria-label="Cambiar entre modo claro y oscuro">☀️</button><h1>Iglesia ICCVGD · Mi iglesia</h1><div class="bsub"><span id="bdate"></span></div><div class="who" id="who"></div></header><div id="app"><p class="note">Cargando...</p></div></main><nav class="nav" id="nav" style="display:none"></nav>
+</style></head><body><main><header class="hero"><div class="hero-top"><div><h1>⛪ Mi iglesia</h1><p class="hero-sub">Registro compartido y seguro · ICCVGD</p><span class="hero-date" id="hdate"></span></div><div class="hero-actions"><button class="icon-btn" id="thmBtn" onclick="toggleTheme()" title="Cambiar tema claro/oscuro" aria-label="Cambiar tema">🌙</button><div class="menu-wrap"><button class="icon-btn" id="menuBtn" onclick="toggleMenu(event)" title="Más opciones" aria-label="Más opciones">⋮</button><div class="dropdown" id="topMenu" role="menu"><button type="button" onclick="toggleTheme();closeMenu()">🌓 Cambiar modo claro / oscuro</button><button type="button" onclick="downloadIndex();closeMenu()">⬇️ Descargar index.html</button><div id="menuUserItems" style="display:none"><hr><button type="button" onclick="S.pw=true;closeMenu();draw()">🔑 Cambiar contraseña</button><button type="button" style="color:#D6336C" onclick="closeMenu();out()">🚪 Cerrar sesión</button></div></div></div></div></div><div class="who" id="who" style="display:none"></div></header><div id="app"><p class="note">Cargando...</p></div></main><nav class="nav" id="nav" style="display:none"></nav>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.js"></script>
 <script>
-window.onerror=function(msg,src,line){
-  var a=document.getElementById("app");
-  if(a)a.innerHTML='<div class="card"><h3>⚠️ Error al iniciar la app</h3><p class="note">'+String(msg)+' (línea '+line+')</p><button class="btn" onclick="location.reload()">Reintentar</button></div>';
-};
-function applyTheme(t){document.documentElement.setAttribute("data-theme",t);var b=$("tbtn");if(b)b.textContent=t==="dark"?"☀️":"🌙"}
-function toggleTheme(){var cur=document.documentElement.getAttribute("data-theme")==="dark"?"light":"dark";try{localStorage.setItem("iccvgd_theme",cur)}catch(e){}applyTheme(cur)}
-(function(){var saved=null;try{saved=localStorage.getItem("iccvgd_theme")}catch(e){}if(!saved)saved=(window.matchMedia&&window.matchMedia("(prefers-color-scheme:dark)").matches)?"dark":"light";applyTheme(saved)})();
-var SB=window.supabase?window.supabase.createClient("https://qszdcipapiiqtzryhnzl.supabase.co","sb_publishable_bQQXZdbBeMrD-kYbVJGT0A_UEtRHNnZ"):null;
+var SB=supabase.createClient("https://qszdcipapiiqtzryhnzl.supabase.co","sb_publishable_bQQXZdbBeMrD-kYbVJGT0A_UEtRHNnZ");
 var ST=["Visitante","Nuevo creyente","Discípulo","Miembro","Servidor","Líder","Discipulador","Pastor"],COL={"Visitante":"#E07B12","Nuevo creyente":"#2F9E5B","Discípulo":"#1565C0","Miembro":"#00897B","Servidor":"#8E4FC7","Líder":"#B26A00","Discipulador":"#D6336C","Pastor":"#37474F"},CELLS=[],CE=[];
 var RS=[{n:"Piedras y ruinas",m:"Arqueología",c:"#8A5A2B",e:"🏺",R:[{q:"¿De quién nombro la «casa»?",c:["Me hallaron en 1993, en el norte de Israel.","Mi texto está en arameo y lo grabó un rey enemigo de Israel.","Soy la primera mención, fuera de la Biblia, de la dinastía de un rey de Judá."],o:["Salomón","David","Omri","Ezequías"],a:1,x:"Es la estela de Tel Dan (siglo IX a.C.), que menciona la «casa de David».",v:"2 Samuel 7:16",va:"Dios prometió a David una casa, es decir, una dinastía firme. Que un texto de sus enemigos la nombre muestra que esa dinastía era real y conocida."},{q:"¿Qué obra de ingeniería soy?",c:["Me excavaron hacia el final del siglo VIII a.C.","Dos equipos cavaron desde extremos opuestos y se encontraron en el medio de la roca.","Llevo agua de la fuente de Gihón a un estanque dentro de Jerusalén, en unos 530 metros."],o:["Muralla de Nehemías","Túnel de Ezequías","Pozo de Jacob","Estanque de Betesda"],a:1,x:"Es el túnel de Ezequías, que aseguró agua a Jerusalén ante el asedio asirio.",v:"2 Reyes 20:20",va:"El texto recuerda que Ezequías hizo el estanque y el conducto para traer agua a la ciudad. La arqueología identifica esa obra en Jerusalén."}]},{n:"Mapas y caminos",m:"Geografía",c:"#2F6EA5",e:"🗺️",R:[{q:"¿Qué lugar soy?",c:["Estoy a unos 430 metros bajo el nivel del mar.","El río Jordán desemboca en mí, pero no tengo salida de agua.","Génesis me llama con otro nombre, el Mar Salado."],o:["Mar de Galilea","Mar Rojo","Mar Muerto","Mar Mediterráneo"],a:2,x:"Es el Mar Muerto, el punto más bajo en tierra firme del planeta.",v:"Génesis 14:3",va:"El texto ubica el valle de Sidim donde está el Mar Salado, nombre bíblico de este mar. Los relatos bíblicos ocurren en lugares reales."},{q:"¿Qué camino soy?",c:["Se desciende por mí unos mil metros en menos de 30 kilómetros.","Cruzo el desierto de Judea y tenía fama de peligroso.","Jesús me eligió como escenario de una parábola sobre el prójimo."],o:["Nazaret a Caná","Belén a Hebrón","Jerusalén a Jericó","Damasco a Tiro"],a:2,x:"Es el camino de Jerusalén a Jericó, de la parábola del buen samaritano.",v:"Lucas 10:30",va:"Jesús habla de alguien que «descendía» de Jerusalén a Jericó. Sus oyentes conocían ese camino y su riesgo, y por eso la parábola les llegaba."}]},{n:"Costumbres y cultura",m:"Antropología",c:"#C2185B",e:"🏺",R:[{q:"¿Qué gesto de hospitalidad soy?",c:["Las sandalias dejaban los pies expuestos al polvo del camino.","Por lo general lo hacía el siervo de menor rango.","Jesús me practicó con sus discípulos la noche antes de la cruz."],o:["Besar la mano","Lavar los pies","Partir el pan","Ungir la cabeza"],a:1,x:"El lavamiento de pies era tarea del siervo más humilde.",v:"Juan 13:14",va:"Jesús tomó el lugar del siervo y mandó hacer lo mismo unos con otros. El servicio por amor es la señal de su cuerpo."},{q:"¿En cuántas partes dividían la noche los romanos?",c:["Se llamaban vigilias y marcaban los turnos de guardia.","Marcos las nombra: tarde, medianoche, canto del gallo y mañana.","Jesús llegó caminando sobre el mar en la última de ellas."],o:["Dos","Tres","Cuatro","Siete"],a:2,x:"Eran cuatro vigilias. La última iba aproximadamente de 3 a 6 de la madrugada.",v:"Marcos 6:48",va:"Marcos dice que Jesús vino a los discípulos en la cuarta vigilia, cuando llevaban horas remando contra el viento."}]},{n:"Mente y cuerpo",m:"Neurociencia",c:"#7A45B8",e:"🧠",nt:"La ciencia describe cómo funciona lo creado; la Biblia revela quién lo creó y para qué. Aquí admiramos, no probamos la fe con un laboratorio.",R:[{q:"¿Qué capacidad del cerebro soy?",c:["Permito que tus conexiones neuronales se reorganicen con la práctica.","Se resume así: las neuronas que se activan juntas se conectan.","Pablo habló de ser transformados por la renovación del entendimiento."],o:["Neuroplasticidad","Amnesia","Sinestesia","Insomnio"],a:0,x:"Es la neuroplasticidad: el cerebro cambia con lo que repetimos, piensa y practica.",v:"Romanos 12:2",va:"Pablo pide ser transformados por la renovación de la mente. Meditar y practicar la Palabra forma hábitos nuevos de pensar y de vivir."},{q:"¿Qué necesidad de tu cerebro soy?",c:["Mientras estoy presente, el cerebro consolida lo aprendido.","En estudios, sobre todo con animales, se ha visto que ayudo a limpiar desechos del cerebro.","Un salmo dice que Dios me da a sus amados."],o:["Ayuno","Sueño","Silencio","Canto"],a:1,x:"Es el sueño: descansar es una necesidad que Dios dio y no es pereza.",v:"Salmo 127:2",va:"El salmista dice que Dios da el sueño a sus amados. Descansar es confiar, porque no todo depende de nuestro esfuerzo."}]},{n:"Manuscritos y lenguas",m:"Texto bíblico",c:"#2F9E5B",e:"📜",R:[{q:"¿Qué hallazgo soy?",c:["Me descubrieron desde 1947 en cuevas cerca de Qumrán.","Incluyo copias de casi todos los libros del Antiguo Testamento.","Mi copia de Isaías es mil años más antigua que las que se tenían antes."],o:["Piedra de Rosetta","Código de Hammurabi","Papiro de Oxirrinco","Rollos del Mar Muerto"],a:3,x:"Son los Rollos del Mar Muerto, que mostraron una transmisión muy fiel del texto.",v:"Isaías 40:8",va:"La palabra de nuestro Dios permanece para siempre. Que los manuscritos se hayan conservado con tanta fidelidad respalda esa confianza."},{q:"¿Qué traducción soy?",c:["Mi nombre significa «setenta».","Me hicieron en Alejandría, Egipto, desde el siglo III a.C.","Muchas citas del Antiguo Testamento en el Nuevo siguen mi versión griega."],o:["Vulgata","Peshitta","Targum","Septuaginta"],a:3,x:"Es la Septuaginta, la traducción griega del Antiguo Testamento.",v:"Hechos 17:11",va:"Los de Berea examinaban las Escrituras cada día. Conocer cómo llegó el texto hasta nosotros nos anima a estudiarlo con ganas."}]}];
-var S={tab:"ini",im:null,rd:null,rm:null,mm:null,ft:null,fm:null,rec:false,pw:false,q:"",f:"Todos",sel:null,tb:null,lv:1,ia:null,cm:"or",pn:false,tn:false,T:{},rs:null,ri:0,cl:1,bad:[],ok:false,ev:"Culto dominical",dl_view:null,dl_open:null,dl_ans:{},dl_ed:null,dl_q:[],am:"lista",gd:null,aq:""},U=null,ME=null,P=[],AT=[],EQ=[],AN=[],PR=[],TE=[],AR=[],AM=[],MR=[],RP=[],IC=[],EC=[],FN=[],DL=[],DP=[],AG=[],AGM=[],R0={},$=function(i){return document.getElementById(i)};
+var S={tab:"ini",im:null,rd:null,rm:null,mm:null,ft:null,fm:null,rec:false,pw:false,q:"",f:"Todos",sel:null,tb:null,lv:1,ia:null,cm:"or",pn:false,tn:false,T:{},rs:null,ri:0,cl:1,bad:[],ok:false,ev:"Culto dominical",dl_view:null,dl_open:null,dl_ans:{},dl_ed:null,dl_q:[],am:"lista",gd:null},U=null,ME=null,P=[],AT=[],EQ=[],AN=[],PR=[],TE=[],AR=[],AM=[],MR=[],RP=[],IC=[],EC=[],FN=[],DL=[],DP=[],AG=[],AGM=[],R0={},$=function(i){return document.getElementById(i)};
 function esc(s){return String(s==null?"":s).replace(/[&<>"]/g,function(c){return{"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]})}
 function toast(t){var d=document.createElement("div");d.className="toast";d.textContent=t;document.body.appendChild(d);setTimeout(function(){d.remove()},2600)}
 function ini(n){return n.split(" ").map(function(w){return w[0]}).slice(0,2).join("")}
@@ -84,23 +99,8 @@ if(r.error){toast(r.error.message);return}
 if(n&&!r.data.session){toast("Revisa tu correo para confirmar la cuenta");return}
 await boot()}
 async function out(){await SB.auth.signOut();ME=null;U=null;P=[];draw()}
-async function boot(){
-  if(!SB){
-    $("app").innerHTML='<div class="card"><h3>⚠️ Sin conexión al servidor</h3><p class="note">No se pudo cargar la librería de conexión (Supabase). Verifica tu conexión a internet o prueba recargar.</p><button class="btn" onclick="location.reload()">Reintentar</button></div>';
-    return;
-  }
-  try{
-    var s=await SB.auth.getSession();
-    U=s.data&&s.data.session&&s.data.session.user;
-    if(!U){ME=null;draw();return}
-    var r=await SB.from("profiles").select("*").eq("id",U.id).single();
-    ME=r.data||{role:"pendiente",cell:null,name:""};
-    if(ME.role!=="pendiente"){$("app").innerHTML='<p class="note">Cargando…</p>';await load()}
-    draw();checkSub();
-  }catch(err){
-    $("app").innerHTML='<div class="card"><h3>⚠️ Error de conexión</h3><p class="note">'+esc(err&&err.message?err.message:String(err))+'</p><button class="btn" onclick="location.reload()">Reintentar</button></div>';
-  }
-}
+async function boot(){var s=await SB.auth.getSession();U=s.data.session&&s.data.session.user;if(!U){ME=null;draw();return}
+var r=await SB.from("profiles").select("*").eq("id",U.id).single();ME=r.data||{role:"pendiente",cell:null,name:""};if(ME.role!=="pendiente"){$("app").innerHTML='<p class="note">Cargando…</p>';await load()}draw();checkSub()}
 async function load(){var d=new Date(Date.now()-42*864e5).toLocaleDateString("en-CA"),pa=ME.role==="pastor"||ME.role==="lider",pd=ME.role==="discipulador",none=Promise.resolve({data:[]});
 var R=await Promise.all([SB.from("people_all").select("*").order("name"),SB.from("attendance").select("person_id,event_date,event,present").gte("event_date",d),SB.from("retos").select("key,pts"),
 pa?SB.from("people").select("id,tel,note"):pd?SB.from("people_tel").select("*"):none,SB.from("attendance_report").select("*"),SB.from("attendance_monthly").select("*"),SB.from("cells").select("*").order("name"),
@@ -133,29 +133,19 @@ function gtot(){var s=0;["g1","g2","g3","g4","g5"].forEach(function(i){s+=parseI
 function gcu(m){var o={sessions:0,damas:0,caballeros:0,ninos:0,jovenes:0,ancianos:0,total:0};AGM.filter(function(r){return r.month===m&&r.event==="Culto dominical"}).forEach(function(r){o.sessions+=r.sessions;GR.forEach(function(g){o[g[0]]+=r[g[0]]||0});o.total+=r.total||0});return o}
 function gcard(m){var r=gcu(m);if(!r.sessions)return'';var av=function(x){return Math.round(x/r.sessions)};
 return'<div class="card"><h3>Conteo general del culto</h3><p class="note">'+r.sessions+' domingos con conteo · total '+r.total+' · promedio '+av(r.total)+'</p><p>'+GR.map(function(g){return g[1]+': '+r[g[0]]+' (promedio '+av(r[g[0]])+')'}).join("<br>")+'</p></div>'}
-var GCOL=[["damas","Damas","#D6336C"],["caballeros","Caballeros","#1565C0"],["ninos","Niños","#2F9E5B"],["jovenes","Jóvenes","#E07B12"],["ancianos","Ancianos","#8E4FC7"]];
-function gbar(g){var tot=gtt(g);if(!tot)return'<p class="note">Sin asistentes registrados en este conteo.</p>';
-var segs=GCOL.map(function(c){var v=g[c[0]]||0,pct=Math.round(v/tot*100);return v?'<i style="width:'+pct+'%;background:'+c[2]+'" title="'+c[1]+': '+v+' ('+pct+'%)"></i>':''}).join("");
-var legs=GCOL.map(function(c){var v=g[c[0]]||0,pct=Math.round(v/tot*100);return'<span><b style="background:'+c[2]+'"></b>'+c[1]+': '+v+' ('+pct+'%)</span>'}).join("");
-return'<div class="sbar">'+segs+'</div><div class="leg">'+legs+'</div>'}
 function agen(){var t=S.gd||today(),ex=AG.filter(function(g){return g.event_date===t&&g.event==="Culto dominical"})[0]||{},tot=gtt(ex);
 var h='<div class="card"><h3>Conteo general del culto</h3><p class="note">Anota cuántas personas hay por grupo, sin nombres. Si ese mismo día tomaste asistencia por lista, usa solo una de las dos para no duplicar en el informe.</p><label>Fecha</label><input type="date" value="'+t+'" onchange="S.gd=this.value;draw()">';
 GR.forEach(function(g){h+='<label>'+g[1]+'</label><input id="'+g[2]+'" type="number" min="0" inputmode="numeric" value="'+(ex[g[0]]||0)+'" oninput="gtot()">'});
-h+='<p style="margin:12px 0 4px;font-size:17px"><b>Total: <span id="gt" style="color:var(--acc)">'+tot+'</span> personas</b></p><label>Notas (opcional)</label><input id="gn" value="'+esc(ex.notes)+'" placeholder="Ej. Culto misionero o visita especial"><button class="btn" onclick="gsave()">'+(ex.id?"Actualizar conteo":"Guardar conteo")+'</button>'+(ex.id?'<button class="btn danger" onclick="gdel('+ex.id+')">🗑️ Eliminar este conteo</button>':'')+'</div>';
-var rec=AG.slice(0,8);if(rec.length)h+='<h3 style="margin:14px 0 4px">Últimos conteos</h3><p class="note">Toca un conteo para cargarlo arriba y editarlo o eliminarlo.</p>'+rec.map(function(g){var active=g.event_date===t;return'<div class="card" style="cursor:pointer;'+(active?'border:2px solid var(--acc)':'')+'" onclick="S.gd=''+g.event_date+'';draw();window.scrollTo({top:0,behavior:'smooth'})"><div style="display:flex;justify-content:space-between;align-items:center"><b>📅 '+fd(g.event_date)+'</b><span class="pill" style="background:'+(active?'#2F9E5B':'#1565C0')+'">Total: '+gtt(g)+(active?' · Editando':'')+'</span></div>'+gbar(g)+(g.notes?'<p class="note" style="margin-top:6px">📝 '+esc(g.notes)+'</p>':'')+'</div>'}).join("");return h}
+h+='<p><b>Total: <span id="gt">'+tot+'</span></b></p><label>Notas (opcional)</label><input id="gn" value="'+esc(ex.notes)+'"><button class="btn" onclick="gsave()">'+(ex.id?"Actualizar conteo":"Guardar conteo")+'</button></div>';
+var rec=AG.slice(0,6);if(rec.length)h+='<h3 style="margin:14px 0 4px">Últimos conteos</h3>'+rec.map(function(g){return'<div class="card"><b>'+fd(g.event_date)+'</b> · total '+gtt(g)+'<p class="note">Damas '+g.damas+' · Caballeros '+g.caballeros+' · Niños '+g.ninos+' · Jóvenes '+g.jovenes+' · Ancianos '+g.ancianos+'</p></div>'}).join("");return h}
 async function gsave(){var t=S.gd||today(),v=function(i){return Math.max(0,parseInt($(i).value)||0)},d={event_date:t,event:"Culto dominical",damas:v("g1"),caballeros:v("g2"),ninos:v("g3"),jovenes:v("g4"),ancianos:v("g5"),notes:$("gn").value.trim()};
 var r=await SB.from("attendance_general").upsert(d,{onConflict:"event_date,event"});if(r.error){toast("No se pudo guardar: "+r.error.message);return}await load();toast("Conteo guardado");draw()}
-async function gdel(id){if(!confirm("¿Eliminar este conteo general definitivamente?"))return;var r=await SB.from("attendance_general").delete().eq("id",id);if(r.error){toast("No se pudo eliminar: "+r.error.message);return}S.gd=today();await load();toast("Conteo eliminado");draw()}
 function asis(){var evs=EVR[ME.role]||[];if(evs.indexOf(S.ev)<0){S.ev=evs[0];setT()}
 var gen=ME.role==="pastor"||ME.role==="coordinador";if(!gen)S.am="lista";
-var ch=gen?'<div class="chips"><button class="chip" aria-pressed="'+(S.am!=="gen")+'" onclick="S.am='lista';draw()">Lista de personas</button><button class="chip" aria-pressed="'+(S.am==="gen")+'" onclick="S.am='gen';draw()">Conteo general</button></div>':'';
+var ch=gen?'<div class="chips"><button class="chip" aria-pressed="'+(S.am!=="gen")+'" onclick="S.am=\'lista\';draw()">Lista de personas</button><button class="chip" aria-pressed="'+(S.am==="gen")+'" onclick="S.am=\'gen\';draw()">Conteo general</button></div>':'';
 return ch+(S.am==="gen"?agen():alistv(evs))}
-function amark(all){var L=alist(),q=(S.aq||"").toLowerCase().trim(),vis=q?L.filter(function(p){return p.name.toLowerCase().indexOf(q)>-1}):L;vis.forEach(function(p){if(all)S.T[p.id]=true;else delete S.T[p.id]});draw()}
-function alistv(evs){var L=alist(),n=L.filter(function(p){return S.T[p.id]}).length,q=(S.aq||"").toLowerCase().trim(),vis=q?L.filter(function(p){return p.name.toLowerCase().indexOf(q)>-1}):L;
-var pct=L.length?Math.round(n/L.length*100):0;
-var h='<div class="card"><h3>Asistencia de hoy</h3><p class="note">Toca el botón de cada persona que llegó. Estos datos alimentan el informe mensual.</p><label>Reunión</label><select onchange="setev(this.value)">'+evs.map(function(e){return'<option'+(e===S.ev?" selected":"")+'>'+e+'</option>'}).join("")+'</select><div style="display:flex;justify-content:space-between;align-items:center;margin-top:12px;gap:6px;flex-wrap:wrap"><b>Presentes: <span style="color:var(--g)">'+n+'</span> de '+L.length+' ('+pct+'%)</b><div style="display:flex;gap:6px"><button class="chip" onclick="amark(true)">✔ Marcar todos</button><button class="chip" onclick="amark(false)">Limpiar</button></div></div><div class="pbar"><i style="width:'+pct+'%"></i></div><input id="aq" type="search" placeholder="🔍 Buscar persona por nombre..." value="'+esc(S.aq)+'" style="margin-top:6px"></div>';
-h+=vis.length?vis.map(function(p){return'<div class="card row"><span class="av" style="background:'+COL[p.stage]+'">'+esc(ini(p.name))+'</span><span class="grow"><b>'+esc(p.name)+'</b><small>'+esc(p.cell||"Sin célula")+'</small></span><button class="tog" aria-pressed="'+!!S.T[p.id]+'" onclick="S.T['+p.id+']=!S.T['+p.id+'];draw()">'+(S.T[p.id]?"✓ Presente":"Marcar")+'</button></div>'}).join(""):'<p class="note">Ninguna persona coincide con "'+esc(S.aq)+'".</p>';
-return h+'<div class="card" style="text-align:center"><b>'+n+' de '+L.length+' presentes ('+pct+'%)</b><button class="btn" onclick="saveasis()">Guardar asistencia</button></div>'}
+function alistv(evs){var L=alist(),n=L.filter(function(p){return S.T[p.id]}).length;
+return'<div class="card"><h3>Asistencia de hoy</h3><p class="note">Toca el botón de cada persona que llegó. Estos datos alimentan el informe mensual.</p><label>Reunión</label><select onchange="setev(this.value)">'+evs.map(function(e){return'<option'+(e===S.ev?" selected":"")+'>'+e+'</option>'}).join("")+'</select></div>'+L.map(function(p){return'<div class="card row"><span class="av" style="background:'+COL[p.stage]+'">'+esc(ini(p.name))+'</span><span class="grow"><b>'+esc(p.name)+'</b><small>'+esc(p.cell||"Sin célula")+'</small></span><button class="tog" aria-pressed="'+!!S.T[p.id]+'" onclick="S.T['+p.id+']=!S.T['+p.id+'];draw()">'+(S.T[p.id]?"Presente":"Marcar")+'</button></div>'}).join("")+'<p class="note">'+n+' de '+L.length+' presentes</p><button class="btn" onclick="saveasis()">Guardar asistencia</button>'}
 async function saveasis(){var L=alist();if(!L.length){toast("Aún no hay personas");return}var t=today(),rows=L.map(function(p){return{person_id:p.id,event_date:t,event:S.ev,present:!!S.T[p.id]}});
 var r=await SB.from("attendance").upsert(rows,{onConflict:"person_id,event_date,event"});if(r.error){toast("Error: "+r.error.message);return}await load();toast("Asistencia guardada");draw()}
 function panel(){var l=P,t=today(),pr={},wc=[0,0,0,0,0],ws=[{},{},{},{},{}],rec={};
@@ -575,8 +565,11 @@ function equipo(){var o=function(a,v){return a.map(function(x){return'<option'+(
 return'<div class="card"><h3>Equipo de líderes</h3><p class="note">Asigna a cada líder su célula. Quien crea una cuenta aparece aquí como líder sin célula. Todo el que tenga un rol ve el directorio sin teléfonos ni notas. Solo los coordinadores (máximo 2) toman la asistencia del culto, y cada líder la de su célula. Cada discipulador mueve solo a los discípulos que le asignes en el Tablero. Las cuentas nuevas quedan en Pendiente y no ven nada hasta que les des un rol.</p></div>'+EQ.map(function(q){var me=q.id===U.id;return'<div class="card"><b>'+esc(q.name||"Sin nombre")+(me?" (tú)":"")+'</b><label>Rol</label><select id="qr'+q.id+'"'+(me?" disabled":"")+'>'+RO.map(function(r){return'<option value="'+r[0]+'"'+(q.role===r[0]?" selected":"")+'>'+r[1]+'</option>'}).join("")+'</select><label>Célula</label><select id="qc'+q.id+'"><option value="">Sin célula</option>'+o(CELLS,q.cell)+'</select><button class="btn" onclick="saveq(\''+q.id+'\')">Guardar</button></div>'}).join("")}
 async function saveq(id){var r=await SB.from("profiles").update({role:$("qr"+id).value,cell:$("qc"+id).value||null}).eq("id",id);if(r.error){toast(r.error.message.indexOf("max_coordinadores")>-1?"Ya hay 2 coordinadores. Cambia primero el rol de uno de ellos.":"No se pudo guardar: "+r.error.message);return}await load();toast("Equipo actualizado");draw()}
 function draw(){var T=[["ini","🏠","Inicio"],["reg","👥","Registro"],["asis","✅","Asistencia"],["panel","📊","Panel"],["cel","🏘️","Células"],["tabl","🗂️","Tablero"],["inf","📄","Informe"],["rend","📝","Rendición"],["com","🙌","Comunidad"],["retos","🧩","Retos"],["fin","💰","Finanzas"]];T.push(["equipo","⚙️","Equipo"]);
-var bd=$("bdate");if(bd){var dstr=new Date().toLocaleDateString("es-CO",{weekday:"long",day:"numeric",month:"long",year:"numeric"});bd.textContent="📅 "+dstr.charAt(0).toUpperCase()+dstr.slice(1)}
-$("who").innerHTML=ME?'<span>'+esc(ME.name||U.email)+' · '+(ME.role==="lider"?"Líder"+(ME.cell?" de "+esc(ME.cell):" (sin célula asignada)"):({pastor:"Pastor",discipulador:"Discipulador",servidor:"Servidor",coordinador:"Coordinador",discipulo:"Discípulo",pendiente:"Pendiente de aprobación"}[ME.role]||ME.role))+'</span><span><button class="chip" onclick="S.pw=true;draw()">Contraseña</button> <button class="chip" onclick="out()">Salir</button></span>':'<span>Registro compartido y seguro</span>';
+var hd=$("hdate");if(hd){var fstr=new Date().toLocaleDateString("es-CO",{weekday:"long",day:"numeric",month:"long",year:"numeric"});hd.textContent="📅 "+fstr.charAt(0).toUpperCase()+fstr.slice(1)}
+var rLabel=ME?(ME.role==="lider"?"Líder"+(ME.cell?" · "+esc(ME.cell):" · Sin célula"):({pastor:"Pastor",discipulador:"Discipulador",servidor:"Servidor",coordinador:"Coordinador",discipulo:"Discípulo",pendiente:"Pendiente"}[ME.role]||ME.role)):"";
+$("who").style.display=ME?"flex":"none";
+$("menuUserItems").style.display=ME?"block":"none";
+$("who").innerHTML=ME?'<span>👤 <b>'+esc(ME.name||U.email)+'</b></span><span class="role-tag">'+rLabel+'</span>':"";
 $("nav").style.display=ME?"flex":"none";
 if(S.rec||(S.pw&&ME)){$("nav").style.display="none";$("app").innerHTML=pwform();return}
 if(!ME){$("app").innerHTML=authv();return}
@@ -584,8 +577,14 @@ if(ME.role==="pendiente"){$("nav").style.display="none";$("app").innerHTML='<div
 var al=RT[ME.role]||[];if(al.indexOf(S.tab)<0)S.tab=al[0];
 $("nav").innerHTML=T.filter(function(t){return al.indexOf(t[0])>-1}).map(function(t){return'<button aria-current="'+(S.tab===t[0])+'" onclick="S.tab=\''+t[0]+'\';S.sel=null;S.tb=null;S.ce=null;S.ia=null;S.pn=false;S.tn=false;S.ft=null;S.dl_view=null;S.dl_open=null;S.dl_ed=null;draw()"><span>'+t[1]+'</span>'+t[2]+'</button>'}).join("");
 $("app").innerHTML=S.tab==="reg"?reg():S.tab==="asis"?asis():S.tab==="ini"?inicio():S.tab==="inf"?informe():S.tab==="rend"?rendicion():S.tab==="fin"&&ME.role==="pastor"?finanzas():S.tab==="com"?comunidad():S.tab==="cel"?celulas():S.tab==="tabl"?tablero():S.tab==="retos"?retos():S.tab==="equipo"&&ME.role==="pastor"?equipo():panel();
-var q=$("q");if(q)q.oninput=function(){S.q=q.value;var p=q.selectionStart;draw();var n=$("q");if(n){n.focus();n.setSelectionRange(p,p)}}
-var aq=$("aq");if(aq)aq.oninput=function(){S.aq=aq.value;var p=aq.selectionStart;draw();var n=$("aq");if(n){n.focus();n.setSelectionRange(p,p)}}}
+var q=$("q");if(q)q.oninput=function(){S.q=q.value;var p=q.selectionStart;draw();var n=$("q");n.focus();n.setSelectionRange(p,p)}}
+function applyTheme(t){document.documentElement.setAttribute("data-theme",t);var b=$("thmBtn");if(b)b.textContent=t==="dark"?"☀️":"🌙";var mc=document.querySelector('meta[name="theme-color"]');if(mc)mc.setAttribute("content",t==="dark"?"#0F131A":"#1565C0")}
+function toggleTheme(){var cur=document.documentElement.getAttribute("data-theme");if(!cur)cur=window.matchMedia&&window.matchMedia("(prefers-color-scheme:dark)").matches?"dark":"light";var nxt=cur==="dark"?"light":"dark";try{localStorage.setItem("mi_iglesia_theme",nxt)}catch(e){}applyTheme(nxt);toast(nxt==="dark"?"Modo oscuro activado":"Modo claro activado")}
+function toggleMenu(e){if(e)e.stopPropagation();var m=$("topMenu");if(m)m.classList.toggle("open")}
+function closeMenu(){var m=$("topMenu");if(m)m.classList.remove("open")}
+document.addEventListener("click",function(e){var m=$("topMenu");if(m&&m.classList.contains("open")&&!e.target.closest(".menu-wrap"))m.classList.remove("open")});
+function downloadIndex(){try{var doc="<!DOCTYPE html>"+document.documentElement.outerHTML;var a=document.createElement("a");a.href=URL.createObjectURL(new Blob([doc],{type:"text/html;charset=utf-8"}));a.download="index.html";document.body.appendChild(a);a.click();setTimeout(function(){URL.revokeObjectURL(a.href);a.remove()},500);toast("Descargando index.html...")}catch(err){toast("No se pudo descargar: "+err.message)}}
+(function(){try{var saved=localStorage.getItem("mi_iglesia_theme");if(saved==="dark"||saved==="light")applyTheme(saved);else if(window.matchMedia&&window.matchMedia("(prefers-color-scheme:dark)").matches)applyTheme("dark")}catch(e){}})();
 if(location.hash.indexOf("type=recovery")>-1)S.rec=true;
 SB.auth.onAuthStateChange(function(ev){if(ev==="PASSWORD_RECOVERY"){S.rec=true;draw()}});
 if("serviceWorker" in navigator)navigator.serviceWorker.register("sw.js").catch(function(){});
