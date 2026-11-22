@@ -1260,7 +1260,7 @@ function renderRoleWelcomeCard(){
   });
   var inner='<p style="margin:4px 0 8px"><b>¡Bienvenido(a), '+esc(firstName)+'!</b> Qué alegría tenerte hoy en la app de la iglesia.</p>';
   inner+='<p class="note" style="margin-bottom:10px">Tu rol activo: <b>'+esc(roleNames)+'</b>. '+esc(descs.join(" "))+'</p>';
-  inner+='<b style="font-size:16px;color:var(--acc);display:block;margin-bottom:6px">✨ Sugerencias de lo que puedes hacer hoy:</b>';
+  inner+='<b style="font-size:16px;color:var(--acc);display:block;margin-bottom:6px">🧭 Sugerencias de lo que puedes hacer hoy:</b>';
   inner+=tips.slice(0,5).map(function(tp){
     return'<button class="btn alt sm" style="text-align:left;display:flex;align-items:center;justify-content:space-between;gap:8px;margin:6px 0" onclick="'+tp.fn+'"><span>'+tp.e+' '+esc(tp.t)+'</span><span>→</span></button>';
   }).join("");
@@ -1471,7 +1471,7 @@ var r=await SB.from("monthly_reports").upsert(d,{onConflict:"month,user_id"});if
 function rgen(){var m=S.rm||repM();S.rm=m;var rp=RP.filter(function(x){return x.month===m}),by=function(r){return rp.filter(function(x){return x.role===r})},sm=function(a,k){return a.reduce(function(s,x){return s+(x[k]||0)},0)},sa=function(a,k){return a.reduce(function(s,x){return s+((x.auto||{})[k]||0)},0)},
 li=by("lider"),di=by("discipulador"),co=by("coordinador"),g=function(e){return AR.filter(function(r){return r.month===m&&r.event===e})[0]||{sessions:0,present_total:0}},cu=g("Culto dominical"),ce=g("Célula"),av=function(x){return x.sessions?Math.round(x.present_total/x.sessions):0},
 dec=sm(rp,"n3"),vis=sm(li,"n2")+sm(co,"n2"),vst=sm(rp,"n4"),nV=P.filter(function(p){return p.stage==="Visitante"}).length,nB=P.filter(function(p){return p.bap}).length;
-var resp=isPastor()?EQ.filter(function(q){return q.role==="lider"||q.role==="discipulador"||q.role==="coordinador"}).length:0;
+var resp=isPastor()?EQ.filter(function(q){var rs=Array.isArray(q.roles)&&q.roles.length?q.roles:[q.role];return rs.some(function(r){return r==="lider"||r==="lider_celula"||r==="asistente_lider"||r==="discipulador"||r==="coordinador"})}).length:0;
 var gg=gcu(m),desgloseTx="";
 if(gg.sessions){
   cu={sessions:gg.sessions,present_total:gg.total};
@@ -1486,7 +1486,7 @@ h+=foldBtn("rg_dis","📖","Informes de discipulado",di.length,"#1565C0",di.leng
 h+=foldBtn("rg_cul","⛪","Cultos y coordinación",cu.sessions,"#8E4FC7",'<p>'+cu.sessions+' domingos registrados · promedio '+av(cu)+' · '+sm(co,"n2")+' visitantes recibidos</p>'+co.filter(function(r){return r.wins}).map(function(r){return'<p class="note"><i>'+esc(r.wins)+'</i></p>'}).join(""),false);
 h+=foldBtn("rg_con","👥","Congregación hoy",P.length,"#2F9E5B",'<p>'+P.length+' personas registradas · '+nV+' visitantes · '+nB+' bautizados</p>'+(resp?'<p class="note">'+rp.length+' de '+resp+' responsables enviaron su informe.</p>':''),false);
 h+='<div class="grid2 no-print" style="margin-top:10px"><a class="btn" style="display:block;text-align:center;text-decoration:none;background:#25D366;margin:0" href="https://wa.me/?text='+encodeURIComponent(tx)+'" target="_blank" rel="noopener">💬 WhatsApp</a><button class="btn alt" style="margin:0" onclick="window.print()">🖨️ Imprimir / PDF</button></div>';return h}
-function rrev(){var m=S.rm||repM();S.rm=m;var l=MR.filter(function(x){return x.month===m}),rs=EQ.filter(function(q){return q.role==="lider"||q.role==="discipulador"||q.role==="coordinador"}),pend=rs.filter(function(q){return!l.some(function(x){return x.user_id===q.id})}),RN={lider:"Líder",discipulador:"Discipulador",coordinador:"Coordinador"};
+function rrev(){var m=S.rm||repM();S.rm=m;var l=MR.filter(function(x){return x.month===m}),rs=EQ.filter(function(q){var rList=Array.isArray(q.roles)&&q.roles.length?q.roles:[q.role];return rList.some(function(r){return r==="lider"||r==="lider_celula"||r==="asistente_lider"||r==="discipulador"||r==="coordinador"})}),pend=rs.filter(function(q){return!l.some(function(x){return x.user_id===q.id})}),RN={lider:"Líder",discipulador:"Discipulador",coordinador:"Coordinador"};
 var h='<div class="card"><h3>📥 Por revisar</h3><label class="no-print">Mes</label>'+msel(m,"S.rm=this.value;draw()")+'<p class="note">'+l.length+' de '+rs.length+' responsables enviaron su informe.</p></div>';
 if(pend.length){
   h+=foldBtn("rv_pend","⏳","Faltan por enviar",pend.length,"#E07B12",pend.map(function(q){return'<p style="margin:6px 0">'+esc(q.name||q.id)+' · '+RN[q.role]+(q.cell?" · "+esc(q.cell):"")+'</p>'}).join(""),false);
