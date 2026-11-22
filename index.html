@@ -569,7 +569,7 @@ async function load(){
   }
   MR=R[11].data||[];RP=R[12].data||[];
   if(canEditFinanzas()){IC=R[13].data||[];EC=R[14].data||[];FN=R[15].data||[]}
-  DL=(R[16]&&!R[16].error)?(R[16].data||[]):[];DP=(R[17]&&!R[17].error)?(R[17].data||[]):[];AG=(R[18]&&!R[18].error)?(R[18].data||[]):[];var dzMap=lget("general_diezmadores",{}),dzNamesMap=lget("general_diezmadores_nombres",{});AG.forEach(function(g){var k=(g.event_date||"")+"|"+(g.event||"Culto dominical");if((!g.diezmadores_nombres||!g.diezmadores_nombres.length)&&dzNamesMap[k]){g.diezmadores_nombres=dzNamesMap[k]}var nl=parseDiezmadoresList(g.diezmadores_nombres);if(nl.length){g.diezmadores=nl.length}else if(g.diezmadores==null&&dzMap[k]!=null){g.diezmadores=dzMap[k]}});AGM=(R[19]&&!R[19].error)?(R[19].data||[]):[];setT()
+  DL=(R[16]&&!R[16].error)?(R[16].data||[]):[];DP=(R[17]&&!R[17].error)?(R[17].data||[]):[];AG=(R[18]&&!R[18].error)?(R[18].data||[]):[];var dzMap=lget("general_diezmadores",{});AG.forEach(function(g){var k=(g.event_date||"")+"|"+(g.event||"Culto dominical");if(g.diezmadores==null&&dzMap[k]!=null)g.diezmadores=dzMap[k]});AGM=(R[19]&&!R[19].error)?(R[19].data||[]):[];setT()
 }
 function setT(){var t=today();S.T={};AT.forEach(function(x){if(x.event_date===t&&x.event===S.ev&&x.present)S.T[x.person_id]=true})}
 
@@ -672,57 +672,12 @@ function toggleAllAsis(val){
   draw();
 }
 var GR=[["damas","Damas","g1","#D6336C","👩"],["caballeros","Caballeros","g2","#1565C0","👨"],["ninos","Niños","g3","#E07B12","🧒"],["jovenes","Jóvenes","g4","#2F9E5B","🧑"],["ancianos","Ancianos","g5","#8E4FC7","🧓"],["visitantes","Visitantes","g6","#00897B","👋"]];var DZ=["diezmadores","Diezmadores","g7","#D4AF37","🪙"];
-function parseDiezmadoresList(val){
-  if(Array.isArray(val))return val.map(function(x){return String(x||"").trim()}).filter(Boolean);
-  if(typeof val==="string"){
-    var s=val.trim();
-    if(!s)return[];
-    if(s[0]==="["){try{var a=JSON.parse(s);if(Array.isArray(a))return a.map(function(x){return String(x||"").trim()}).filter(Boolean)}catch(e){}}
-    return s.split(/\r?\n|,/).map(function(x){return x.trim()}).filter(Boolean);
-  }
-  return[];
-}
-function addDiezmadorName(){
-  var inp=$("g7_name");if(!inp)return;
-  var nm=inp.value.trim();
-  if(!nm){toast("Escribe el nombre del diezmador");return}
-  var t=S.gd||today();
-  if(!S.dz_draft||S.dz_draft_date!==t){
-    var ex=AG.filter(function(g){return g.event_date===t&&g.event==="Culto dominical"})[0]||{};
-    S.dz_draft=parseDiezmadoresList(ex.diezmadores_nombres);
-    S.dz_draft_date=t;
-  }
-  if(S.dz_draft.some(function(x){return x.toLowerCase()===nm.toLowerCase()})){toast("Ese nombre ya está en la lista");return}
-  S.dz_draft.push(nm);
-  inp.value="";
-  draw();
-  setTimeout(function(){var el=$("g7_name");if(el)el.focus()},30);
-}
-function removeDiezmadorName(idx){
-  var t=S.gd||today();
-  if(!S.dz_draft||S.dz_draft_date!==t){
-    var ex=AG.filter(function(g){return g.event_date===t&&g.event==="Culto dominical"})[0]||{};
-    S.dz_draft=parseDiezmadoresList(ex.diezmadores_nombres);
-    S.dz_draft_date=t;
-  }
-  S.dz_draft.splice(idx,1);
-  draw();
-}
 function gtt(g){return(g.damas||0)+(g.caballeros||0)+(g.ninos||0)+(g.jovenes||0)+(g.ancianos||0)+(g.visitantes||0)}
 function gtot(){var s=0;["g1","g2","g3","g4","g5","g6"].forEach(function(i){var el=$(i);if(el)s+=parseInt(el.value)||0});$("gt").innerHTML=s}
-function gcu(m){var o={sessions:0,damas:0,caballeros:0,ninos:0,jovenes:0,ancianos:0,visitantes:0,diezmadores:0,diezmadores_list:[],total:0};
-AGM.filter(function(r){return r.month===m&&r.event==="Culto dominical"}).forEach(function(r){o.sessions+=r.sessions;GR.forEach(function(g){o[g[0]]+=r[g[0]]||0});o.diezmadores+=r.diezmadores||0;o.total+=(r.total!=null?r.total:gtt(r))});
-var agMonth=AG.filter(function(g){return g.event==="Culto dominical"&&String(g.event_date||"").slice(0,7)===m.slice(0,7)});
-if(agMonth.length){
-  var sumNames=0,allN=[];
-  agMonth.forEach(function(g){var nl=parseDiezmadoresList(g.diezmadores_nombres);sumNames+=nl.length||(g.diezmadores||0);nl.forEach(function(n){if(allN.indexOf(n)<0)allN.push(n)})});
-  if(sumNames>0)o.diezmadores=sumNames;
-  o.diezmadores_list=allN;
-}
-return o}
+function gcu(m){var o={sessions:0,damas:0,caballeros:0,ninos:0,jovenes:0,ancianos:0,visitantes:0,diezmadores:0,total:0};AGM.filter(function(r){return r.month===m&&r.event==="Culto dominical"}).forEach(function(r){o.sessions+=r.sessions;GR.forEach(function(g){o[g[0]]+=r[g[0]]||0});o.diezmadores+=r.diezmadores||0;o.total+=(r.total!=null?r.total:gtt(r))});return o}
 function gcard(m){var r=gcu(m);if(!r.sessions)return'';var av=function(x){return Math.round(x/r.sessions)};
 var items=GR.map(function(g){return{label:g[1],val:r[g[0]],color:g[3]}});
-var dzExtra='<div style="margin-top:10px;padding:10px 12px;border-radius:12px;background:var(--soft);border:1px solid var(--line)"><b>🪙 Diezmadores en el mes: '+r.diezmadores+'</b> (prom. '+av(r.diezmadores)+' por domingo)'+(r.diezmadores_list.length?'<p class="note" style="margin:6px 0 0"><b>Personas que diezmaron:</b> '+esc(r.diezmadores_list.join(", "))+'</p>':'')+'</div>';return foldBtn("inf_cnt","🍩","Distribución del conteo general",r.total,"#8E4FC7",'<p class="note">'+r.sessions+' domingos con conteo · total '+r.total+' · promedio '+av(r.total)+'</p>'+svgDonutChart(items)+dzExtra,false)}
+return foldBtn("inf_cnt","🍩","Distribución del conteo general",r.total,"#8E4FC7",'<p class="note">'+r.sessions+' domingos con conteo · total '+r.total+' · promedio '+av(r.total)+'</p>'+svgDonutChart(items),false)}
 async function gdel(id){
   if(!confirm("¿Eliminar este conteo general?"))return;
   var r=await SB.from("attendance_general").delete().eq("id",id);
@@ -730,26 +685,10 @@ async function gdel(id){
   await load();toast("Conteo eliminado");draw();
 }
 function agen(){var t=S.gd||today(),ex=AG.filter(function(g){return g.event_date===t&&g.event==="Culto dominical"})[0]||{},tot=gtt(ex);
-if(!S.dz_draft||S.dz_draft_date!==t){S.dz_draft=parseDiezmadoresList(ex.diezmadores_nombres);S.dz_draft_date=t}
-var dzList=S.dz_draft,dzTotal=dzList.length||(ex.diezmadores||0);
-var dlOpts=P.map(function(p){return'<option value="'+esc(p.name)+'">'}).join("");
-var h='<div class="card"><h3>🔢 Conteo general del culto</h3><p class="note">Anota cuántas personas hay por grupo, y registra los nombres de los diezmadores del culto.</p><label>Fecha</label><input type="date" value="'+t+'" onchange="S.gd=this.value;S.dz_draft=null;draw()">';
+var h='<div class="card"><h3>🔢 Conteo general del culto</h3><p class="note">Anota cuántas personas hay por grupo, sin nombres. Si ese mismo día tomaste asistencia por lista, usa solo una de las dos para no duplicar.</p><label>Fecha</label><input type="date" value="'+t+'" onchange="S.gd=this.value;draw()">';
 GR.forEach(function(g){h+='<label>'+g[4]+' '+g[1]+'</label><input id="'+g[2]+'" type="number" min="0" inputmode="numeric" value="'+(ex[g[0]]||0)+'" oninput="gtot()">'});
-h+='<div style="margin-top:14px;padding:14px;border-radius:14px;background:var(--soft);border:1.5px solid #D4AF37">';
-h+='<label style="margin-top:0">'+DZ[4]+' '+DZ[1]+' ('+dzList.length+' registrados)</label>';
-h+='<div style="display:flex;gap:8px;align-items:center"><input id="g7_name" list="dl_people_dz" placeholder="Escribe o elige el nombre del diezmador..." onkeydown="if(event.key==='Enter'){event.preventDefault();addDiezmadorName()}"><button type="button" class="btn sm" style="width:auto;margin:0;flex:none;background:#D4AF37;color:#1F2430" onclick="addDiezmadorName()">➕ Agregar</button></div>';
-h+='<datalist id="dl_people_dz">'+dlOpts+'</datalist>';
-if(dzList.length){
-  h+='<div style="margin-top:10px;display:flex;flex-direction:column;gap:6px">';
-  dzList.forEach(function(nm,idx){
-    h+='<div style="display:flex;justify-content:space-between;align-items:center;background:var(--card);border:1px solid var(--line);border-radius:10px;padding:8px 12px"><span><b>'+(idx+1)+'.</b> '+esc(nm)+'</span><button type="button" class="chip" style="padding:4px 10px;font-size:14px;color:#D6336C;border-color:#D6336C" onclick="removeDiezmadorName('+idx+')">✕</button></div>';
-  });
-  h+='</div>';
-}else if(ex.diezmadores>0){
-  h+='<p class="note" style="margin-top:8px">Había un conteo numérico previo de <b>'+ex.diezmadores+'</b> diezmadores sin nombres. Agrega los nombres arriba para actualizarlo.</p>';
-}
-h+='<small class="note" style="display:block;margin-top:8px">El total de diezmadores se calcula automáticamente por los nombres registrados y no duplica el total de asistentes físicos.</small></div>';
-h+='<p><b>Total asistentes: <span id="gt">'+tot+'</span> · 🪙 Diezmadores: '+dzTotal+'</b></p><label>Notas (opcional)</label><input id="gn" value="'+esc(ex.notes)+'"><button class="btn" onclick="gsave()">💾 '+(ex.id?"Actualizar conteo":"Guardar conteo")+'</button></div>';
+h+='<div style="margin-top:12px;padding:12px;border-radius:14px;background:var(--soft);border:1.5px solid var(--line)"><label style="margin-top:0">'+DZ[4]+' '+DZ[1]+' (registro del día)</label><input id="'+DZ[2]+'" type="number" min="0" inputmode="numeric" value="'+(ex[DZ[0]]||0)+'"><small class="note">Se guarda de forma independiente al total de asistentes físicos para no duplicar personas.</small></div>';
+h+='<p><b>Total asistentes: <span id="gt">'+tot+'</span> · 🪙 Diezmadores: '+(ex.diezmadores||0)+'</b></p><label>Notas (opcional)</label><input id="gn" value="'+esc(ex.notes)+'"><button class="btn" onclick="gsave()">💾 '+(ex.id?"Actualizar conteo":"Guardar conteo")+'</button></div>';
 if(AG.length){
   var last=AG[0];
   var donutItems=GR.map(function(g){return{label:g[1],val:last[g[0]]||0,color:g[3]}});
@@ -764,34 +703,12 @@ if(AG.length){
 }
 var rec=AG.slice(0,8);
 if(rec.length){
-  var recInner=rec.map(function(g){var dNames=parseDiezmadoresList(g.diezmadores_nombres);var dCnt=dNames.length||(g.diezmadores||0);return'<div class="card"><div style="display:flex;justify-content:space-between;align-items:center"><b>'+fd(g.event_date)+' · total '+gtt(g)+' · 🪙 '+dCnt+' diezmadores</b>'+(isPastor()&&g.id?'<button class="chip" style="color:#D6336C;border-color:#D6336C" onclick="gdel('+g.id+')">🗑️ Borrar</button>':'')+'</div><p class="note">Damas '+(g.damas||0)+' · Caballeros '+(g.caballeros||0)+' · Niños '+(g.ninos||0)+' · Jóvenes '+(g.jovenes||0)+' · Ancianos '+(g.ancianos||0)+' · Visitantes '+(g.visitantes||0)+' · Diezmadores '+dCnt+'</p>'+(dNames.length?'<p style="margin:6px 0 0;font-size:16px"><b>🪙 Nombres:</b> '+esc(dNames.join(", "))+'</p>':'')+'</div>'}).join("");
+  var recInner=rec.map(function(g){return'<div class="card"><div style="display:flex;justify-content:space-between;align-items:center"><b>'+fd(g.event_date)+' · total '+gtt(g)+' · 🪙 '+(g.diezmadores||0)+' diezmadores</b>'+(isPastor()&&g.id?'<button class="chip" style="color:#D6336C;border-color:#D6336C" onclick="gdel('+g.id+')">🗑️ Borrar</button>':'')+'</div><p class="note">Damas '+(g.damas||0)+' · Caballeros '+(g.caballeros||0)+' · Niños '+(g.ninos||0)+' · Jóvenes '+(g.jovenes||0)+' · Ancianos '+(g.ancianos||0)+' · Visitantes '+(g.visitantes||0)+' · Diezmadores '+(g.diezmadores||0)+'</p></div>'}).join("");
   h+=foldBtn("ag_rec","🗓️","Historial de últimos conteos",rec.length,"#00897B",recInner,false);
 }
 return h}
-async function gsave(){var t=S.gd||today(),v=function(i){var el=$(i);return el?Math.max(0,parseInt(el.value)||0):0};
-var pendingInp=$("g7_name");
-if(pendingInp&&pendingInp.value.trim()){
-  var extraNm=pendingInp.value.trim();
-  if(!S.dz_draft||S.dz_draft_date!==t)S.dz_draft=[];
-  if(!S.dz_draft.some(function(x){return x.toLowerCase()===extraNm.toLowerCase()}))S.dz_draft.push(extraNm);
-  pendingInp.value="";
-}
-var dzNames=(S.dz_draft&&S.dz_draft_date===t)?S.dz_draft.slice():[];
-var dzVal=dzNames.length;
-var d={event_date:t,event:"Culto dominical",damas:v("g1"),caballeros:v("g2"),ninos:v("g3"),jovenes:v("g4"),ancianos:v("g5"),visitantes:v("g6"),diezmadores:dzVal,diezmadores_nombres:dzNames,notes:$("gn").value.trim()};
-var dzNamesMap=lget("general_diezmadores_nombres",{});dzNamesMap[t+"|Culto dominical"]=dzNames;lset("general_diezmadores_nombres",dzNamesMap);
-var dzMap=lget("general_diezmadores",{});dzMap[t+"|Culto dominical"]=dzVal;lset("general_diezmadores",dzMap);
-var r=await SB.from("attendance_general").upsert(d,{onConflict:"event_date,event"});
-if(r.error&&r.error.message&&r.error.message.indexOf("diezmadores_nombres")>-1){
-  delete d.diezmadores_nombres;
-  r=await SB.from("attendance_general").upsert(d,{onConflict:"event_date,event"});
-}
-if(r.error&&r.error.message&&r.error.message.indexOf("diezmadores")>-1){
-  delete d.diezmadores;
-  r=await SB.from("attendance_general").upsert(d,{onConflict:"event_date,event"});
-}
-if(r.error){toast("No se pudo guardar: "+r.error.message);return}
-S.dz_draft=null;await load();toast("Conteo y diezmadores guardados ("+dzVal+")");draw()}
+async function gsave(){var t=S.gd||today(),v=function(i){var el=$(i);return el?Math.max(0,parseInt(el.value)||0):0},dzVal=v("g7"),d={event_date:t,event:"Culto dominical",damas:v("g1"),caballeros:v("g2"),ninos:v("g3"),jovenes:v("g4"),ancianos:v("g5"),visitantes:v("g6"),diezmadores:dzVal,notes:$("gn").value.trim()};
+var r=await SB.from("attendance_general").upsert(d,{onConflict:"event_date,event"});if(r.error&&r.error.message&&r.error.message.indexOf("diezmadores")>-1){delete d.diezmadores;r=await SB.from("attendance_general").upsert(d,{onConflict:"event_date,event"});if(!r.error){var dzMap=lget("general_diezmadores",{});dzMap[t+"|Culto dominical"]=dzVal;lset("general_diezmadores",dzMap);await load();toast("Conteo guardado (agrega la columna diezmadores en Supabase para sincronizar en nube)");draw();return}}if(r.error){toast("No se pudo guardar: "+r.error.message);return}await load();toast("Conteo guardado");draw()}
 function asis(){var evs=allowedEvents();if(evs.indexOf(S.ev)<0){S.ev=evs[0];setT()}
 var gen=isPastor()||isCoordinador();if(!gen)S.am="lista";
 var ch=gen?'<div class="chips"><button class="chip" aria-pressed="'+(S.am!=="gen")+'" onclick="S.am=\'lista\';draw()">✅ Lista de personas</button><button class="chip" aria-pressed="'+(S.am==="gen")+'" onclick="S.am=\'gen\';draw()">🔢 Conteo general</button></div>':'';
