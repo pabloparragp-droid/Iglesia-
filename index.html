@@ -557,6 +557,11 @@ async function load(){
   var x=R[3].data||[],mp={};
   if(pa){x.forEach(function(r){mp[r.id]=r});P.forEach(function(p){var y=mp[p.id];if(y){p.tel=y.tel;p.note=y.note;if(y.birthday)p.birthday=y.birthday;if(y.birth_date)p.birth_date=y.birth_date}})}
   else if(pd){x.forEach(function(r){mp[r.id]=r.tel});P.forEach(function(p){if(mp[p.id]!==undefined)p.tel=mp[p.id]})}
+  var localBdays=lget("member_birthdays",{});
+  P.forEach(function(p){
+    if(localBdays[p.id]){p.birthday=localBdays[p.id];p.birth_date=localBdays[p.id];}
+    if(isCoordinador()&&!pa&&!pd){delete p.tel;delete p.note;}
+  });
   AR=R[4].data||[];AM=R[5].data||[];if(!R[6].error){CE=R[6].data||[];CELLS=CE.map(function(c){return c.name})}
   AN=R[7].data||[];PR=R[8].data||[];TE=R[9].data||[];
   if(isPastor()){
@@ -650,6 +655,7 @@ if(r.error&&r.error.message&&r.error.message.indexOf("birthday")>-1){
   r=S.sel?await SB.from("people").update(d).eq("id",S.sel):await SB.from("people").insert(d);
 }
 if(r.error){toast("No se pudo guardar: "+r.error.message);return}
+if(S.sel){var bMap=lget("member_birthdays",{});if(bVal)bMap[S.sel]=bVal;else delete bMap[S.sel];lset("member_birthdays",bMap);}
 await load();S.sel=null;toast("Ficha guardada");draw()}
 
 // ===== ASISTENCIA =====
@@ -1096,7 +1102,8 @@ async function cadd(){var r=await SB.from("people").update({cell:S.ce}).eq("id",
 // ===== INICIO (LOGO TRANSPARENTE + DEVOCIONAL LEER-MEDITAR-APLICAR + CUMPLEAÑOS CON GOOGLE CALENDAR) =====
 var MS=["Enero","Febrero","Marzo","Abril","Mayo","Junio","Julio","Agosto","Septiembre","Octubre","Noviembre","Diciembre"],PV={pastor:"Solo el pastor",celula:"Mi célula",iglesia:"Toda la iglesia"};
 function fd(d){return new Date(d+"T12:00:00").toLocaleDateString("es-CO",{weekday:"short",day:"numeric",month:"short"})}
-function cane(a){return isPastor()||(isCellLeaderOrAsst()&&ME.cell&&a.audience===ME.cell)}
+function canPublishAnnouncements(){return isPastor()||isCoordinador()||(isCellLeaderOrAsst()&&ME.cell)}
+function cane(a){return isPastor()||(isCellLeaderOrAsst()&&ME.cell&&a.audience===ME.cell)||(isCoordinador()&&(a.audience==="todos"||!a.audience||a.author_id===U.id))}
 function acard(a,pinned){
   var w="https://wa.me/?text="+encodeURIComponent(a.title+(a.event_date?"\n"+fd(a.event_date)+(a.event_time?" · "+a.event_time:"")+(a.place?" · "+a.place:""):"")+(a.body?"\n"+a.body:""));
   if(S.ev_view==="lista"){
@@ -1140,9 +1147,129 @@ function bdayCard(){
   return h;
 }
 
+
+// ===== BIENVENIDA Y SUGERENCIAS PERSONALIZADAS POR ROL AL ABRIR LA APP =====
+var ROLE_GUIDE={
+  pastor:{
+    desc:"Tienes visión y administración completa de la congregación.",
+    tips:[
+      {e:"📊",t:"Revisar el Panel Pastoral y alertas de seguimiento",fn:"switchTab('panel')"},
+      {e:"📢",t:"Publicar o fijar anuncios y eventos para toda la iglesia",fn:"S.ia=0;draw()"},
+      {e:"💰",t:"Gestionar movimientos y balances en Finanzas",fn:"switchTab('fin')"},
+      {e:"⚙️",t:"Asignar roles y células en Equipo",fn:"switchTab('equipo')"}
+    ]
+  },
+  coordinador:{
+    desc:"Puedes coordinar el servicio dominical, publicar anuncios y mantener al día los cumpleaños de los miembros.",
+    tips:[
+      {e:"📢",t:"Publicar un anuncio general en Inicio",fn:"S.ia=0;draw()"},
+      {e:"🎂",t:"Agregar o actualizar cumpleaños en las tarjetas de Registro",fn:"switchTab('reg')"},
+      {e:"✅",t:"Tomar asistencia o conteo general del culto dominical",fn:"switchTab('asis')"},
+      {e:"📝",t:"Enviar tu informe mensual en Rendición",fn:"switchTab('rend')"}
+    ]
+  },
+  lider_celula:{
+    desc:"Acompañas el crecimiento y la asistencia de tu célula de cuidado.",
+    tips:[
+      {e:"✅",t:"Registrar la asistencia semanal de tu célula",fn:"switchTab('asis')"},
+      {e:"🏘️",t:"Ver participantes e historial en Células",fn:"switchTab('cel')"},
+      {e:"🗂️",t:"Actualizar el avance de tus discípulos en el Tablero",fn:"switchTab('tabl')"},
+      {e:"📢",t:"Publicar un aviso para tu célula",fn:"S.ia=0;draw()"}
+    ]
+  },
+  lider:{
+    desc:"Acompañas el crecimiento y la asistencia de tu célula de cuidado.",
+    tips:[
+      {e:"✅",t:"Registrar la asistencia semanal de tu célula",fn:"switchTab('asis')"},
+      {e:"🏘️",t:"Ver participantes e historial en Células",fn:"switchTab('cel')"},
+      {e:"🗂️",t:"Actualizar el avance de tus discípulos en el Tablero",fn:"switchTab('tabl')"},
+      {e:"📝",t:"Enviar tu informe mensual en Rendición",fn:"switchTab('rend')"}
+    ]
+  },
+  asistente_lider:{
+    desc:"Apoyas al líder en el cuidado, asistencia y seguimiento de la célula.",
+    tips:[
+      {e:"✅",t:"Tomar asistencia de la reunión de célula",fn:"switchTab('asis')"},
+      {e:"👥",t:"Consultar o actualizar fichas de tu célula en Registro",fn:"switchTab('reg')"},
+      {e:"🗂️",t:"Revisar el avance de discípulos en el Tablero",fn:"switchTab('tabl')"}
+    ]
+  },
+  discipulador:{
+    desc:"Guías paso a paso a tus discípulos en su crecimiento bíblico.",
+    tips:[
+      {e:"🗂️",t:"Mover el paso o lección de tus discípulos en el Tablero",fn:"switchTab('tabl')"},
+      {e:"📖",t:"Revisar lecciones y autoexámenes de Discipulado",fn:"S.tab='tabl';S.dl_view='lessons';draw()"},
+      {e:"📝",t:"Reportar encuentros y avances en Rendición",fn:"switchTab('rend')"}
+    ]
+  },
+  lider_alabanza:{
+    desc:"Organizas los turnos de ministración, repertorio e inventario musical.",
+    tips:[
+      {e:"🎸",t:"Programar grupo de alabanza y repertorio",fn:"S.tab='tabl';S.dl_view='alabanza';S.worship_sub='prog';draw()"},
+      {e:"🥁",t:"Revisar o actualizar inventario de instrumentos",fn:"S.tab='tabl';S.dl_view='alabanza';S.worship_sub='inv';draw()"},
+      {e:"✅",t:"Registrar asistencia de ensayo en Asistencia",fn:"switchTab('asis')"}
+    ]
+  },
+  lider_servidores:{
+    desc:"Coordinas los turnos de servicio y recepción de la iglesia.",
+    tips:[
+      {e:"✅",t:"Registrar asistencia de servidores",fn:"switchTab('asis')"},
+      {e:"💬",t:"Coordinar con el equipo en el Chat de Servidores",fn:"S.tab='com';S.cm='ch';S.chat_ch='privado';S.chat_priv_target='Servidores';draw()"},
+      {e:"🙌",t:"Unirte en oración por la congregación en Comunidad",fn:"switchTab('com')"}
+    ]
+  },
+  servidor:{
+    desc:"Sirves activamente en la casa de Dios y edificas la unidad del cuerpo.",
+    tips:[
+      {e:"🎸",t:"Consultar programación de servicio y alabanza",fn:"S.tab='tabl';S.dl_view='alabanza';draw()"},
+      {e:"🙌",t:"Orar por peticiones y compartir testimonios en Comunidad",fn:"switchTab('com')"},
+      {e:"🧩",t:"Participar en los retos bíblicos semanales",fn:"switchTab('retos')"}
+    ]
+  },
+  miembro:{
+    desc:"Eres parte viva de la familia de la fe en Iglesia ICCVGD.",
+    tips:[
+      {e:"🌅",t:"Leer el devocional diario (Leer · Meditar · Aplicar)",fn:"S.dev_modal=true;draw()"},
+      {e:"🙌",t:"Compartir peticiones de oración o testimonios en Comunidad",fn:"switchTab('com')"},
+      {e:"📖",t:"Avanzar en tus lecciones de Discipulado",fn:"S.tab='tabl';S.dl_view='lessons';draw()"},
+      {e:"🧩",t:"Resolver los retos y misterios bíblicos de la semana",fn:"switchTab('retos')"}
+    ]
+  },
+  discipulo:{
+    desc:"Estás dando pasos firmes en tu fundamento en Cristo.",
+    tips:[
+      {e:"📖",t:"Continuar tu lección y autoexamen en Discipulado",fn:"switchTab('tabl')"},
+      {e:"🌅",t:"Meditar en el devocional de hoy",fn:"S.dev_modal=true;draw()"},
+      {e:"🙌",t:"Enviar una petición de oración en Comunidad",fn:"switchTab('com')"},
+      {e:"🧩",t:"Sumar puntos en los retos bíblicos semanales",fn:"switchTab('retos')"}
+    ]
+  }
+};
+function renderRoleWelcomeCard(){
+  if(!ME)return'';
+  var firstName=(ME.name||U.email||"Hermano(a)").trim().split(/\s+/)[0];
+  var roles=myRoles();
+  var roleNames=roles.map(function(r){return(ROLE_META[r]?ROLE_META[r].emo+" "+ROLE_META[r].lbl:r)}).join(" · ");
+  var seenTips={},tips=[],descs=[];
+  roles.forEach(function(r){
+    var g=ROLE_GUIDE[r]||ROLE_GUIDE.miembro;
+    if(descs.indexOf(g.desc)<0)descs.push(g.desc);
+    g.tips.forEach(function(tp){
+      if(!seenTips[tp.t]){seenTips[tp.t]=1;tips.push(tp)}
+    });
+  });
+  var inner='<p style="margin:4px 0 8px"><b>¡Bienvenido(a), '+esc(firstName)+'!</b> Qué alegría tenerte hoy en la app de la iglesia.</p>';
+  inner+='<p class="note" style="margin-bottom:10px">Tu rol activo: <b>'+esc(roleNames)+'</b>. '+esc(descs.join(" "))+'</p>';
+  inner+='<b style="font-size:16px;color:var(--acc);display:block;margin-bottom:6px">✨ Sugerencias de lo que puedes hacer hoy:</b>';
+  inner+=tips.slice(0,5).map(function(tp){
+    return'<button class="btn alt sm" style="text-align:left;display:flex;align-items:center;justify-content:space-between;gap:8px;margin:6px 0" onclick="'+tp.fn+'"><span>'+tp.e+' '+esc(tp.t)+'</span><span>→</span></button>';
+  }).join("");
+  return foldBtn("ini_welcome","👋","Bienvenida y guía para tu rol",roles.length===1?(ROLE_META[roles[0]]?ROLE_META[roles[0]].lbl:roles[0]):roles.length+" roles","#2F9E5B",inner,true);
+}
+
 function inicio(){
   if(S.ia!=null)return aform();
-  var can=isPastor()||(isCellLeaderOrAsst()&&ME.cell),t=today(),lim=new Date(Date.now()+14*864e5).toLocaleDateString("en-CA"),yr=t.slice(0,4);
+  var can=canPublishAnnouncements(),t=today(),lim=new Date(Date.now()+14*864e5).toLocaleDateString("en-CA"),yr=t.slice(0,4);
   var prox=AN.filter(function(a){return a.kind==="evento"&&a.event_date>=t&&a.event_date<=lim});
   var rawAv=AN.filter(function(a){return a.kind==="anuncio"});
   var pinnedAv=rawAv.filter(function(a){return a.annual}).sort(function(a,b){return b.created_at>a.created_at?1:-1});
@@ -1150,6 +1277,7 @@ function inicio(){
   var an=AN.filter(function(a){return a.annual&&a.event_date&&a.event_date.slice(0,4)===yr});
 
   var h='<div class="card t-azul" style="text-align:center"><img class="hero-transp-logo" src="icon-192.png" alt="Logo Iglesia ICCVGD" onerror="this.style.display=\'none\'"><b>Iglesia Cristiana ICCVGD</b><p class="note">En Cristo somos nueva creación para servir en unidad.</p><div class="grid2" style="margin-top:8px"><button class="btn sm" style="margin:0;background:#1565C0" onclick="S.dev_modal=true;draw()">🌅 Devocional de hoy</button><button class="btn alt sm" style="margin:0" onclick="S.tr_modal=true;draw()">🧭 Principios clave</button></div></div>';
+  h+=renderRoleWelcomeCard();
 
   h+=notiCard()+(can?'<button class="btn" onclick="S.ia=0;draw()">➕ Publicar anuncio o evento</button>':'');
 
@@ -1180,10 +1308,12 @@ function inicio(){
   h+=foldBtn("ini_cal","🗓️","Calendario del año "+yr,an.length,"#8E4FC7",calInner,false);
   return h
 }
-function aform(){var pa=isPastor(),a=S.ia?AN.filter(function(x){return x.id===S.ia})[0]:{kind:"evento",title:"",body:"",event_date:"",event_time:"",place:"",annual:false,audience:pa?"todos":ME.cell};if(!a){S.ia=null;return inicio()}
+function aform(){var pa=isPastor(),co=isCoordinador()&&!pa&&!isCellLeaderOrAsst(),defKind=co?"anuncio":"evento",defAud=(pa||co)?"todos":ME.cell,a=S.ia?AN.filter(function(x){return x.id===S.ia})[0]:{kind:defKind,title:"",body:"",event_date:"",event_time:"",place:"",annual:false,audience:defAud};if(!a){S.ia=null;return inicio()}
 var o=function(v,l,s){return'<option value="'+esc(v)+'"'+(s===v?" selected":"")+'>'+esc(l)+'</option>'};
-return'<div class="card"><h3>📝 '+(S.ia?"Editar publicación":"Publicar")+'</h3><label>Tipo</label><select id="at">'+o("evento","Evento (con fecha)",a.kind)+o("anuncio","Anuncio",a.kind)+'</select><label>Título</label><input id="ati" value="'+esc(a.title)+'"><label>Detalle (usa Enter para separar líneas o ítems)</label><textarea id="ab" rows="4">'+esc(a.body)+'</textarea><label>Fecha (opcional en anuncios)</label><input id="ad" type="date" value="'+esc(a.event_date)+'"><label>Hora</label><input id="ah" value="'+esc(a.event_time)+'" placeholder="Ej. 6:00 p. m."><label>Lugar</label><input id="ap" value="'+esc(a.place)+'">'+(pa?'<label>Dirigido a</label><select id="au">'+o("todos","Toda la iglesia",a.audience)+CELLS.map(function(c){return o(c,c,a.audience)}).join("")+'</select><label style="display:flex;gap:8px;align-items:center"><input id="aa" type="checkbox" style="width:22px;height:22px"'+(a.annual?" checked":"")+'> Fijar anuncio / Actividad principal del año</label>':'<p class="note">Se publicará para '+esc(ME.cell)+'.</p>')+'<button class="btn" onclick="asave()">💾 Guardar</button>'+(S.ia?'<button class="btn alt" onclick="adel()">🗑️ Eliminar</button>':'')+'<button class="btn alt" onclick="S.ia=null;draw()">Cancelar</button></div>'}
-async function asave(){var ti=$("ati").value.trim();if(!ti){toast("Escribe el título");return}var pa=isPastor(),d={kind:$("at").value,title:ti,body:$("ab").value,event_date:$("ad").value||null,event_time:$("ah").value,place:$("ap").value,audience:pa?$("au").value:ME.cell,annual:pa&&$("aa").checked};
+var tipoOpts=co?o("anuncio","Anuncio",a.kind):o("evento","Evento (con fecha)",a.kind)+o("anuncio","Anuncio",a.kind);
+var audHtml=(pa||co)?'<label>Dirigido a</label><select id="au">'+o("todos","Toda la iglesia",a.audience)+CELLS.map(function(c){return o(c,c,a.audience)}).join("")+'</select>'+(pa?'<label style="display:flex;gap:8px;align-items:center"><input id="aa" type="checkbox" style="width:22px;height:22px"'+(a.annual?" checked":"")+'> Fijar anuncio / Actividad principal del año</label>':''):'<p class="note">Se publicará para '+esc(ME.cell)+'.</p>';
+return'<div class="card"><h3>📝 '+(S.ia?"Editar publicación":"Publicar")+'</h3><label>Tipo</label><select id="at">'+tipoOpts+'</select><label>Título</label><input id="ati" value="'+esc(a.title)+'"><label>Detalle (usa Enter para separar líneas o ítems)</label><textarea id="ab" rows="4">'+esc(a.body)+'</textarea><label>Fecha (opcional en anuncios)</label><input id="ad" type="date" value="'+esc(a.event_date)+'"><label>Hora</label><input id="ah" value="'+esc(a.event_time)+'" placeholder="Ej. 6:00 p. m."><label>Lugar</label><input id="ap" value="'+esc(a.place)+'">'+audHtml+'<button class="btn" onclick="asave()">💾 Guardar</button>'+(S.ia?'<button class="btn alt" onclick="adel()">🗑️ Eliminar</button>':'')+'<button class="btn alt" onclick="S.ia=null;draw()">Cancelar</button></div>'}
+async function asave(){var ti=$("ati").value.trim();if(!ti){toast("Escribe el título");return}var pa=isPastor(),co=isCoordinador()&&!pa&&!isCellLeaderOrAsst(),d={kind:co?"anuncio":$("at").value,title:ti,body:$("ab").value,event_date:$("ad").value||null,event_time:$("ah").value,place:$("ap").value,audience:(pa||co)?($("au")?$("au").value:"todos"):ME.cell,annual:pa&&$("aa")&&$("aa").checked};
 if(d.kind==="evento"&&!d.event_date){toast("Elige la fecha del evento");return}
 var r=S.ia?await SB.from("announcements").update(d).eq("id",S.ia):await SB.from("announcements").insert(d);
 if(r.error){toast("No se pudo guardar: "+r.error.message);return}await load();S.ia=null;toast("Publicado");draw()}
@@ -1254,9 +1384,34 @@ async function tpub(id){var r=await SB.from("testimonies").update({status:"publi
 async function tdel(id){if(!confirm("¿Eliminar este testimonio?"))return;var r=await SB.from("testimonies").delete().eq("id",id);if(r.error){toast("Error: "+r.error.message);return}await load();draw()}
 
 function rdet(){var p=P.filter(function(x){return x.id===S.sel})[0];if(!p){S.sel=null;return reg()}
-var b=p.birthday||p.birth_date;
+var b=p.birthday||p.birth_date||"";
 var calUrl=buildBirthdayCalUrl(p);
-return'<div class="card"><h3>'+esc(p.name)+'</h3><p class="note">'+esc(p.stage)+' · '+esc(p.cell||"Sin célula")+(p.lvl?" · "+esc(p.lvl):"")+'</p><p>Bautismo: '+(p.bap?"Bautizado":"Sin bautizar")+'</p>'+(b?'<p>🎂 Cumpleaños: '+fd(b)+'</p>':'')+(calUrl?'<a class="btn alt sm" style="display:block;text-align:center;text-decoration:none" href="'+calUrl+'" target="_blank" rel="noopener">📅 Agregar cumpleaños a Google Calendar</a>':'')+(p.tel?'<p>Teléfono: '+esc(p.tel)+'</p>'+wab(p,"al_dia"):'')+'<button class="btn alt" onclick="S.sel=null;draw()">← Volver</button></div>'}
+var coordOnly=isCoordinador()&&!canEdit(p);
+var h='<div class="card"><h3>'+esc(p.name)+'</h3><p class="note">'+esc(p.stage)+' · '+esc(p.cell||"Sin célula")+'</p>';
+if(coordOnly){
+  h+='<div style="margin:12px 0;padding:12px;border-radius:14px;background:var(--soft);border:1.5px solid var(--line)"><label style="margin-top:0">🎂 Fecha de cumpleaños</label><input id="coord_bd" type="date" value="'+esc(b)+'"><button class="btn sm" onclick="saveCoordBirthday('+p.id+')">💾 Guardar cumpleaños</button><small class="note" style="display:block;margin-top:6px">🔒 Por privacidad de rol, los demás datos personales de la ficha están restringidos.</small></div>';
+  if(calUrl)h+='<a class="btn alt sm" style="display:block;text-align:center;text-decoration:none" href="'+calUrl+'" target="_blank" rel="noopener">📅 Agregar cumpleaños a Google Calendar</a>';
+}else{
+  h+=(p.lvl?'<p class="note">Avance: '+esc(p.lvl)+'</p>':'')+'<p>Bautismo: '+(p.bap?"Bautizado":"Sin bautizar")+'</p>'+(b?'<p>🎂 Cumpleaños: '+fd(b)+'</p>':'')+(calUrl?'<a class="btn alt sm" style="display:block;text-align:center;text-decoration:none" href="'+calUrl+'" target="_blank" rel="noopener">📅 Agregar cumpleaños a Google Calendar</a>':'')+(p.tel?'<p>Teléfono: '+esc(p.tel)+'</p>'+wab(p,"al_dia"):'');
+}
+h+='<button class="btn alt" onclick="S.sel=null;draw()">← Volver</button></div>';
+return h}
+async function saveCoordBirthday(personId){
+  var val=$("coord_bd")?$("coord_bd").value||null:null;
+  var map=lget("member_birthdays",{});
+  if(val)map[personId]=val;else delete map[personId];
+  lset("member_birthdays",map);
+  var r=await SB.rpc("set_member_birthday",{p_id:personId,p_birthday:val});
+  if(r.error){
+    var r2=await SB.from("people").update({birthday:val}).eq("id",personId);
+    if(r2.error&&r2.error.message&&r2.error.message.indexOf("birthday")>-1){
+      await SB.from("people").update({birth_date:val}).eq("id",personId);
+    }
+  }
+  await load();
+  toast(val?"🎂 Cumpleaños actualizado en la tarjeta":"Cumpleaños borrado");
+  draw();
+}
 
 // ===== INFORME MENSUAL =====
 function informe0(){var ms=[],cur=today().slice(0,7)+"-01";AR.forEach(function(r){if(ms.indexOf(r.month)<0)ms.push(r.month)});AGM.forEach(function(r){if(ms.indexOf(r.month)<0)ms.push(r.month)});if(ms.indexOf(cur)<0)ms.push(cur);ms.sort().reverse();if(!S.im||ms.indexOf(S.im)<0)S.im=ms[0];
@@ -1640,7 +1795,7 @@ var r=await SB.from("people").delete().eq("id",p.id);if(r.error){toast("No se pu
 
 function equipo(){
   var o=function(a,v){return a.map(function(x){return'<option'+(x===v?" selected":"")+'>'+x+'</option>'}).join("")};
-  var reglas='<p class="note">Puedes asignar uno o varios roles: Pastor, Líder de célula, Asistente de líder, Líder de alabanza, Líder de servidores, Coordinador, Discipulador, Servidor y Miembro. Solo el Pastor ve Finanzas; solo el Pastor y el Líder de alabanza ven el inventario de instrumentos.</p>';
+  var reglas='<p class="note">Puedes asignar uno o varios roles: Pastor, Líder de célula, Asistente de líder, Líder de alabanza, Líder de servidores, Coordinador (publica anuncios y edita cumpleaños sin ver datos restringidos de miembros), Discipulador, Servidor y Miembro. Solo el Pastor ve Finanzas; solo el Pastor y el Líder de alabanza ven el inventario de instrumentos.</p>';
   var h='<button class="btn alt" style="margin:8px 0" onclick="switchTab(\'ini\')">← Volver a Inicio</button><div class="card"><h3>⚙️ Equipo de líderes ('+EQ.length+')</h3></div>'+foldBtn("eq_reg","📜","Reglas de roles y permisos",null,"#1565C0",reglas,false);
   return h+EQ.map(function(q){
     var me=q.id===U.id;
