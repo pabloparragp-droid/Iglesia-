@@ -238,7 +238,7 @@ function getWeeklyRS(){
 }
 var RS=getWeeklyRS();
 
-var S={tab:"ini",im:null,rd:null,rm:null,mm:null,ft:null,fm:null,fy:"all",rec:false,pw:false,q:"",aq:"",f:"Todos",fc:"Todas",fb:"Todos",sel:null,tb:null,lv:1,ia:null,cm:"or",pn:false,tn:false,T:{},rs:null,ri:0,cl:1,bad:[],ok:false,ev:"Culto dominical",dl_view:null,dl_open:null,dl_ans:{},dl_ed:null,dl_q:[],am:"lista",gd:null,more:false,pcell:"Todas",prayed:{},grad_name:"",tb_fold:{1:true},tb_lvl_filter:0,tb_disc_filter:"todos",ev_view:"tarjetas",dev_modal:false,tr_modal:false,chat_ch:"general",chat_priv_target:"",chat_msgs:[],worship_prog:[],worship_inv:[],worship_sub:"prog"},U=null,ME=null,P=[],AT=[],EQ=[],AN=[],PR=[],TE=[],AR=[],AM=[],MR=[],RP=[],IC=[],EC=[],FN=[],DL=[],DP=[],AG=[],AGM=[],R0={},$=function(i){return document.getElementById(i)};
+var S={tab:"ini",im:null,rd:null,rm:null,mm:null,ft:null,fm:null,fy:"all",rec:false,pw:false,q:"",aq:"",f:"Todos",fc:"Todas",fb:"Todos",sel:null,tb:null,lv:1,ia:null,cm:"or",pn:false,tn:false,T:{},rs:null,ri:0,cl:1,bad:[],ok:false,ev:"Culto dominical",dl_view:null,dl_open:null,dl_ans:{},dl_ed:null,dl_q:[],am:"lista",gd:null,more:false,pcell:"Todas",prayed:{},grad_name:"",tb_fold:{1:true},tb_lvl_filter:0,tb_disc_filter:"todos",ev_view:"tarjetas",dev_modal:false,tr_modal:false,chat_ch:"general",chat_priv_target:"",chat_msgs:[],worship_prog:[],worship_inv:[],worship_sub:"prog",retiro_cfg:{nombre:"Retiro Espiritual Iglesia ICCVGD",fecha:"",tarifa:0,lugar:"",notas:""},retiro_list:[],retiro_q:"",retiro_f:"todos"},U=null,ME=null,P=[],AT=[],EQ=[],AN=[],PR=[],TE=[],AR=[],AM=[],MR=[],RP=[],IC=[],EC=[],FN=[],DL=[],DP=[],AG=[],AGM=[],R0={},$=function(i){return document.getElementById(i)};
 
 // ===== TEMA CLARO / OSCURO =====
 function getTheme(){return localStorage.getItem("iccvgd_theme")||(window.matchMedia&&window.matchMedia("(prefers-color-scheme:dark)").matches?"dark":"light")}
@@ -257,6 +257,7 @@ var ROLE_META={
   pastor:{lbl:"Pastor",emo:"⛪"},
   tesorero:{lbl:"Tesorero",emo:"💼"},
   lider_alabanza:{lbl:"Líder de alabanza",emo:"🎸"},
+  asistencia_alabanza:{lbl:"Asistencia de alabanza",emo:"🎤"},
   lider_servidores:{lbl:"Líder de servidores",emo:"🛡️"},
   lider_celula:{lbl:"Líder de célula",emo:"🏘️"},
   asistente_lider:{lbl:"Asistente de líder",emo:"🤝"},
@@ -280,6 +281,7 @@ function hasRole(r){return myRoles().indexOf(r)>-1}
 function isPastor(){return hasRole("pastor")}
 function isTesorero(){return isPastor()}
 function isWorshipLeader(){return isPastor()||hasRole("lider_alabanza")}
+function isWorshipAsis(){return isPastor()||hasRole("lider_alabanza")||hasRole("asistencia_alabanza")}
 function isServersLeader(){return isPastor()||hasRole("lider_servidores")}
 function isLider(){return hasRole("lider")||hasRole("lider_celula")}
 function isAsistenteLider(){return hasRole("asistente_lider")}
@@ -287,7 +289,7 @@ function isCellLeaderOrAsst(){return isLider()||isAsistenteLider()}
 function isCoordinador(){return hasRole("coordinador")}
 function isDiscipulador(){return hasRole("discipulador")}
 function isMiembro(){return hasRole("miembro")}
-function isServidor(){return hasRole("servidor")||isWorshipLeader()||isServersLeader()}
+function isServidor(){return hasRole("servidor")||isWorshipAsis()||isServersLeader()}
 function canEditFinanzas(){return isPastor()}
 
 // ===== BOTONES PLEGABLES DE IDENTIDAD PARA EVITAR SATURACIÓN =====
@@ -516,7 +518,7 @@ async function out(){await SB.auth.signOut();ME=null;U=null;P=[];draw()}
 async function boot(){
   S.chat_msgs=lget("chat_msgs",[]);
   S.worship_prog=lget("worship_prog",[]);
-  S.worship_inv=lget("worship_inv",[]);
+  S.worship_inv=lget("worship_inv",[]);S.retiro_cfg=lget("retiro_cfg",{nombre:"Retiro Espiritual Iglesia ICCVGD",fecha:"",tarifa:0,lugar:"",notas:""});S.retiro_list=lget("retiro_list",[]);
   var s=await SB.auth.getSession();U=s.data.session&&s.data.session.user;if(!U){ME=null;draw();return}
   var r=await SB.from("profiles").select("*").eq("id",U.id).single();
   var rawMe=r.data||{role:"pendiente",cell:null,name:""};
@@ -667,7 +669,7 @@ function allowedEvents(){
     if(isCoordinador()){evs.push("Culto dominical")}
     if(isCellLeaderOrAsst()){evs.push("Célula")}
     if(isDiscipulador()){evs.push("Discipulado")}
-    if(isWorshipLeader()||isServersLeader()){evs.push("Alabanza y servidores")}
+    if(isWorshipAsis()||isServersLeader()){evs.push("Alabanza y servidores")}
   }
   return evs.length?evs:["Culto dominical"];
 }
@@ -818,18 +820,19 @@ function retos(){
 // ===== TABLERO TIPO TRELLO POR NIVELES 1, 2 Y 3 (CON ID 1 LETRA + 1 NÚMERO CONSECUTIVO) =====
 var LV=["Nivel 1 · Básico","Nivel 2 · Intermedio","Nivel 3 · Avanzado","Nivel 4 · Ministerio","Sirviendo en la iglesia"],MX={1:8,2:12,3:12,4:12,5:12},SC={al_dia:["#2F9E5B","Al día"],atrasado:["#E07B12","Atrasado"],llamada:["#D6336C","Llamar o visitar"],listo:["#1565C0","Listo para subir"]},SO=["llamada","atrasado","listo","al_dia"];
 var RT={
-  pastor:["ini","reg","asis","panel","cel","tabl","inf","rend","com","retos","fin","equipo"],
-  tesorero:["ini","reg","panel","cel","tabl","inf","rend","com","retos"],
-  lider_alabanza:["ini","reg","asis","panel","cel","tabl","inf","rend","com","retos"],
-  lider_servidores:["ini","reg","asis","panel","cel","tabl","inf","rend","com","retos"],
-  lider_celula:["ini","reg","asis","panel","cel","tabl","inf","rend","com","retos"],
-  asistente_lider:["ini","reg","asis","panel","cel","tabl","inf","rend","com","retos"],
-  lider:["ini","reg","asis","panel","cel","tabl","inf","rend","com","retos"],
-  coordinador:["ini","reg","asis","panel","cel","tabl","inf","rend","com","retos"],
-  discipulador:["ini","reg","panel","cel","tabl","inf","rend","com","retos"],
-  servidor:["ini","reg","panel","cel","tabl","inf","rend","com","retos"],
-  miembro:["ini","reg","panel","cel","tabl","inf","rend","com","retos"],
-  discipulo:["ini","reg","panel","cel","tabl","inf","rend","com","retos"]
+  pastor:["ini","reg","asis","retiro","panel","cel","tabl","inf","rend","com","retos","fin","equipo"],
+  tesorero:["ini","reg","retiro","panel","cel","tabl","inf","rend","com","retos"],
+  lider_alabanza:["ini","reg","asis","retiro","panel","cel","tabl","inf","rend","com","retos"],
+  asistencia_alabanza:["ini","reg","asis","retiro","panel","cel","tabl","inf","rend","com","retos"],
+  lider_servidores:["ini","reg","asis","retiro","panel","cel","tabl","inf","rend","com","retos"],
+  lider_celula:["ini","reg","asis","retiro","panel","cel","tabl","inf","rend","com","retos"],
+  asistente_lider:["ini","reg","asis","retiro","panel","cel","tabl","inf","rend","com","retos"],
+  lider:["ini","reg","asis","retiro","panel","cel","tabl","inf","rend","com","retos"],
+  coordinador:["ini","reg","asis","retiro","panel","cel","tabl","inf","rend","com","retos"],
+  discipulador:["ini","reg","retiro","panel","cel","tabl","inf","rend","com","retos"],
+  servidor:["ini","reg","retiro","panel","cel","tabl","inf","rend","com","retos"],
+  miembro:["ini","reg","retiro","panel","cel","tabl","inf","rend","com","retos"],
+  discipulo:["ini","reg","retiro","panel","cel","tabl","inf","rend","com","retos"]
 };
 function allowedTabsForMe(){
   var out=[];
@@ -1156,6 +1159,7 @@ var ROLE_GUIDE={
       {e:"📊",t:"Revisar el Panel Pastoral y alertas de seguimiento",fn:"switchTab('panel')"},
       {e:"📢",t:"Publicar o fijar anuncios y eventos para toda la iglesia",fn:"S.ia=0;draw()"},
       {e:"💰",t:"Gestionar movimientos y balances en Finanzas",fn:"switchTab('fin')"},
+      {e:"⛺",t:"Gestionar confirmaciones y abonos en Retiro",fn:"switchTab('retiro')"},
       {e:"⚙️",t:"Asignar roles y células en Equipo",fn:"switchTab('equipo')"}
     ]
   },
@@ -1200,6 +1204,14 @@ var ROLE_GUIDE={
       {e:"🗂️",t:"Mover el paso o lección de tus discípulos en el Tablero",fn:"switchTab('tabl')"},
       {e:"📖",t:"Revisar lecciones y autoexámenes de Discipulado",fn:"S.tab='tabl';S.dl_view='lessons';draw()"},
       {e:"📝",t:"Reportar encuentros y avances en Rendición",fn:"switchTab('rend')"}
+    ]
+  },
+  asistencia_alabanza:{
+    desc:"Registras la asistencia del equipo de alabanza en ensayos y servicios.",
+    tips:[
+      {e:"✅",t:"Tomar asistencia de Alabanza y servidores",fn:"switchTab('asis')"},
+      {e:"🎸",t:"Consultar programación del grupo de alabanza",fn:"S.tab='tabl';S.dl_view='alabanza';draw()"},
+      {e:"⛺",t:"Revisar inscripciones y abonos del Retiro",fn:"switchTab('retiro')"}
     ]
   },
   lider_alabanza:{
@@ -1795,7 +1807,7 @@ var r=await SB.from("people").delete().eq("id",p.id);if(r.error){toast("No se pu
 
 function equipo(){
   var o=function(a,v){return a.map(function(x){return'<option'+(x===v?" selected":"")+'>'+x+'</option>'}).join("")};
-  var reglas='<p class="note">Puedes asignar uno o varios roles: Pastor, Líder de célula, Asistente de líder, Líder de alabanza, Líder de servidores, Coordinador (publica anuncios y edita cumpleaños sin ver datos restringidos de miembros), Discipulador, Servidor y Miembro. Solo el Pastor ve Finanzas; solo el Pastor y el Líder de alabanza ven el inventario de instrumentos.</p>';
+  var reglas='<p class="note">Puedes asignar uno o varios roles: Pastor, Líder de célula, Asistente de líder, Líder de alabanza, Asistencia de alabanza, Líder de servidores, Coordinador (publica anuncios y edita cumpleaños sin ver datos restringidos de miembros), Discipulador, Servidor y Miembro. Solo el Pastor ve Finanzas; solo el Pastor y el Líder de alabanza ven el inventario de instrumentos.</p>';
   var h='<button class="btn alt" style="margin:8px 0" onclick="switchTab(\'ini\')">← Volver a Inicio</button><div class="card"><h3>⚙️ Equipo de líderes ('+EQ.length+')</h3></div>'+foldBtn("eq_reg","📜","Reglas de roles y permisos",null,"#1565C0",reglas,false);
   return h+EQ.map(function(q){
     var me=q.id===U.id;
@@ -1815,7 +1827,7 @@ function mapDbRole(selRoles){
   }
   if(selRoles.indexOf("lider_celula")>-1||selRoles.indexOf("asistente_lider")>-1)return"lider";
   if(selRoles.indexOf("miembro")>-1)return"discipulo";
-  if(selRoles.indexOf("tesorero")>-1||selRoles.indexOf("lider_alabanza")>-1||selRoles.indexOf("lider_servidores")>-1)return"servidor";
+  if(selRoles.indexOf("tesorero")>-1||selRoles.indexOf("lider_alabanza")>-1||selRoles.indexOf("asistencia_alabanza")>-1||selRoles.indexOf("lider_servidores")>-1)return"servidor";
   return"pendiente";
 }
 async function saveq(id){
@@ -1837,6 +1849,248 @@ async function saveq(id){
   await load();toast("Equipo actualizado");draw()
 }
 
+
+// ===== CONTROL DE RETIRO DE IGLESIA (TARIFA, CONFIRMADOS, ABONOS, SALDOS Y MEDIOS DE PAGO) =====
+function canManageRetiro(){return isPastor()||isCoordinador()||isCellLeaderOrAsst()}
+function retiroTotales(){
+  var tarifa=Math.max(0,Number(S.retiro_cfg.tarifa)||0);
+  var list=S.retiro_list||[];
+  var confirmados=list.filter(function(x){return x.confirmado});
+  var abonaron=list.filter(function(x){return(Number(x.abono)||0)>0});
+  var recaudado=list.reduce(function(s,x){return s+(Number(x.abono)||0)},0);
+  var esperado=confirmados.reduce(function(s,x){
+    var tInd=(x.tarifa_ind!=null&&x.tarifa_ind!=="")?Number(x.tarifa_ind):tarifa;
+    return s+Math.max(0,tInd);
+  },0);
+  var deudaTotal=confirmados.reduce(function(s,x){
+    var tInd=(x.tarifa_ind!=null&&x.tarifa_ind!=="")?Number(x.tarifa_ind):tarifa;
+    var deb=Math.max(0,tInd-(Number(x.abono)||0));
+    return s+deb;
+  },0);
+  return{tarifa:tarifa,totalReg:list.length,confirmados:confirmados.length,abonaron:abonaron.length,recaudado:recaudado,esperado:esperado,deudaTotal:deudaTotal};
+}
+function saveRetiroCfg(){
+  S.retiro_cfg={
+    nombre:($("rt_nom").value.trim()||"Retiro Espiritual"),
+    fecha:$("rt_fec").value||"",
+    tarifa:Math.max(0,parseFloat($("rt_tar").value)||0),
+    lugar:$("rt_lug").value.trim(),
+    notas:$("rt_not").value.trim()
+  };
+  lset("retiro_cfg",S.retiro_cfg);
+  toast("Tarifa y datos del retiro guardados");
+  draw();
+}
+function addRetiroInscrito(){
+  var pid=$("rt_psel")?$("rt_psel").value:"";
+  var nomCustom=$("rt_pnom")?$("rt_pnom").value.trim():"";
+  var nombre="",tel="",cell="";
+  if(pid){
+    var pObj=P.filter(function(p){return String(p.id)===String(pid)})[0];
+    if(pObj){nombre=pObj.name;tel=pObj.tel||"";cell=pObj.cell||"";}
+  }else if(nomCustom){
+    nombre=nomCustom;
+    tel=$("rt_ptel")?$("rt_ptel").value.trim():"";
+  }
+  if(!nombre){toast("Selecciona una persona o escribe el nombre");return}
+  var yaExiste=S.retiro_list.some(function(x){return(pid&&String(x.person_id)===String(pid))||x.nombre.toLowerCase()===nombre.toLowerCase()});
+  if(yaExiste){toast("Esta persona ya está en la lista del retiro");return}
+  var conf=$("rt_pconf")?$("rt_pconf").checked:true;
+  var abono=Math.max(0,parseFloat($("rt_pabo").value)||0);
+  var medio=$("rt_pmed")?$("rt_pmed").value:"Efectivo";
+  var nota=$("rt_pnot")?$("rt_pnot").value.trim():"";
+  var abonosHist=abono>0?[{fecha:today(),monto:abono,medio:medio,nota:nota||"Abono inicial"}]:[];
+  S.retiro_list.unshift({
+    id:Date.now(),
+    person_id:pid||null,
+    nombre:nombre,
+    tel:tel,
+    cell:cell,
+    confirmado:conf,
+    abono:abono,
+    medio:abono>0?medio:"Sin abono",
+    abonos:abonosHist,
+    nota:nota
+  });
+  lset("retiro_list",S.retiro_list);
+  toast("Inscripción agregada al retiro");
+  draw();
+}
+function registrarAbonoRetiro(id){
+  var item=S.retiro_list.filter(function(x){return x.id===id})[0];
+  if(!item)return;
+  var montoEl=$("ab_m_"+id),medEl=$("ab_w_"+id),notEl=$("ab_n_"+id);
+  var monto=montoEl?parseFloat(montoEl.value)||0:0;
+  if(!(monto>0)){toast("Escribe un valor de abono mayor a cero");return}
+  var medio=medEl?medEl.value:"Efectivo";
+  var nota=notEl?notEl.value.trim():"";
+  item.abono=(Number(item.abono)||0)+monto;
+  item.medio=medio;
+  item.confirmado=true;
+  if(!Array.isArray(item.abonos))item.abonos=[];
+  item.abonos.push({fecha:today(),monto:monto,medio:medio,nota:nota});
+  lset("retiro_list",S.retiro_list);
+  toast("Abono de "+FM(monto)+" registrado ("+medio+")");
+  draw();
+}
+function toggleConfirmRetiro(id){
+  var item=S.retiro_list.filter(function(x){return x.id===id})[0];
+  if(!item)return;
+  item.confirmado=!item.confirmado;
+  lset("retiro_list",S.retiro_list);
+  toast(item.confirmado?"Asistencia confirmada":"Marcado como pendiente por confirmar");
+  draw();
+}
+function delRetiroItem(id){
+  if(!confirm("¿Quitar a esta persona del control del retiro?"))return;
+  S.retiro_list=S.retiro_list.filter(function(x){return x.id!==id});
+  lset("retiro_list",S.retiro_list);
+  toast("Registro eliminado");
+  draw();
+}
+function exportRetiroCSV(){
+  var tot=retiroTotales(),q=function(s){return'"'+String(s==null?"":s).replace(/"/g,'""')+'"'};
+  var c="Nombre,Célula,Confirmado,Tarifa Estimada,Total Abonado,Saldo Pendiente,Último Medio de Abono,Detalle Abonos,Notas\n";
+  S.retiro_list.forEach(function(x){
+    var tInd=(x.tarifa_ind!=null&&x.tarifa_ind!=="")?Number(x.tarifa_ind):tot.tarifa;
+    var ab=Number(x.abono)||0;
+    var deb=Math.max(0,tInd-ab);
+    var det=(x.abonos||[]).map(function(a){return a.fecha+": "+a.monto+" ("+a.medio+")"}).join(" | ");
+    c+=[q(x.nombre),q(x.cell||""),q(x.confirmado?"Sí":"No"),tInd,ab,deb,q(x.medio||""),q(det),q(x.nota||"")].join(",")+"\n";
+  });
+  c+="\nConfirmados,"+tot.confirmados+"\nTotal Recaudado,"+tot.recaudado+"\nSaldo Total por Cobrar,"+tot.deudaTotal+"\n";
+  var a=document.createElement("a");
+  a.href=URL.createObjectURL(new Blob(["\ufeff"+c],{type:"text/csv;charset=utf-8"}));
+  a.download="control_retiro_"+today()+".csv";
+  a.click();
+  toast("Reporte de retiro exportado en CSV");
+}
+function retiro(){
+  var canEd=canManageRetiro(),cfg=S.retiro_cfg,tot=retiroTotales();
+  var MEDIOS=["Efectivo","Nequi","Daviplata","Bre-B","Transferencia bancaria","Otro"];
+  var h='<button class="btn alt no-print" style="margin:8px 0" onclick="switchTab(\'ini\')">← Volver a Inicio</button>';
+  h+='<div class="card t-azul"><span class="pill" style="background:#1565C0">⛺ Control de Retiro</span><h3 style="margin-top:8px">'+esc(cfg.nombre||"Retiro de Iglesia")+'</h3>';
+  h+='<p class="note">'+(cfg.fecha?'📅 '+fd(cfg.fecha)+' · ':'')+(cfg.lugar?'📍 '+esc(cfg.lugar)+' · ':'')+'Tarifa estimada: <b>'+FM(tot.tarifa)+'</b> por persona</p>';
+  if(cfg.notas)h+='<p class="note">📝 '+esc(cfg.notas)+'</p>';
+  h+='</div>';
+
+  h+='<div class="stats">'
+    +'<div class="stat" style="background:#1565C0"><b>'+tot.confirmados+'</b>Confirmados</div>'
+    +'<div class="stat" style="background:#2F9E5B"><b>'+tot.abonaron+'</b>Con abono</div>'
+    +'<div class="stat" style="background:#00897B"><b>'+FM(tot.recaudado)+'</b>Total abonado</div>'
+    +'<div class="stat" style="background:'+(tot.deudaTotal>0?'#E07B12':'#2F9E5B')+'"><b>'+FM(tot.deudaTotal)+'</b>Total que deben</div>'
+    +'</div>';
+
+  // Distribución por medio de pago
+  var byMedio={};
+  S.retiro_list.forEach(function(x){
+    (x.abonos||[]).forEach(function(a){
+      var m=a.medio||"Efectivo";
+      byMedio[m]=(byMedio[m]||0)+(Number(a.monto)||0);
+    });
+  });
+  var medKeys=Object.keys(byMedio);
+  if(medKeys.length){
+    var medColors={"Efectivo":"#2F9E5B","Nequi":"#8E4FC7","Daviplata":"#D6336C","Bre-B":"#1565C0","Transferencia bancaria":"#00897B","Otro":"#E07B12"};
+    var medDonut=medKeys.map(function(k){return{label:k,val:Math.round(byMedio[k]),color:medColors[k]||"#1565C0"}});
+    h+=foldBtn("rt_med_chart","💳","Recaudo por forma de abono",FM(tot.recaudado),"#8E4FC7",svgDonutChart(medDonut),false);
+  }
+
+  if(canEd){
+    var cfgInner='<label style="margin-top:0">Nombre del retiro</label><input id="rt_nom" value="'+esc(cfg.nombre||"")+'">'
+      +'<div class="grid2"><div><label>💰 Tarifa estimada por persona</label><input id="rt_tar" type="number" min="0" step="1000" inputmode="numeric" value="'+(cfg.tarifa||0)+'"></div>'
+      +'<div><label>📅 Fecha del retiro</label><input id="rt_fec" type="date" value="'+esc(cfg.fecha||"")+'"></div></div>'
+      +'<label>📍 Lugar / Finca</label><input id="rt_lug" value="'+esc(cfg.lugar||"")+'" placeholder="Ej. Finca El Remanso">'
+      +'<label>Notas generales</label><input id="rt_not" value="'+esc(cfg.notas||"")+'" placeholder="Ej. Incluye transporte y alimentación">'
+      +'<button class="btn" onclick="saveRetiroCfg()">💾 Guardar tarifa y datos</button>';
+    h+=foldBtn("rt_cfg","⚙️","Configurar tarifa estimada y datos",FM(tot.tarifa),"#1565C0",cfgInner,!tot.tarifa);
+
+    var addInner='<label style="margin-top:0">Seleccionar miembro de la iglesia</label>'
+      +'<select id="rt_psel" onchange="if(this.value)$(\'rt_pnom\').value=\'\'"><option value="">-- Elegir de la lista o escribir abajo --</option>'+P.map(function(p){return'<option value="'+p.id+'">'+esc(p.name)+(p.cell?' ('+esc(p.cell)+')':'')+'</option>'}).join("")+'</select>'
+      +'<label>O escribir nombre (invitado / externo)</label><input id="rt_pnom" placeholder="Nombre completo si no está en el directorio">'
+      +'<label>Teléfono (opcional, para WhatsApp)</label><input id="rt_ptel" inputmode="tel" placeholder="Ej. 3001234567">'
+      +'<label style="display:flex;gap:8px;align-items:center"><input id="rt_pconf" type="checkbox" style="width:22px;height:22px" checked> ✅ Confirmado para asistir al retiro</label>'
+      +'<div class="grid2"><div><label>💵 Abono inicial ($)</label><input id="rt_pabo" type="number" min="0" step="1000" inputmode="numeric" value="0"></div>'
+      +'<div><label>💳 Forma de abono</label><select id="rt_pmed">'+MEDIOS.map(function(m){return'<option>'+m+'</option>'}).join("")+'</select></div></div>'
+      +'<label>Nota (opcional)</label><input id="rt_pnot" placeholder="Ej. Separa cupo, paga saldo en quincena">'
+      +'<button class="btn" onclick="addRetiroInscrito()">➕ Agregar persona al retiro</button>';
+    h+=foldBtn("rt_add","➕","Inscribir / Confirmar persona y abono",null,"#2F9E5B",addInner,false);
+  }
+
+  // Buscador y filtros de lista
+  var qLow=(S.retiro_q||"").toLowerCase();
+  var filtered=S.retiro_list.filter(function(x){
+    var mQ=!qLow||x.nombre.toLowerCase().indexOf(qLow)>-1||(x.cell&&x.cell.toLowerCase().indexOf(qLow)>-1);
+    var tInd=(x.tarifa_ind!=null&&x.tarifa_ind!=="")?Number(x.tarifa_ind):tot.tarifa;
+    var ab=Number(x.abono)||0,deb=Math.max(0,tInd-ab);
+    var mF=S.retiro_f==="todos"||(S.retiro_f==="confirmados"&&x.confirmado)||(S.retiro_f==="abonaron"&&ab>0)||(S.retiro_f==="deben"&&deb>0)||(S.retiro_f==="paz"&&deb===0&&ab>0);
+    return mQ&&mF;
+  });
+
+  var listHtml='<input id="rt_search" type="search" placeholder="🔍 Buscar inscrito..." value="'+esc(S.retiro_q||"")+'" oninput="S.retiro_q=this.value;draw()">';
+  listHtml+='<div class="chips">'
+    +'<button class="chip" aria-pressed="'+(S.retiro_f==="todos")+'" onclick="S.retiro_f=\'todos\';draw()">👥 Todos ('+S.retiro_list.length+')</button>'
+    +'<button class="chip" aria-pressed="'+(S.retiro_f==="confirmados")+'" onclick="S.retiro_f=\'confirmados\';draw()">✅ Confirmados ('+tot.confirmados+')</button>'
+    +'<button class="chip" aria-pressed="'+(S.retiro_f==="abonaron")+'" onclick="S.retiro_f=\'abonaron\';draw()">💵 Abonaron ('+tot.abonaron+')</button>'
+    +'<button class="chip" aria-pressed="'+(S.retiro_f==="deben")+'" onclick="S.retiro_f=\'deben\';draw()">⏳ Deben saldo</button>'
+    +'<button class="chip" aria-pressed="'+(S.retiro_f==="paz")+'" onclick="S.retiro_f=\'paz\';draw()">🎉 A paz y salvo</button>'
+    +'</div>';
+
+  if(!filtered.length){
+    listHtml+='<p class="note">No hay personas registradas con este filtro.</p>';
+  }else{
+    filtered.forEach(function(x){
+      var tInd=(x.tarifa_ind!=null&&x.tarifa_ind!=="")?Number(x.tarifa_ind):tot.tarifa;
+      var ab=Number(x.abono)||0;
+      var deb=Math.max(0,tInd-ab);
+      var pct=tInd>0?Math.min(100,Math.round((ab/tInd)*100)):(ab>0?100:0);
+      var stCol=deb===0&&tInd>0?"#2F9E5B":(ab>0?"#1565C0":"#E07B12");
+      var stLbl=deb===0&&tInd>0?"A paz y salvo":(ab>0?"Abonó "+FM(ab):"Debe "+FM(deb));
+      var dTel=String(x.tel||"").replace(/\D/g,"");if(dTel.length===10)dTel=CC+dTel;
+      var waMsg="Hola "+x.nombre.split(" ")[0]+", te comparto el estado de tu inscripción al "+cfg.nombre+": Abonado "+FM(ab)+" · Saldo pendiente "+FM(deb)+". ¡Te esperamos!";
+
+      var cardBody='<div style="display:flex;justify-content:space-between;flex-wrap:wrap;gap:6px;margin-bottom:6px">'
+        +'<span class="pill" style="background:'+(x.confirmado?"#2F9E5B":"#90A4AE")+'">'+(x.confirmado?"✅ Confirmado":"⏳ Sin confirmar")+'</span>'
+        +'<span class="pill" style="background:#8E4FC7">💳 '+esc(x.medio||"Sin abono")+'</span>'
+        +'</div>';
+      cardBody+='<div class="grid2" style="background:var(--bg);padding:10px;border-radius:12px;border:1px solid var(--line);margin:6px 0">'
+        +'<div><small class="note">Tarifa estimada</small><br><b>'+FM(tInd)+'</b></div>'
+        +'<div><small class="note">Total abonado</small><br><b style="color:#2F9E5B">'+FM(ab)+'</b></div>'
+        +'<div style="grid-column:span 2;border-top:1px dashed var(--line);padding-top:6px"><small class="note">Saldo que debe</small><br><b style="font-size:21px;color:'+(deb>0?"#D6336C":"#2F9E5B")+'">'+FM(deb)+'</b></div>'
+        +'</div>';
+      cardBody+='<div class="pbar"><i style="width:'+pct+'%;background:'+stCol+'"></i></div>';
+
+      if(Array.isArray(x.abonos)&&x.abonos.length){
+        cardBody+='<details><summary>🧾 Historial de abonos ('+x.abonos.length+')</summary>'+x.abonos.map(function(a){
+          return'<p class="note" style="margin:4px 0">• '+fd(a.fecha)+' · <b>'+FM(a.monto)+'</b> vía <b>'+esc(a.medio)+'</b>'+(a.nota?' ('+esc(a.nota)+')':'')+'</p>';
+        }).join("")+'</details>';
+      }
+      if(x.nota)cardBody+='<p class="note">📝 '+esc(x.nota)+'</p>';
+
+      if(canEd){
+        cardBody+='<div style="border-top:1px solid var(--line);padding-top:10px;margin-top:8px"><b>➕ Registrar nuevo abono</b>'
+          +'<div class="grid2"><input id="ab_m_'+x.id+'" type="number" min="0" step="1000" inputmode="numeric" placeholder="Monto $">'
+          +'<select id="ab_w_'+x.id+'">'+MEDIOS.map(function(m){return'<option'+(m===x.medio?' selected':'')+'>'+m+'</option>'}).join("")+'</select></div>'
+          +'<input id="ab_n_'+x.id+'" placeholder="Nota del abono (opcional)" style="margin-top:6px">'
+          +'<button class="btn sm" onclick="registrarAbonoRetiro('+x.id+')">💵 Guardar abono</button>'
+          +'<div class="grid2" style="margin-top:6px">'
+          +'<button class="btn alt sm" style="margin:0" onclick="toggleConfirmRetiro('+x.id+')">'+(x.confirmado?"Quitar confirmación":"✅ Confirmar cupo")+'</button>'
+          +'<button class="btn alt sm" style="margin:0;color:#D6336C" onclick="delRetiroItem('+x.id+')">🗑️ Quitar</button>'
+          +'</div></div>';
+      }
+      if(dTel.length>=11){
+        cardBody+='<a class="btn alt sm" style="display:block;text-align:center;text-decoration:none;margin-top:8px" href="https://wa.me/'+dTel+'?text='+encodeURIComponent(waMsg)+'" target="_blank" rel="noopener">💬 Enviar estado de cuenta por WhatsApp</a>';
+      }
+
+      listHtml+=foldBtn("rt_p_"+x.id,x.confirmado?"⛺":"⏳",esc(x.nombre),stLbl,stCol,cardBody,false);
+    });
+  }
+
+  h+=foldBtn("rt_list","📋","Listado de confirmados, abonos y saldos",S.retiro_list.length,"#00897B",listHtml,true);
+  h+='<div class="grid2 no-print" style="margin-top:10px"><button class="btn alt" style="margin:0" onclick="exportRetiroCSV()">📥 Exportar Excel / CSV</button><button class="btn alt" style="margin:0" onclick="window.print()">🖨️ Imprimir / PDF</button></div>';
+  return h;
+}
+
 // ===== NAVEGACIÓN INFERIOR COMPACTA CON PÍLDORA ACTIVA Y MENÚ "MÁS" =====
 function switchTab(id){
   S.tab=id;S.sel=null;S.tb=null;S.ce=null;S.ia=null;S.pn=false;S.tn=false;S.ft=null;S.dl_view=null;S.dl_open=null;S.dl_ed=null;S.more=false;
@@ -1844,7 +2098,7 @@ function switchTab(id){
 }
 function draw(){
   renderHeader();
-  var T=[["ini","🏠","Inicio"],["reg","👥","Registro"],["asis","✅","Asistencia"],["panel","📊","Panel"],["cel","🏘️","Células"],["tabl","🗂️","Tablero"],["inf","📄","Informe"],["rend","📝","Rendición"],["com","🙌","Comunidad"],["retos","🧩","Retos"],["fin","💰","Finanzas"],["equipo","⚙️","Equipo"]];
+  var T=[["ini","🏠","Inicio"],["reg","👥","Registro"],["asis","✅","Asistencia"],["retiro","⛺","Retiro"],["panel","📊","Panel"],["cel","🏘️","Células"],["tabl","🗂️","Tablero"],["inf","📄","Informe"],["rend","📝","Rendición"],["com","🙌","Comunidad"],["retos","🧩","Retos"],["fin","💰","Finanzas"],["equipo","⚙️","Equipo"]];
   $("nav").style.display=ME?"flex":"none";
   $("more_box").innerHTML="";
   $("modal_box").innerHTML=S.dev_modal?renderDevotionalModal():(S.tr_modal?renderTransversalesModal():"");
@@ -1870,7 +2124,7 @@ function draw(){
     $("more_box").innerHTML='<div class="more-pop" onclick="if(event.target===this){S.more=false;draw()}"><div class="more-sheet"><div style="display:flex;justify-content:space-between;align-items:center"><b>Más secciones</b><button class="chip" onclick="S.more=false;draw()">✕ Cerrar</button></div><div class="more-grid">'+extraTabs.map(function(t){return'<button class="more-item" aria-current="'+(S.tab===t[0])+'" onclick="switchTab(\''+t[0]+'\')"><span>'+t[1]+'</span>'+t[2]+'</button>'}).join("")+'</div></div></div>';
   }
 
-  $("app").innerHTML=S.tab==="reg"?reg():S.tab==="asis"?asis():S.tab==="ini"?inicio():S.tab==="inf"?informe():S.tab==="rend"?rendicion():S.tab==="fin"&&canEditFinanzas()?finanzas():S.tab==="com"?comunidad():S.tab==="cel"?celulas():S.tab==="tabl"?tablero():S.tab==="retos"?retos():S.tab==="equipo"&&isPastor()?equipo():panel();
+  $("app").innerHTML=S.tab==="reg"?reg():S.tab==="asis"?asis():S.tab==="retiro"?retiro():S.tab==="ini"?inicio():S.tab==="inf"?informe():S.tab==="rend"?rendicion():S.tab==="fin"&&canEditFinanzas()?finanzas():S.tab==="com"?comunidad():S.tab==="cel"?celulas():S.tab==="tabl"?tablero():S.tab==="retos"?retos():S.tab==="equipo"&&isPastor()?equipo():panel();
   var q=$("q");if(q)q.oninput=function(){S.q=q.value;var p=q.selectionStart;draw();var n=$("q");if(n){n.focus();n.setSelectionRange(p,p)}}
   var aq=$("aq");if(aq)aq.oninput=function(){S.aq=aq.value;var p=aq.selectionStart;draw();var n=$("aq");if(n){n.focus();n.setSelectionRange(p,p)}}
 }
