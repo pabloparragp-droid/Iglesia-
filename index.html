@@ -2,6 +2,7 @@
 :root{--bg:#EEF4FC;--card:#fff;--ink:#1F2430;--mute:#59606E;--b:#1565C0;--g:#2F9E5B;--o:#E07B12;--line:#D6DDE8;--soft:#E3EDFA;--acc:#1565C0;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
 @media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#14171C;--card:#1D222A;--ink:#EAEFF7;--mute:#A3ADBD;--line:#2E3642;--soft:#252C36;--acc:#7DB2F0;--sh:0 4px 16px rgba(0,0,0,.35)}}
 :root[data-theme="dark"]{--bg:#14171C;--card:#1D222A;--ink:#EAEFF7;--mute:#A3ADBD;--line:#2E3642;--soft:#252C36;--acc:#7DB2F0;--sh:0 4px 16px rgba(0,0,0,.35)}
+:root[data-theme="pastel"]{--bg:#F5E6F0;--card:#FFF9FC;--ink:#2B1E34;--mute:#634E70;--b:#8E44AD;--g:#1E8449;--o:#D35400;--line:#DFC2DA;--soft:#EBD3E6;--acc:#7D3C98;--sh:0 4px 14px rgba(125,60,152,.14)}
 html{scroll-padding-top:env(safe-area-inset-top,0px)}*{box-sizing:border-box}
 body{margin:0;background:var(--bg);color:var(--ink);font:20px/1.6 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;transition:background .25s,color .25s}
 main{max-width:680px;margin:0 auto;padding:0 14px 108px}
@@ -240,10 +241,10 @@ var RS=getWeeklyRS();
 
 var S={tab:"ini",im:null,rd:null,rm:null,mm:null,ft:null,fm:null,fy:"all",rec:false,pw:false,q:"",aq:"",f:"Todos",fc:"Todas",fb:"Todos",sel:null,tb:null,lv:1,ia:null,cm:"or",pn:false,tn:false,T:{},rs:null,ri:0,cl:1,bad:[],ok:false,ev:"Culto dominical",dl_view:null,dl_open:null,dl_ans:{},dl_ed:null,dl_q:[],am:"lista",gd:null,more:false,pcell:"Todas",prayed:{},grad_name:"",tb_fold:{1:true},tb_lvl_filter:0,tb_disc_filter:"todos",ev_view:"tarjetas",dev_modal:false,tr_modal:false,chat_ch:"general",chat_priv_target:"",chat_msgs:[],worship_prog:[],worship_inv:[],worship_sub:"prog",retiro_cfg:{nombre:"Retiro Espiritual Iglesia ICCVGD",fecha:"",tarifa:0,lugar:"",notas:""},retiro_list:[],retiro_q:"",retiro_f:"todos"},U=null,ME=null,P=[],AT=[],EQ=[],AN=[],PR=[],TE=[],AR=[],AM=[],MR=[],RP=[],IC=[],EC=[],FN=[],DL=[],DP=[],AG=[],AGM=[],R0={},$=function(i){return document.getElementById(i)};
 
-// ===== TEMA CLARO / OSCURO =====
+// ===== TEMA CLARO / PASTEL / OSCURO =====
 function getTheme(){return localStorage.getItem("iccvgd_theme")||(window.matchMedia&&window.matchMedia("(prefers-color-scheme:dark)").matches?"dark":"light")}
 function applyTheme(th){document.documentElement.setAttribute("data-theme",th);localStorage.setItem("iccvgd_theme",th)}
-function toggleTheme(){var next=getTheme()==="dark"?"light":"dark";applyTheme(next);draw()}
+function toggleTheme(){var cur=getTheme(),next=cur==="light"?"pastel":(cur==="pastel"?"dark":"light");applyTheme(next);draw()}
 (function(){var saved=localStorage.getItem("iccvgd_theme");if(saved)document.documentElement.setAttribute("data-theme",saved)})();
 
 // ===== ALMACENAMIENTO LOCAL DE RESPALDO =====
@@ -492,7 +493,7 @@ function svgRadialGauge(pts,maxPts,label){
 }
 
 function renderHeader(){
-  var th=getTheme(),tIcon=th==="dark"?"☀️ Claro":"🌙 Oscuro";
+  var th=getTheme(),tIcon=th==="light"?"🌸 Pastel":(th==="pastel"?"🌙 Oscuro":"☀️ Claro");
   var fechaHoy=new Date().toLocaleDateString("es-CO",{weekday:"long",day:"numeric",month:"long"});
   fechaHoy=fechaHoy.charAt(0).toUpperCase()+fechaHoy.slice(1);
   var saludo=ME&&ME.name?"Hola, "+esc(ME.name.split(" ")[0]):"Iglesia ICCVGD";
@@ -918,7 +919,7 @@ function delWorshipInv(id){
   lset("worship_inv",S.worship_inv);toast("Ítem eliminado");draw();
 }
 function renderAlabanzaModule(){
-  var canSeeInv=isWorshipLeader();
+  var canSeeInv=isWorshipAsis();
   if(!canSeeInv&&S.worship_sub==="inv")S.worship_sub="prog";
   var h='<button class="btn alt" style="margin:8px 0" onclick="S.dl_view=null;draw()">← Volver al Tablero</button>';
   h+='<div class="card t-azul"><h3>🎸 Alabanza y Servidores</h3><p class="note">'+(canSeeInv?"Programa tu grupo de alabanza y administra el inventario de instrumentos.":"Consulta la programación del grupo de alabanza.")+'</p><div class="chips"><button class="chip" aria-pressed="'+(S.worship_sub==="prog")+'" onclick="S.worship_sub=\'prog\';draw()">🎶 Programar grupo</button>'+(canSeeInv?'<button class="chip" aria-pressed="'+(S.worship_sub==="inv")+'" onclick="S.worship_sub=\'inv\';draw()">🥁 Inventario instrumentos ('+S.worship_inv.length+')</button>':'')+'</div></div>';
@@ -1207,10 +1208,11 @@ var ROLE_GUIDE={
     ]
   },
   asistencia_alabanza:{
-    desc:"Registras la asistencia del equipo de alabanza en ensayos y servicios.",
+    desc:"Registras la asistencia del equipo de alabanza y administras el inventario de instrumentos.",
     tips:[
+      {e:"🥁",t:"Revisar o editar el inventario de instrumentos",fn:"S.tab='tabl';S.dl_view='alabanza';S.worship_sub='inv';draw()"},
       {e:"✅",t:"Tomar asistencia de Alabanza y servidores",fn:"switchTab('asis')"},
-      {e:"🎸",t:"Consultar programación del grupo de alabanza",fn:"S.tab='tabl';S.dl_view='alabanza';draw()"},
+      {e:"🎸",t:"Consultar programación del grupo de alabanza",fn:"S.tab='tabl';S.dl_view='alabanza';S.worship_sub='prog';draw()"},
       {e:"⛺",t:"Revisar inscripciones y abonos del Retiro",fn:"switchTab('retiro')"}
     ]
   },
@@ -1288,7 +1290,7 @@ function inicio(){
   var normalAv=rawAv.filter(function(a){return!a.annual}).sort(function(a,b){return b.created_at>a.created_at?1:-1}).slice(0,12);
   var an=AN.filter(function(a){return a.annual&&a.event_date&&a.event_date.slice(0,4)===yr});
 
-  var h='<div class="card t-azul" style="text-align:center"><img class="hero-transp-logo" src="icon-192.png" alt="Logo Iglesia ICCVGD" onerror="this.style.display=\'none\'"><b>Iglesia Cristiana ICCVGD</b><p class="note">En Cristo somos nueva creación para servir en unidad.</p><div class="grid2" style="margin-top:8px"><button class="btn sm" style="margin:0;background:#1565C0" onclick="S.dev_modal=true;draw()">🌅 Devocional de hoy</button><button class="btn alt sm" style="margin:0" onclick="S.tr_modal=true;draw()">🧭 Principios clave</button></div></div>';
+  var h='<div class="card t-azul" style="text-align:center"><b>Iglesia Cristiana ICCVGD</b><p class="note">En Cristo somos nueva creación para servir en unidad.</p><div class="grid2" style="margin-top:8px"><button class="btn sm" style="margin:0;background:#1565C0" onclick="S.dev_modal=true;draw()">🌅 Devocional de hoy</button><button class="btn alt sm" style="margin:0" onclick="S.tr_modal=true;draw()">🧭 Principios clave</button></div></div>';
   h+=renderRoleWelcomeCard();
 
   h+=notiCard()+(can?'<button class="btn" onclick="S.ia=0;draw()">➕ Publicar anuncio o evento</button>':'');
@@ -1807,7 +1809,7 @@ var r=await SB.from("people").delete().eq("id",p.id);if(r.error){toast("No se pu
 
 function equipo(){
   var o=function(a,v){return a.map(function(x){return'<option'+(x===v?" selected":"")+'>'+x+'</option>'}).join("")};
-  var reglas='<p class="note">Puedes asignar uno o varios roles: Pastor, Líder de célula, Asistente de líder, Líder de alabanza, Asistencia de alabanza, Líder de servidores, Coordinador (publica anuncios y edita cumpleaños sin ver datos restringidos de miembros), Discipulador, Servidor y Miembro. Solo el Pastor ve Finanzas; solo el Pastor y el Líder de alabanza ven el inventario de instrumentos.</p>';
+  var reglas='<p class="note">Puedes asignar uno o varios roles: Pastor, Líder de célula, Asistente de líder, Líder de alabanza, Asistencia de alabanza, Líder de servidores, Coordinador (publica anuncios y edita cumpleaños sin ver datos restringidos de miembros), Discipulador, Servidor y Miembro. Solo el Pastor ve Finanzas; el Pastor, el Líder de alabanza y Asistencia de alabanza pueden ver y editar el inventario de instrumentos.</p>';
   var h='<button class="btn alt" style="margin:8px 0" onclick="switchTab(\'ini\')">← Volver a Inicio</button><div class="card"><h3>⚙️ Equipo de líderes ('+EQ.length+')</h3></div>'+foldBtn("eq_reg","📜","Reglas de roles y permisos",null,"#1565C0",reglas,false);
   return h+EQ.map(function(q){
     var me=q.id===U.id;
