@@ -125,6 +125,31 @@ details{margin:10px 0}summary{cursor:pointer;font-weight:700;color:var(--acc);fo
 .rma-step.med{border-left-color:#8E4FC7}
 .rma-step.apl{border-left-color:#2F9E5B}
 
+/* ===== VISTA ALTERNATIVA SIMPLE Y NOVEDOSA (MENÚS LIMPIOS SIN SATURACIÓN) ===== */
+.mode-switch{display:flex;align-items:center;justify-content:space-between;gap:10px;background:var(--card);border:1.5px solid var(--line);border-radius:16px;padding:10px 14px;margin:10px 0;box-shadow:var(--sh)}
+.mode-pill{display:inline-flex;background:var(--bg);border:1.5px solid var(--line);border-radius:999px;padding:3px;gap:3px}
+.mode-pill button{border:0;background:transparent;color:var(--mute);padding:7px 13px;border-radius:999px;font:700 15px system-ui,sans-serif;cursor:pointer;transition:all .18s}
+.mode-pill button[aria-pressed="true"]{background:var(--b);color:#fff;box-shadow:0 2px 8px rgba(21,101,192,.28)}
+.hub-hero{background:linear-gradient(135deg,var(--card) 0%,var(--soft) 100%);border:1.5px solid var(--line);border-radius:20px;padding:18px 16px;margin:10px 0;box-shadow:var(--sh)}
+.hub-grid{display:grid;grid-template-columns:1fr 1fr;gap:11px;margin:12px 0}
+.hub-tile{background:var(--card);border:1.5px solid var(--line);border-radius:18px;padding:16px 14px;text-align:left;cursor:pointer;display:flex;flex-direction:column;justify-content:space-between;gap:10px;box-shadow:var(--sh);transition:transform .14s,border-color .15s;position:relative;color:var(--ink)}
+.hub-tile:active{transform:scale(.97)}
+.hub-tile-top{display:flex;align-items:center;justify-content:space-between;width:100%}
+.hub-ico{width:46px;height:46px;border-radius:14px;display:grid;place-items:center;font-size:24px;color:#fff;flex:none}
+.hub-badge{font:800 14px system-ui,sans-serif;padding:4px 10px;border-radius:999px;background:var(--soft);color:var(--acc)}
+.hub-title{font:700 18px Georgia,serif;color:var(--ink);display:block;line-height:1.25}
+.hub-sub{font:400 14px system-ui,sans-serif;color:var(--mute);display:block;margin-top:2px}
+.menu-list{background:var(--card);border:1.5px solid var(--line);border-radius:18px;overflow:hidden;margin:10px 0;box-shadow:var(--sh)}
+.menu-item{width:100%;border:0;border-bottom:1px solid var(--line);background:var(--card);color:var(--ink);padding:15px 16px;display:flex;align-items:center;justify-content:space-between;gap:12px;text-align:left;cursor:pointer;font:inherit;transition:background .15s}
+.menu-item:last-child{border-bottom:0}
+.menu-item:active{background:var(--soft)}
+.menu-item-l{display:flex;align-items:center;gap:12px;min-width:0}
+.menu-item-emo{width:40px;height:40px;border-radius:12px;display:grid;place-items:center;font-size:21px;background:var(--soft);flex:none}
+.menu-item-txt b{display:block;font-size:18px;line-height:1.25}
+.menu-item-txt small{display:block;font-size:15px;color:var(--mute)}
+.menu-item-r{display:inline-flex;align-items:center;gap:8px;flex:none;color:var(--mute);font-weight:700}
+.sub-back{display:inline-flex;align-items:center;gap:6px;border:1.5px solid var(--line);background:var(--card);color:var(--ink);border-radius:999px;padding:9px 15px;font:700 16px system-ui,sans-serif;cursor:pointer;margin:6px 0 10px}
+
 @media print{
   body{background:#fff!important;color:#000!important}
   .nav,.hdr-top,.who,.no-print,.btn,.chip,.chips{display:none!important}
@@ -239,7 +264,7 @@ function getWeeklyRS(){
 }
 var RS=getWeeklyRS();
 
-var S={tab:"ini",im:null,rd:null,rm:null,mm:null,ft:null,fm:null,fy:"all",rec:false,pw:false,q:"",aq:"",f:"Todos",fc:"Todas",fb:"Todos",sel:null,tb:null,lv:1,ia:null,cm:"or",pn:false,tn:false,T:{},rs:null,ri:0,cl:1,bad:[],ok:false,ev:"Culto dominical",dl_view:null,dl_open:null,dl_ans:{},dl_ed:null,dl_q:[],am:"lista",gd:null,more:false,pcell:"Todas",prayed:{},grad_name:"",tb_fold:{1:true},tb_lvl_filter:0,tb_disc_filter:"todos",ev_view:"tarjetas",dev_modal:false,tr_modal:false,chat_ch:"general",chat_priv_target:"",chat_msgs:[],worship_prog:[],worship_inv:[],worship_sub:"prog",retiro_cfg:{nombre:"Retiro Espiritual Iglesia ICCVGD",fecha:"",tarifa:0,lugar:"",notas:""},retiro_list:[],retiro_q:"",retiro_f:"todos"},U=null,ME=null,P=[],AT=[],EQ=[],AN=[],PR=[],TE=[],AR=[],AM=[],MR=[],RP=[],IC=[],EC=[],FN=[],DL=[],DP=[],AG=[],AGM=[],R0={},$=function(i){return document.getElementById(i)};
+var S={tab:"ini",ui_mode:localStorage.getItem("iccvgd_ui_mode")||"simple",im:null,rd:null,rm:null,mm:null,ft:null,fm:null,fy:"all",rec:false,pw:false,q:"",aq:"",f:"Todos",fc:"Todas",fb:"Todos",sel:null,tb:null,lv:1,ia:null,cm:"or",pn:false,tn:false,T:{},rs:null,ri:0,cl:1,bad:[],ok:false,ev:"Culto dominical",dl_view:null,dl_open:null,dl_ans:{},dl_ed:null,dl_q:[],am:"lista",gd:null,more:false,pcell:"Todas",prayed:{},grad_name:"",tb_fold:{1:true},tb_lvl_filter:0,tb_disc_filter:"todos",ev_view:"tarjetas",dev_modal:false,tr_modal:false,chat_ch:"general",chat_priv_target:"",chat_msgs:[],worship_prog:[],worship_inv:[],worship_sub:"prog",retiro_cfg:{nombre:"Retiro Espiritual Iglesia ICCVGD",fecha:"",tarifa:0,lugar:"",notas:""},retiro_list:[],retiro_q:"",retiro_f:"todos"},U=null,ME=null,P=[],AT=[],EQ=[],AN=[],PR=[],TE=[],AR=[],AM=[],MR=[],RP=[],IC=[],EC=[],FN=[],DL=[],DP=[],AG=[],AGM=[],R0={},$=function(i){return document.getElementById(i)};
 
 // ===== TEMA CLARO / PASTEL / OSCURO =====
 function getTheme(){return localStorage.getItem("iccvgd_theme")||(window.matchMedia&&window.matchMedia("(prefers-color-scheme:dark)").matches?"dark":"light")}
@@ -504,7 +529,7 @@ function renderHeader(){
       if(r==="lider"||r==="lider_celula"||r==="asistente_lider")return base+(ME.cell?" de "+esc(ME.cell):" (sin célula)");
       return base;
     }).join(" · ");
-    h+='<div class="who"><span>👤 '+esc(ME.name||U.email)+' · <b>'+rolesLbl+'</b></span><span><button class="chip" onclick="S.pw=true;draw()">🔑 Clave</button> <button class="chip" onclick="out()">Salir</button></span></div>';
+    h+='<div class="who"><span>👤 '+esc(ME.name||U.email)+' · <b>'+rolesLbl+'</b></span><span><button class="chip" onclick="S.pw=true;draw()">🔑 Clave</button></span></div>';
   }
   $("hdr").innerHTML=h;
 }
@@ -1281,16 +1306,144 @@ function renderRoleWelcomeCard(){
   return foldBtn("ini_welcome","👋","Bienvenida y guía para tu rol",roles.length===1?(ROLE_META[roles[0]]?ROLE_META[roles[0]].lbl:roles[0]):roles.length+" roles","#2F9E5B",inner,true);
 }
 
+function setUiMode(m){
+  S.ui_mode=m;
+  S.ini_sub=null;
+  localStorage.setItem("iccvgd_ui_mode",m);
+  toast(m==="simple"?"✨ Vista Simple por menús activada":"📋 Vista Clásica activada");
+  draw();
+}
+function renderUiModeSwitch(){
+  var isSimple=S.ui_mode!=="clasica";
+  return'<div class="mode-switch no-print">'
+    +'<div style="min-width:0"><b style="font-size:16px;display:block">✨ Estilo de pantalla</b><small class="note" style="margin:0;font-size:14px">'+(isSimple?"Vista simple en menús":"Vista clásica completa")+'</small></div>'
+    +'<div class="mode-pill">'
+    +'<button aria-pressed="'+isSimple+'" onclick="setUiMode(\'simple\')">✨ Simple</button>'
+    +'<button aria-pressed="'+(!isSimple)+'" onclick="setUiMode(\'clasica\')">📋 Clásica</button>'
+    +'</div></div>';
+}
+function renderSimpleInicio(ctx){
+  var can=ctx.can,prox=ctx.prox,pinnedAv=ctx.pinnedAv,normalAv=ctx.normalAv,an=ctx.an,yr=ctx.yr,curM=ctx.curM,bdCnt=ctx.bdCnt;
+  var dev=getDailyDev();
+  var firstName=(ME&&ME.name?ME.name:(U&&U.email?U.email:"Bienvenido")).trim().split(/\s+/)[0];
+  var roles=myRoles();
+  var roleNames=roles.map(function(r){return(ROLE_META[r]?ROLE_META[r].emo+" "+ROLE_META[r].lbl:r)}).join(" · ");
+
+  // Subvistas limpias cuando el usuario entra a una opción del menú de Inicio
+  if(S.ini_sub){
+    var back='<button class="sub-back no-print" onclick="S.ini_sub=null;draw()">← Volver al menú de Inicio</button>';
+    if(S.ini_sub==="anuncios"){
+      var allAv=pinnedAv.concat(normalAv);
+      return back
+        +'<div class="card t-azul"><h3>📢 Cartelera de Anuncios y Eventos</h3><p class="note">Información organizada sin saturación.</p>'
+        +(can?'<button class="btn sm" onclick="S.ia=0;draw()">➕ Publicar nuevo anuncio o evento</button>':'')
+        +'<div class="chips" style="margin-top:8px"><button class="chip" aria-pressed="'+(S.ev_view==="tarjetas")+'" onclick="S.ev_view=\'tarjetas\';draw()">🃏 Tarjetas</button><button class="chip" aria-pressed="'+(S.ev_view==="lista")+'" onclick="S.ev_view=\'lista\';draw()">📋 Lista</button></div></div>'
+        +(pinnedAv.length?'<p class="note" style="margin:8px 4px 2px"><b>📌 Fijados</b></p>'+renderItemsGroup(pinnedAv,true):'')
+        +(prox.length?'<p class="note" style="margin:10px 4px 2px"><b>📅 Próximas actividades (14 días)</b></p>'+renderItemsGroup(prox,false):'')
+        +(normalAv.length?'<p class="note" style="margin:10px 4px 2px"><b>📣 Avisos recientes</b></p>'+renderItemsGroup(normalAv,false):'')
+        +(!allAv.length&&!prox.length?'<div class="card"><p class="note">No hay anuncios ni actividades próximas por ahora.</p></div>':'');
+    }
+    if(S.ini_sub==="cumple"){
+      var bdHtml=bdayCard();
+      return back+'<div class="card t-lila"><h3>🎂 Cumpleaños de '+MS[+curM-1]+'</h3><p class="note">Sincroniza con Google Calendar o envía un saludo por WhatsApp.</p>'+(bdHtml||'<p class="note">Aún no hay fechas de cumpleaños registradas.</p>')+'</div>';
+    }
+    if(S.ini_sub==="calendario"){
+      var calInner='';
+      if(!an.length){
+        calInner='<p class="note">Aún no hay actividades principales del año.</p>';
+      }else{
+        for(var m=0;m<12;m++){var l=an.filter(function(a){return+a.event_date.slice(5,7)===m+1}).sort(function(a,b){return a.event_date>b.event_date?1:-1});
+        if(l.length)calInner+='<div class="card"><b>'+MS[m]+'</b>'+l.map(function(a){var ed=cane(a),x='<span class="pill" style="background:#1565C0">'+(+a.event_date.slice(8))+'</span><span class="grow"><b>'+esc(a.title)+'</b><small>'+(a.event_time?esc(a.event_time)+" · ":"")+esc(a.place||"")+'</small></span>';return ed?'<button class="row" style="border:0;background:none;padding:0;margin:8px 0" onclick="S.ia='+a.id+';draw()">'+x+'</button>':'<div class="row" style="margin:8px 0">'+x+'</div>'}).join("")+'</div>'}
+      }
+      return back+'<div class="card"><h3>🗓️ Calendario Anual '+yr+'</h3><p class="note">Fechas principales de la congregación.</p></div>'+calInner;
+    }
+    if(S.ini_sub==="guia"){
+      var seenTips={},tips=[],descs=[];
+      roles.forEach(function(r){
+        var g=ROLE_GUIDE[r]||ROLE_GUIDE.miembro;
+        if(descs.indexOf(g.desc)<0)descs.push(g.desc);
+        g.tips.forEach(function(tp){if(!seenTips[tp.t]){seenTips[tp.t]=1;tips.push(tp)}});
+      });
+      return back+'<div class="card t-verde"><h3>🧭 Guía rápida para tu rol</h3><p class="note"><b>'+esc(roleNames)+'</b> · '+esc(descs.join(" "))+'</p>'
+        +tips.map(function(tp){return'<button class="btn alt sm" style="text-align:left;display:flex;align-items:center;justify-content:space-between;gap:8px;margin:8px 0" onclick="'+tp.fn+'"><span>'+tp.e+' '+esc(tp.t)+'</span><span>→</span></button>'}).join("")
+        +'</div>'+notiCard();
+    }
+  }
+
+  // Pantalla principal de Inicio en Vista Simple: limpia, sin muros de texto, organizada en tarjetas y menús
+  var totalAvisos=pinnedAv.length+prox.length+normalAv.length;
+  var h=renderUiModeSwitch();
+
+  h+='<div class="hub-hero">'
+    +'<div style="display:flex;align-items:center;justify-content:space-between;gap:10px">'
+    +'<div><span class="pill" style="background:#1565C0;font-size:13px">Iglesia ICCVGD</span><h3 style="margin-top:6px">Paz a ti, '+esc(firstName)+'</h3><p class="note" style="margin:2px 0 0">'+esc(roleNames)+'</p></div>'
+    +'<button class="chip" style="border-color:#1565C0;color:var(--acc)" onclick="S.ini_sub=\'guia\';draw()">🧭 Mi guía</button>'
+    +'</div></div>';
+
+  // 4 Accesos directos limpios tipo bento
+  h+='<div class="hub-grid">'
+    +'<button class="hub-tile" onclick="S.dev_modal=true;draw()">'
+      +'<div class="hub-tile-top"><span class="hub-ico" style="background:#1565C0">🌅</span><span class="hub-badge">Hoy</span></div>'
+      +'<div><span class="hub-title">Devocional</span><span class="hub-sub">'+esc(dev.v)+'</span></div>'
+    +'</button>'
+    +'<button class="hub-tile" onclick="S.ini_sub=\'anuncios\';draw()">'
+      +'<div class="hub-tile-top"><span class="hub-ico" style="background:#E07B12">📢</span><span class="hub-badge">'+totalAvisos+'</span></div>'
+      +'<div><span class="hub-title">Cartelera</span><span class="hub-sub">Anuncios y eventos</span></div>'
+    +'</button>'
+    +'<button class="hub-tile" onclick="switchTab(\'tabl\')">'
+      +'<div class="hub-tile-top"><span class="hub-ico" style="background:#2F9E5B">📖</span><span class="hub-badge">Ruta</span></div>'
+      +'<div><span class="hub-title">Discipulado</span><span class="hub-sub">Lecciones y tablero</span></div>'
+    +'</button>'
+    +'<button class="hub-tile" onclick="switchTab(\'com\')">'
+      +'<div class="hub-tile-top"><span class="hub-ico" style="background:#8E4FC7">🙌</span><span class="hub-badge">Orar</span></div>'
+      +'<div><span class="hub-title">Comunidad</span><span class="hub-sub">Oración, chat y fe</span></div>'
+    +'</button>'
+    +'</div>';
+
+  // Menú desplegable / lista limpia con el resto de opciones sin saturar la pantalla
+  var al=allowedTabsForMe();
+  var menuItems=[];
+  if(can)menuItems.push({emo:"➕",t:"Publicar anuncio o evento",s:"Crear aviso en cartelera",b:null,fn:"S.ia=0;draw()"});
+  menuItems.push({emo:"🎂",t:"Cumpleaños del mes",s:MS[+curM-1]+" · Sincronizar calendario",b:bdCnt>0?bdCnt:null,fn:"S.ini_sub=\'cumple\';draw()"});
+  menuItems.push({emo:"🗓️",t:"Calendario anual "+yr,s:"Actividades principales del año",b:an.length>0?an.length:null,fn:"S.ini_sub=\'calendario\';draw()"});
+  if(al.indexOf("asis")>-1)menuItems.push({emo:"✅",t:"Tomar asistencia",s:"Lista o conteo general",b:null,fn:"switchTab(\'asis\')"});
+  if(al.indexOf("retiro")>-1)menuItems.push({emo:"⛺",t:"Control de Retiro",s:"Confirmados, abonos y saldos",b:S.retiro_list.length||null,fn:"switchTab(\'retiro\')"});
+  if(al.indexOf("cel")>-1)menuItems.push({emo:"🏘️",t:"Células de cuidado",s:"Grupos y reuniones",b:CE.length||null,fn:"switchTab(\'cel\')"});
+  if(al.indexOf("panel")>-1)menuItems.push({emo:"📊",t:"Panel pastoral",s:"Indicadores y seguimiento",b:null,fn:"switchTab(\'panel\')"});
+  if(al.indexOf("inf")>-1)menuItems.push({emo:"📄",t:"Informe mensual",s:"Resumen de cultos y células",b:null,fn:"switchTab(\'inf\')"});
+  if(al.indexOf("rend")>-1)menuItems.push({emo:"📝",t:"Rendición de cuentas",s:"Reportes mensuales",b:null,fn:"switchTab(\'rend\')"});
+  if(al.indexOf("retos")>-1)menuItems.push({emo:"🧩",t:"Retos bíblicos",s:"Desafíos semanales",b:pts()?pts()+" pts":null,fn:"switchTab(\'retos\')"});
+  if(al.indexOf("fin")>-1&&canEditFinanzas())menuItems.push({emo:"💰",t:"Finanzas",s:"Ingresos, egresos y balance",b:null,fn:"switchTab(\'fin\')"});
+  if(al.indexOf("equipo")>-1&&isPastor())menuItems.push({emo:"⚙️",t:"Equipo y roles",s:"Permisos de líderes",b:EQ.length||null,fn:"switchTab(\'equipo\')"});
+  menuItems.push({emo:"🧭",t:"Principios transversales",s:"Fundamento doctrinal",b:null,fn:"S.tr_modal=true;draw()"});
+
+  h+='<div class="menu-list">'
+    +menuItems.map(function(it){
+      return'<button class="menu-item" onclick="'+it.fn+'">'
+        +'<span class="menu-item-l"><span class="menu-item-emo">'+it.emo+'</span><span class="menu-item-txt"><b>'+it.t+'</b><small>'+it.s+'</small></span></span>'
+        +'<span class="menu-item-r">'+(it.b!==null?'<span class="pill" style="background:#1565C0;font-size:13px">'+it.b+'</span>':'')+'<span>›</span></span>'
+        +'</button>';
+    }).join("")
+    +'</div>';
+
+  return h;
+}
 function inicio(){
   if(S.ia!=null)return aform();
-  var can=canPublishAnnouncements(),t=today(),lim=new Date(Date.now()+14*864e5).toLocaleDateString("en-CA"),yr=t.slice(0,4);
+  var can=canPublishAnnouncements(),t=today(),lim=new Date(Date.now()+14*864e5).toLocaleDateString("en-CA"),yr=t.slice(0,4),curM=t.slice(5,7);
   var prox=AN.filter(function(a){return a.kind==="evento"&&a.event_date>=t&&a.event_date<=lim});
   var rawAv=AN.filter(function(a){return a.kind==="anuncio"});
   var pinnedAv=rawAv.filter(function(a){return a.annual}).sort(function(a,b){return b.created_at>a.created_at?1:-1});
   var normalAv=rawAv.filter(function(a){return!a.annual}).sort(function(a,b){return b.created_at>a.created_at?1:-1}).slice(0,12);
   var an=AN.filter(function(a){return a.annual&&a.event_date&&a.event_date.slice(0,4)===yr});
+  var bdCnt=P.filter(function(p){var b=p.birthday||p.birth_date;return b&&String(b).length>=10&&String(b).slice(5,7)===curM}).length;
 
-  var h='<div class="card t-azul" style="text-align:center"><b>Iglesia Cristiana ICCVGD</b><p class="note">En Cristo somos nueva creación para servir en unidad.</p><div class="grid2" style="margin-top:8px"><button class="btn sm" style="margin:0;background:#1565C0" onclick="S.dev_modal=true;draw()">🌅 Devocional de hoy</button><button class="btn alt sm" style="margin:0" onclick="S.tr_modal=true;draw()">🧭 Principios clave</button></div></div>';
+  if(S.ui_mode!=="clasica"){
+    return renderSimpleInicio({can:can,prox:prox,pinnedAv:pinnedAv,normalAv:normalAv,an:an,yr:yr,curM:curM,bdCnt:bdCnt});
+  }
+
+  var h=renderUiModeSwitch();
+  h+='<div class="card t-azul" style="text-align:center"><b>Iglesia Cristiana ICCVGD</b><p class="note">En Cristo somos nueva creación para servir en unidad.</p><div class="grid2" style="margin-top:8px"><button class="btn sm" style="margin:0;background:#1565C0" onclick="S.dev_modal=true;draw()">🌅 Devocional de hoy</button><button class="btn alt sm" style="margin:0" onclick="S.tr_modal=true;draw()">🧭 Principios clave</button></div></div>';
   h+=renderRoleWelcomeCard();
 
   h+=notiCard()+(can?'<button class="btn" onclick="S.ia=0;draw()">➕ Publicar anuncio o evento</button>':'');
@@ -1299,8 +1452,6 @@ function inicio(){
 
   var bdHtml=bdayCard();
   if(bdHtml){
-    var curM=today().slice(5,7);
-    var bdCnt=P.filter(function(p){var b=p.birthday||p.birth_date;return b&&String(b).length>=10&&String(b).slice(5,7)===curM}).length;
     h+=foldBtn("ini_bday","🎂","Cumpleaños de "+MS[+curM-1],bdCnt,"#D6336C",bdHtml,false);
   }
 
@@ -2095,7 +2246,7 @@ function retiro(){
 
 // ===== NAVEGACIÓN INFERIOR COMPACTA CON PÍLDORA ACTIVA Y MENÚ "MÁS" =====
 function switchTab(id){
-  S.tab=id;S.sel=null;S.tb=null;S.ce=null;S.ia=null;S.pn=false;S.tn=false;S.ft=null;S.dl_view=null;S.dl_open=null;S.dl_ed=null;S.more=false;
+  S.tab=id;S.sel=null;S.tb=null;S.ce=null;S.ia=null;S.pn=false;S.tn=false;S.ft=null;S.dl_view=null;S.dl_open=null;S.dl_ed=null;S.more=false;S.ini_sub=null;
   draw();
 }
 function draw(){
