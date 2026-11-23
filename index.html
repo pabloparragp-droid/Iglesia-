@@ -133,6 +133,17 @@ details{margin:10px 0}summary{cursor:pointer;font-weight:700;color:var(--acc);fo
 .att-card{background:var(--bg);border:1.5px solid var(--line);border-radius:12px;padding:8px;display:flex;flex-direction:column;gap:6px;align-items:center;text-align:center}
 .att-card img{width:100%;height:96px;object-fit:cover;border-radius:8px;cursor:pointer}
 
+
+/* ===== CUADRÍCULA MINIMALISTA 2x2 MÓDULO ALABANZA ===== */
+.ala-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:14px 0}
+.ala-tile{background:var(--card);border:1.5px solid var(--line);border-radius:20px;padding:18px 14px;text-align:center;cursor:pointer;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;box-shadow:var(--sh);transition:transform .15s,border-color .15s,background .15s;color:var(--ink);min-height:132px;position:relative}
+.ala-tile:active{transform:scale(.96)}
+.ala-tile[aria-selected="true"]{border:2px solid var(--b);background:linear-gradient(145deg,var(--card) 0%,var(--soft) 100%)}
+.ala-ico{width:52px;height:52px;border-radius:16px;display:grid;place-items:center;font-size:26px;color:#fff;box-shadow:0 4px 12px rgba(0,0,0,.12)}
+.ala-lbl{font:700 17px Georgia,serif;line-height:1.2;color:var(--ink)}
+.ala-sub{font:400 13px system-ui,sans-serif;color:var(--mute)}
+.ala-count{position:absolute;top:10px;right:10px;font:800 13px system-ui,sans-serif;padding:3px 9px;border-radius:999px;background:var(--soft);color:var(--acc)}
+
 /* ===== VISTA ALTERNATIVA SIMPLE Y NOVEDOSA (MENÚS LIMPIOS SIN SATURACIÓN) ===== */
 .mode-switch{display:flex;align-items:center;justify-content:space-between;gap:10px;background:var(--card);border:1.5px solid var(--line);border-radius:16px;padding:10px 14px;margin:10px 0;box-shadow:var(--sh)}
 .mode-pill{display:inline-flex;background:var(--bg);border:1.5px solid var(--line);border-radius:999px;padding:3px;gap:3px}
@@ -272,7 +283,7 @@ function getWeeklyRS(){
 }
 var RS=getWeeklyRS();
 
-var S={tab:"ini",ui_mode:localStorage.getItem("iccvgd_ui_mode")||"simple",im:null,rd:null,rm:null,mm:null,ft:null,fm:null,fy:"all",rec:false,pw:false,q:"",aq:"",f:"Todos",fc:"Todas",fb:"Todos",sel:null,tb:null,lv:1,ia:null,cm:"or",pn:false,tn:false,T:{},rs:null,ri:0,cl:1,bad:[],ok:false,ev:"Culto dominical",dl_view:null,dl_open:null,dl_ans:{},dl_ed:null,dl_q:[],am:"lista",gd:null,more:false,pcell:"Todas",prayed:{},grad_name:"",tb_fold:{1:true},tb_lvl_filter:0,tb_disc_filter:"todos",ev_view:"tarjetas",dev_modal:false,tr_modal:false,chat_ch:"general",chat_priv_target:"",chat_msgs:[],worship_prog:[],worship_inv:[],worship_sub:"prog",wp_files:[],img_modal:null,retiro_cfg:{nombre:"Retiro Espiritual Iglesia ICCVGD",fecha:"",tarifa:0,lugar:"",notas:""},retiro_list:[],retiro_q:"",retiro_f:"todos"},U=null,ME=null,P=[],AT=[],EQ=[],AN=[],PR=[],TE=[],AR=[],AM=[],MR=[],RP=[],IC=[],EC=[],FN=[],DL=[],DP=[],AG=[],AGM=[],R0={},$=function(i){return document.getElementById(i)};
+var S={tab:"ini",ui_mode:localStorage.getItem("iccvgd_ui_mode")||"simple",im:null,rd:null,rm:null,mm:null,ft:null,fm:null,fy:"all",rec:false,pw:false,q:"",aq:"",f:"Todos",fc:"Todas",fb:"Todos",sel:null,tb:null,lv:1,ia:null,cm:"or",pn:false,tn:false,T:{},rs:null,ri:0,cl:1,bad:[],ok:false,ev:"Culto dominical",dl_view:null,dl_open:null,dl_ans:{},dl_ed:null,dl_q:[],am:"lista",gd:null,more:false,pcell:"Todas",prayed:{},grad_name:"",tb_fold:{1:true},tb_lvl_filter:0,tb_disc_filter:"todos",ev_view:"tarjetas",dev_modal:false,tr_modal:false,chat_ch:"general",chat_priv_target:"",chat_msgs:[],worship_prog:[],worship_inv:[],worship_sub:null,wp_files:[],img_modal:null,retiro_cfg:{nombre:"Retiro Espiritual Iglesia ICCVGD",fecha:"",tarifa:0,lugar:"",notas:""},retiro_list:[],retiro_q:"",retiro_f:"todos"},U=null,ME=null,P=[],AT=[],EQ=[],AN=[],PR=[],TE=[],AR=[],AM=[],MR=[],RP=[],IC=[],EC=[],FN=[],DL=[],DP=[],AG=[],AGM=[],R0={},$=function(i){return document.getElementById(i)};
 
 // ===== TEMA CLARO / PASTEL / OSCURO =====
 function getTheme(){return localStorage.getItem("iccvgd_theme")||(window.matchMedia&&window.matchMedia("(prefers-color-scheme:dark)").matches?"dark":"light")}
@@ -854,19 +865,19 @@ function retos(){
 // ===== TABLERO TIPO TRELLO POR NIVELES 1, 2 Y 3 (CON ID 1 LETRA + 1 NÚMERO CONSECUTIVO) =====
 var LV=["Nivel 1 · Básico","Nivel 2 · Intermedio","Nivel 3 · Avanzado","Nivel 4 · Ministerio","Sirviendo en la iglesia"],MX={1:8,2:12,3:12,4:12,5:12},SC={al_dia:["#2F9E5B","Al día"],atrasado:["#E07B12","Atrasado"],llamada:["#D6336C","Llamar o visitar"],listo:["#1565C0","Listo para subir"]},SO=["llamada","atrasado","listo","al_dia"];
 var RT={
-  pastor:["ini","reg","asis","retiro","panel","cel","tabl","inf","rend","com","retos","fin","equipo"],
-  tesorero:["ini","reg","retiro","panel","cel","tabl","inf","rend","com","retos"],
-  lider_alabanza:["ini","reg","asis","retiro","panel","cel","tabl","inf","rend","com","retos"],
-  asistencia_alabanza:["ini","reg","asis","retiro","panel","cel","tabl","inf","rend","com","retos"],
-  lider_servidores:["ini","reg","asis","retiro","panel","cel","tabl","inf","rend","com","retos"],
-  lider_celula:["ini","reg","asis","retiro","panel","cel","tabl","inf","rend","com","retos"],
-  asistente_lider:["ini","reg","asis","retiro","panel","cel","tabl","inf","rend","com","retos"],
-  lider:["ini","reg","asis","retiro","panel","cel","tabl","inf","rend","com","retos"],
-  coordinador:["ini","reg","asis","retiro","panel","cel","tabl","inf","rend","com","retos"],
-  discipulador:["ini","reg","retiro","panel","cel","tabl","inf","rend","com","retos"],
-  servidor:["ini","reg","retiro","panel","cel","tabl","inf","rend","com","retos"],
-  miembro:["ini","reg","retiro","panel","cel","tabl","inf","rend","com","retos"],
-  discipulo:["ini","reg","retiro","panel","cel","tabl","inf","rend","com","retos"]
+  pastor:["ini","reg","asis","alabanza","retiro","panel","cel","tabl","inf","rend","com","retos","fin","equipo"],
+  tesorero:["ini","reg","alabanza","retiro","panel","cel","tabl","inf","rend","com","retos"],
+  lider_alabanza:["ini","reg","asis","alabanza","retiro","panel","cel","tabl","inf","rend","com","retos"],
+  asistencia_alabanza:["ini","reg","asis","alabanza","retiro","panel","cel","tabl","inf","rend","com","retos"],
+  lider_servidores:["ini","reg","asis","alabanza","retiro","panel","cel","tabl","inf","rend","com","retos"],
+  lider_celula:["ini","reg","asis","alabanza","retiro","panel","cel","tabl","inf","rend","com","retos"],
+  asistente_lider:["ini","reg","asis","alabanza","retiro","panel","cel","tabl","inf","rend","com","retos"],
+  lider:["ini","reg","asis","alabanza","retiro","panel","cel","tabl","inf","rend","com","retos"],
+  coordinador:["ini","reg","asis","alabanza","retiro","panel","cel","tabl","inf","rend","com","retos"],
+  discipulador:["ini","reg","alabanza","retiro","panel","cel","tabl","inf","rend","com","retos"],
+  servidor:["ini","reg","alabanza","retiro","panel","cel","tabl","inf","rend","com","retos"],
+  miembro:["ini","reg","alabanza","retiro","panel","cel","tabl","inf","rend","com","retos"],
+  discipulo:["ini","reg","alabanza","retiro","panel","cel","tabl","inf","rend","com","retos"]
 };
 function allowedTabsForMe(){
   var out=[];
@@ -1040,49 +1051,94 @@ function delWorshipInv(id){
 }
 function renderAlabanzaModule(){
   var canSeeInv=isWorshipAsis();
-  if(!canSeeInv&&S.worship_sub==="inv")S.worship_sub="prog";
-  var h='<button class="btn alt" style="margin:8px 0" onclick="S.dl_view=null;draw()">← Volver al Tablero</button>';
-  h+='<div class="card t-azul"><h3>🎸 Alabanza y Servidores</h3><p class="note">'+(canSeeInv?"Programa tu grupo de alabanza, adjunta partituras en PDF o fotos de acordes y administra el inventario.":"Consulta la programación, letras en PDF y fotos del grupo de alabanza.")+'</p><div class="chips"><button class="chip" aria-pressed="'+(S.worship_sub==="prog")+'" onclick="S.worship_sub=\'prog\';draw()">🎶 Programar grupo</button>'+(canSeeInv?'<button class="chip" aria-pressed="'+(S.worship_sub==="inv")+'" onclick="S.worship_sub=\'inv\';draw()">🥁 Inventario instrumentos ('+S.worship_inv.length+')</button>':'')+'</div></div>';
+  var sub=S.worship_sub;
+  if(!canSeeInv&&(sub==="nuevo"||sub==="inv"))sub=null;
 
-  if(S.worship_sub==="prog"){
-    if(canSeeInv){
-      var draftFilesHtml=S.wp_files.length?'<div class="att-list">'+S.wp_files.map(function(f,idx){
-        return'<span class="att-chip">'+(f.kind==="pdf"?"📄 ":"🖼️ ")+esc(f.name)+' <button type="button" style="border:0;background:none;color:#D6336C;font-weight:800;cursor:pointer;padding:0 2px" onclick="removeDraftWorshipFile('+idx+')">✕</button></span>';
-      }).join("")+'</div>':'';
-      h+='<div class="card"><h3>🎶 Programar grupo de alabanza</h3>'
-        +'<label>Fecha del servicio / ensayo</label><input id="wp_dt" type="date" value="'+today()+'">'
-        +'<label>Integrantes / Roles asignados</label><input id="wp_tm" placeholder="Ej. Voz guía, guitarra acústica, teclado, batería">'
-        +'<label>Canciones / Repertorio</label><textarea id="wp_sg" rows="3" placeholder="Ej. Cántico de apertura, adoración, ministración..."></textarea>'
-        +'<label>📎 Adjuntar partituras PDF o fotos de acordes</label>'
-        +'<input id="wp_fl" type="file" accept="application/pdf,image/*" multiple onchange="handleWorshipFiles(this)" style="padding:10px">'
-        +'<small class="note">Puedes seleccionar varios archivos PDF (máx. 3 MB) o fotos desde tu celular.</small>'
-        +draftFilesHtml
-        +'<label>Indicaciones de sonido o ensayo</label><input id="wp_nt" placeholder="Ej. Ensayo sábado 4:00 p. m.">'
-        +'<button class="btn" onclick="saveWorshipProg()">💾 Guardar programación</button></div>';
+  var totalFiles=S.worship_prog.reduce(function(acc,x){return acc+(Array.isArray(x.files)?x.files.length:0)},0);
+  var h='<button class="btn alt no-print" style="margin:8px 0" onclick="switchTab(\'ini\')">← Volver a Inicio</button>';
+  h+='<div class="card t-azul" style="text-align:center;padding:18px 16px"><span class="pill" style="background:#1565C0;font-size:13px">Ministerio Musical</span><h3 style="margin-top:6px">🎸 Alabanza</h3><p class="note" style="margin:4px 0 0">Selecciona una opción para gestionar o consultar</p></div>';
+
+  // Cuadrícula minimalista de iconos elegantes 2x2
+  var tile1={id:"prog",ico:"🎶",bg:"#1565C0",title:"Programación",sub:"Turnos y repertorio",cnt:S.worship_prog.length,fn:"S.worship_sub=(S.worship_sub===\'prog\'?null:\'prog\');draw()"};
+  var tile2={id:"archivos",ico:"🎼",bg:"#8E4FC7",title:"Partituras y Fotos",sub:"PDF y acordes",cnt:totalFiles,fn:"S.worship_sub=(S.worship_sub===\'archivos\'?null:\'archivos\');draw()"};
+  var tile3=canSeeInv
+    ?{id:"nuevo",ico:"✍️",bg:"#2F9E5B",title:"Programar Grupo",sub:"Crear nuevo servicio",cnt:null,fn:"S.worship_sub=(S.worship_sub===\'nuevo\'?null:\'nuevo\');draw()"}
+    :{id:"asis_w",ico:"✅",bg:"#2F9E5B",title:"Asistencia",sub:"Ensayos y cultos",cnt:null,fn:"S.ev=\'Alabanza y servidores\';switchTab(\'asis\')"};
+  var tile4=canSeeInv
+    ?{id:"inv",ico:"🥁",bg:"#E07B12",title:"Inventario",sub:"Instrumentos y sonido",cnt:S.worship_inv.length,fn:"S.worship_sub=(S.worship_sub===\'inv\'?null:\'inv\');draw()"}
+    :{id:"chat_w",ico:"💬",bg:"#00897B",title:"Chat Alabanza",sub:"Equipo musical",cnt:null,fn:"S.tab=\'com\';S.cm=\'ch\';S.chat_ch=\'privado\';S.chat_priv_target=\'Alabanza\';draw()"};
+
+  var tiles=[tile1,tile2,tile3,tile4];
+  h+='<div class="ala-grid">'
+    +tiles.map(function(t){
+      var sel=sub===t.id;
+      return'<button class="ala-tile" aria-selected="'+sel+'" onclick="'+t.fn+'">'
+        +(t.cnt!==null?'<span class="ala-count">'+t.cnt+'</span>':'')
+        +'<span class="ala-ico" style="background:'+t.bg+'">'+t.ico+'</span>'
+        +'<div><span class="ala-lbl">'+t.title+'</span><span class="ala-sub">'+t.sub+'</span></div>'
+        +'</button>';
+    }).join("")
+    +'</div>';
+
+  // Vista de detalle limpia según el ícono seleccionado en la cuadrícula 2x2
+  if(sub==="nuevo"&&canSeeInv){
+    var draftFilesHtml=S.wp_files.length?'<div class="att-list">'+S.wp_files.map(function(f,idx){
+      return'<span class="att-chip">'+(f.kind==="pdf"?"📄 ":"🖼️ ")+esc(f.name)+' <button type="button" style="border:0;background:none;color:#D6336C;font-weight:800;cursor:pointer;padding:0 2px" onclick="removeDraftWorshipFile('+idx+')">✕</button></span>';
+    }).join("")+'</div>':'';
+    h+='<div class="card"><h3>✍️ Programar grupo de alabanza</h3>'
+      +'<label>Fecha del servicio / ensayo</label><input id="wp_dt" type="date" value="'+today()+'">'
+      +'<label>Integrantes / Roles asignados</label><input id="wp_tm" placeholder="Ej. Voz guía, guitarra acústica, teclado, batería">'
+      +'<label>Canciones / Repertorio</label><textarea id="wp_sg" rows="3" placeholder="Ej. Cántico de apertura, adoración, ministración..."></textarea>'
+      +'<label>📎 Adjuntar partituras PDF o fotos de acordes</label>'
+      +'<input id="wp_fl" type="file" accept="application/pdf,image/*" multiple onchange="handleWorshipFiles(this)" style="padding:10px">'
+      +'<small class="note">Puedes seleccionar varios archivos PDF (máx. 3 MB) o fotos desde tu celular.</small>'
+      +draftFilesHtml
+      +'<label>Indicaciones de sonido o ensayo</label><input id="wp_nt" placeholder="Ej. Ensayo sábado 4:00 p. m.">'
+      +'<button class="btn" onclick="saveWorshipProg();S.worship_sub=\'prog\';draw()">💾 Guardar programación</button></div>';
+  }else if(sub==="prog"){
+    if(!S.worship_prog.length){
+      h+='<div class="card"><p class="note">Aún no hay programaciones registradas.</p>'+(canSeeInv?'<button class="btn sm" onclick="S.worship_sub=\'nuevo\';draw()">✍️ Crear primera programación</button>':'')+'</div>';
+    }else{
+      h+=S.worship_prog.map(function(x){
+        var files=Array.isArray(x.files)?x.files:[];
+        var filesView='';
+        if(files.length){
+          filesView+='<div style="margin-top:8px"><b style="font-size:16px">📎 Archivos adjuntos ('+files.length+'):</b><div class="att-grid">';
+          files.forEach(function(f,fIdx){
+            if(f.kind==="img"){
+              filesView+='<div class="att-card"><img src="'+f.data+'" alt="'+esc(f.name)+'" onclick="openWorshipImgModal('+x.id+','+fIdx+')"><small style="font-size:13px;word-break:break-word">🖼️ '+esc(f.name)+'</small></div>';
+            }else{
+              filesView+='<div class="att-card" style="justify-content:center"><span style="font-size:34px">📄</span><small style="font-size:13px;word-break:break-word">'+esc(f.name)+'</small><button class="chip" style="font-size:13px;padding:5px 10px" onclick="openWorshipPdf('+x.id+','+fIdx+')">Abrir PDF</button></div>';
+            }
+          });
+          filesView+='</div></div>';
+        }
+        return'<div class="card"><b>📅 '+fd(x.date)+' · '+esc(x.team)+'</b><p style="margin:6px 0"><b>Repertorio:</b> '+fmtLines(x.songs)+'</p>'+filesView+(x.notes?'<p class="note">📝 '+esc(x.notes)+'</p>':'')+(canSeeInv?'<button class="btn alt sm" onclick="delWorshipProg('+x.id+')">🗑️ Eliminar</button>':'')+'</div>';
+      }).join("");
     }
-    var pHtml=S.worship_prog.length?S.worship_prog.map(function(x){
-      var files=Array.isArray(x.files)?x.files:[];
-      var filesView='';
-      if(files.length){
-        filesView+='<div style="margin-top:8px"><b style="font-size:16px">📎 Archivos adjuntos ('+files.length+'):</b><div class="att-grid">';
-        files.forEach(function(f,fIdx){
-          if(f.kind==="img"){
-            filesView+='<div class="att-card"><img src="'+f.data+'" alt="'+esc(f.name)+'" onclick="openWorshipImgModal('+x.id+','+fIdx+')"><small style="font-size:13px;word-break:break-word">🖼️ '+esc(f.name)+'</small></div>';
-          }else{
-            filesView+='<div class="att-card" style="justify-content:center"><span style="font-size:34px">📄</span><small style="font-size:13px;word-break:break-word">'+esc(f.name)+'</small><button class="chip" style="font-size:13px;padding:5px 10px" onclick="openWorshipPdf('+x.id+','+fIdx+')">Abrir PDF</button></div>';
-          }
-        });
-        filesView+='</div></div>';
-      }
-      return'<div class="card"><b>📅 '+fd(x.date)+' · '+esc(x.team)+'</b><p style="margin:6px 0"><b>Repertorio:</b> '+fmtLines(x.songs)+'</p>'+filesView+(x.notes?'<p class="note">📝 '+esc(x.notes)+'</p>':'')+(canSeeInv?'<button class="btn alt sm" onclick="delWorshipProg('+x.id+')">🗑️ Eliminar</button>':'')+'</div>';
-    }).join(""):'<p class="note">Aún no hay programaciones registradas.</p>';
-    h+=foldBtn("w_prog_list","🗓️","Programaciones activas",S.worship_prog.length,"#1565C0",pHtml,true);
-  }else{
-    if(canSeeInv){
-      h+='<div class="card"><h3>🥁 Registrar instrumento o equipo</h3><label>Instrumento / Equipo</label><input id="wi_it" placeholder="Ej. Guitarra eléctrica, consola, micrófono inalámbrico"><label>Cantidad</label><input id="wi_qt" type="number" min="1" value="1"><label>Estado</label><select id="wi_cn"><option>Óptimo</option><option>Requiere revisión</option><option>En mantenimiento</option></select><label>Ubicación o nota</label><input id="wi_nt" placeholder="Ej. Tarima principal / Estuche azul"><button class="btn" onclick="saveWorshipInv()">💾 Agregar al inventario</button></div>';
+  }else if(sub==="archivos"){
+    var allAtts=[];
+    S.worship_prog.forEach(function(x){
+      (Array.isArray(x.files)?x.files:[]).forEach(function(f,fIdx){
+        allAtts.push({prog:x,file:f,idx:fIdx});
+      });
+    });
+    if(!allAtts.length){
+      h+='<div class="card"><p class="note">Aún no hay partituras en PDF ni fotos de acordes adjuntas.</p>'+(canSeeInv?'<button class="btn sm" onclick="S.worship_sub=\'nuevo\';draw()">✍️ Subir partituras o fotos</button>':'')+'</div>';
+    }else{
+      h+='<div class="card"><h3>🎼 Partituras PDF y Fotos ('+allAtts.length+')</h3><div class="att-grid">';
+      allAtts.forEach(function(it){
+        if(it.file.kind==="img"){
+          h+='<div class="att-card"><img src="'+it.file.data+'" alt="'+esc(it.file.name)+'" onclick="openWorshipImgModal('+it.prog.id+','+it.idx+')"><small style="font-size:13px;word-break:break-word">🖼️ '+esc(it.file.name)+'</small><small class="note" style="font-size:12px">'+fd(it.prog.date)+'</small></div>';
+        }else{
+          h+='<div class="att-card" style="justify-content:center"><span style="font-size:34px">📄</span><small style="font-size:13px;word-break:break-word">'+esc(it.file.name)+'</small><small class="note" style="font-size:12px">'+fd(it.prog.date)+'</small><button class="chip" style="font-size:13px;padding:5px 10px" onclick="openWorshipPdf('+it.prog.id+','+it.idx+')">Abrir PDF</button></div>';
+        }
+      });
+      h+='</div></div>';
     }
-    var iHtml=S.worship_inv.length?S.worship_inv.map(function(x){var cCol=x.cond==="Óptimo"?"#2F9E5B":x.cond==="Requiere revisión"?"#E07B12":"#D6336C";return'<div class="card row"><span class="av" style="background:'+cCol+'">🎸</span><span class="grow"><b>'+esc(x.item)+' (x'+x.qty+')</b><small>Estado: '+esc(x.cond)+(x.notes?" · "+esc(x.notes):"")+'</small></span>'+(canSeeInv?'<button class="chip" onclick="delWorshipInv('+x.id+')">🗑️</button>':'')+'</div>'}).join(""):'<p class="note">Aún no hay instrumentos registrados en el inventario.</p>';
-    h+=foldBtn("w_inv_list","🎛️","Inventario de instrumentos",S.worship_inv.length,"#2F9E5B",iHtml,true);
+  }else if(sub==="inv"&&canSeeInv){
+    h+='<div class="card"><h3>🥁 Registrar instrumento o equipo</h3><label>Instrumento / Equipo</label><input id="wi_it" placeholder="Ej. Guitarra eléctrica, consola, micrófono inalámbrico"><label>Cantidad</label><input id="wi_qt" type="number" min="1" value="1"><label>Estado</label><select id="wi_cn"><option>Óptimo</option><option>Requiere revisión</option><option>En mantenimiento</option></select><label>Ubicación o nota</label><input id="wi_nt" placeholder="Ej. Tarima principal / Estuche azul"><button class="btn" onclick="saveWorshipInv()">💾 Agregar al inventario</button></div>';
+    h+=S.worship_inv.length?S.worship_inv.map(function(x){var cCol=x.cond==="Óptimo"?"#2F9E5B":x.cond==="Requiere revisión"?"#E07B12":"#D6336C";return'<div class="card row"><span class="av" style="background:'+cCol+'">🎸</span><span class="grow"><b>'+esc(x.item)+' (x'+x.qty+')</b><small>Estado: '+esc(x.cond)+(x.notes?" · "+esc(x.notes):"")+'</small></span><button class="chip" onclick="delWorshipInv('+x.id+')">🗑️</button></div>'}).join(""):'<div class="card"><p class="note">Aún no hay instrumentos registrados en el inventario.</p></div>';
   }
   return h;
 }
@@ -1091,14 +1147,13 @@ function tablero(){
   if(ME.role==="discipulo")return renderDiscipuladoHub(false);
   if(S.dl_view==="editor"&&isPastor())return renderLessonEditor();
   if(S.dl_view==="lessons")return renderDiscipuladoHub(true);
-  if(S.dl_view==="alabanza")return renderAlabanzaModule();
   if(S.tb)return tform();
 
   var allB=P.filter(function(p){return p.level});
   var codeMap=buildDiscipleCodeMap(allB);
   var B=S.tb_disc_filter==="mios"?allB.filter(function(p){return canMove(p)}):allB;
 
-  var h='<div class="card"><h3>🗂️ Tablero de Discipulado (Niveles 1, 2 y 3)</h3><p class="note">Columnas por nivel con lecciones ascendentes y fichas desplegables con ID consecutivo. Toca el nombre de un discípulo para ver su avance y moverlo.</p><div class="grid2"><button class="btn alt" style="margin:0" onclick="S.dl_view=\'lessons\';S.dl_open=null;draw()">📖 Lecciones</button><button class="btn alt" style="margin:0" onclick="S.dl_view=\'alabanza\';draw()">🎸 Alabanza</button></div>';
+  var h='<div class="card"><h3>🗂️ Tablero de Discipulado (Niveles 1, 2 y 3)</h3><p class="note">Columnas por nivel con lecciones ascendentes y fichas desplegables con ID consecutivo. Toca el nombre de un discípulo para ver su avance y moverlo.</p><button class="btn alt" style="margin:0" onclick="S.dl_view=\'lessons\';S.dl_open=null;draw()">📖 Lecciones de Discipulado</button>';
   h+='<div class="chips" style="margin-top:8px"><button class="chip" aria-pressed="'+(S.tb_disc_filter==="todos")+'" onclick="S.tb_disc_filter=\'todos\';draw()">👥 Todos ('+allB.length+')</button><button class="chip" aria-pressed="'+(S.tb_disc_filter==="mios")+'" onclick="S.tb_disc_filter=\'mios\';draw()">★ Mis discípulos</button></div></div>';
 
   h+='<div class="stats">'+SO.map(function(k){return'<div class="stat" style="background:'+SC[k][0]+'"><b>'+B.filter(function(p){return p.status===k}).length+'</b>'+SC[k][1]+'</div>'}).join("")+'</div>';
@@ -1357,17 +1412,17 @@ var ROLE_GUIDE={
   asistencia_alabanza:{
     desc:"Registras la asistencia del equipo de alabanza y administras el inventario de instrumentos.",
     tips:[
-      {e:"🥁",t:"Revisar o editar el inventario de instrumentos",fn:"S.tab='tabl';S.dl_view='alabanza';S.worship_sub='inv';draw()"},
+      {e:"🥁",t:"Revisar o editar el inventario de instrumentos",fn:"S.worship_sub='inv';switchTab('alabanza')"},
       {e:"✅",t:"Tomar asistencia de Alabanza y servidores",fn:"switchTab('asis')"},
-      {e:"🎸",t:"Consultar programación del grupo de alabanza",fn:"S.tab='tabl';S.dl_view='alabanza';S.worship_sub='prog';draw()"},
+      {e:"🎸",t:"Consultar programación del grupo de alabanza",fn:"S.worship_sub='prog';switchTab('alabanza')"},
       {e:"⛺",t:"Revisar inscripciones y abonos del Retiro",fn:"switchTab('retiro')"}
     ]
   },
   lider_alabanza:{
     desc:"Organizas los turnos de ministración, repertorio e inventario musical.",
     tips:[
-      {e:"🎸",t:"Programar grupo de alabanza y repertorio",fn:"S.tab='tabl';S.dl_view='alabanza';S.worship_sub='prog';draw()"},
-      {e:"🥁",t:"Revisar o actualizar inventario de instrumentos",fn:"S.tab='tabl';S.dl_view='alabanza';S.worship_sub='inv';draw()"},
+      {e:"🎸",t:"Programar grupo de alabanza y repertorio",fn:"S.worship_sub='prog';switchTab('alabanza')"},
+      {e:"🥁",t:"Revisar o actualizar inventario de instrumentos",fn:"S.worship_sub='inv';switchTab('alabanza')"},
       {e:"✅",t:"Registrar asistencia de ensayo en Asistencia",fn:"switchTab('asis')"}
     ]
   },
@@ -1382,7 +1437,7 @@ var ROLE_GUIDE={
   servidor:{
     desc:"Sirves activamente en la casa de Dios y edificas la unidad del cuerpo.",
     tips:[
-      {e:"🎸",t:"Consultar programación de servicio y alabanza",fn:"S.tab='tabl';S.dl_view='alabanza';draw()"},
+      {e:"🎸",t:"Consultar programación de servicio y alabanza",fn:"switchTab('alabanza')"},
       {e:"🙌",t:"Orar por peticiones y compartir testimonios en Comunidad",fn:"switchTab('com')"},
       {e:"🧩",t:"Participar en los retos bíblicos semanales",fn:"switchTab('retos')"}
     ]
@@ -1529,6 +1584,7 @@ function renderSimpleInicio(ctx){
   menuItems.push({emo:"🎂",t:"Cumpleaños del mes",s:MS[+curM-1]+" · Sincronizar calendario",b:bdCnt>0?bdCnt:null,fn:"S.ini_sub=\'cumple\';draw()"});
   menuItems.push({emo:"🗓️",t:"Calendario anual "+yr,s:"Actividades principales del año",b:an.length>0?an.length:null,fn:"S.ini_sub=\'calendario\';draw()"});
   if(al.indexOf("asis")>-1)menuItems.push({emo:"✅",t:"Tomar asistencia",s:"Lista o conteo general",b:null,fn:"switchTab(\'asis\')"});
+  if(al.indexOf("alabanza")>-1)menuItems.push({emo:"🎸",t:"Alabanza",s:"Programación, partituras e inventario",b:S.worship_prog.length||null,fn:"switchTab(\'alabanza\')"});
   if(al.indexOf("retiro")>-1)menuItems.push({emo:"⛺",t:"Control de Retiro",s:"Confirmados, abonos y saldos",b:S.retiro_list.length||null,fn:"switchTab(\'retiro\')"});
   if(al.indexOf("cel")>-1)menuItems.push({emo:"🏘️",t:"Células de cuidado",s:"Grupos y reuniones",b:CE.length||null,fn:"switchTab(\'cel\')"});
   if(al.indexOf("panel")>-1)menuItems.push({emo:"📊",t:"Panel pastoral",s:"Indicadores y seguimiento",b:null,fn:"switchTab(\'panel\')"});
@@ -2373,7 +2429,7 @@ function switchTab(id){
 }
 function draw(){
   renderHeader();
-  var T=[["ini","🏠","Inicio"],["reg","👥","Registro"],["asis","✅","Asistencia"],["retiro","⛺","Retiro"],["panel","📊","Panel"],["cel","🏘️","Células"],["tabl","🗂️","Tablero"],["inf","📄","Informe"],["rend","📝","Rendición"],["com","🙌","Comunidad"],["retos","🧩","Retos"],["fin","💰","Finanzas"],["equipo","⚙️","Equipo"]];
+  var T=[["ini","🏠","Inicio"],["reg","👥","Registro"],["asis","✅","Asistencia"],["alabanza","🎸","Alabanza"],["retiro","⛺","Retiro"],["panel","📊","Panel"],["cel","🏘️","Células"],["tabl","🗂️","Tablero"],["inf","📄","Informe"],["rend","📝","Rendición"],["com","🙌","Comunidad"],["retos","🧩","Retos"],["fin","💰","Finanzas"],["equipo","⚙️","Equipo"]];
   $("nav").style.display=ME?"flex":"none";
   $("more_box").innerHTML="";
   $("modal_box").innerHTML=S.img_modal?renderImagePreviewModal():(S.dev_modal?renderDevotionalModal():(S.tr_modal?renderTransversalesModal():""));
@@ -2399,7 +2455,7 @@ function draw(){
     $("more_box").innerHTML='<div class="more-pop" onclick="if(event.target===this){S.more=false;draw()}"><div class="more-sheet"><div style="display:flex;justify-content:space-between;align-items:center"><b>Más secciones</b><button class="chip" onclick="S.more=false;draw()">✕ Cerrar</button></div><div class="more-grid">'+extraTabs.map(function(t){return'<button class="more-item" aria-current="'+(S.tab===t[0])+'" onclick="switchTab(\''+t[0]+'\')"><span>'+t[1]+'</span>'+t[2]+'</button>'}).join("")+'</div></div></div>';
   }
 
-  $("app").innerHTML=S.tab==="reg"?reg():S.tab==="asis"?asis():S.tab==="retiro"?retiro():S.tab==="ini"?inicio():S.tab==="inf"?informe():S.tab==="rend"?rendicion():S.tab==="fin"&&canEditFinanzas()?finanzas():S.tab==="com"?comunidad():S.tab==="cel"?celulas():S.tab==="tabl"?tablero():S.tab==="retos"?retos():S.tab==="equipo"&&isPastor()?equipo():panel();
+  $("app").innerHTML=S.tab==="reg"?reg():S.tab==="asis"?asis():S.tab==="alabanza"?renderAlabanzaModule():S.tab==="retiro"?retiro():S.tab==="ini"?inicio():S.tab==="inf"?informe():S.tab==="rend"?rendicion():S.tab==="fin"&&canEditFinanzas()?finanzas():S.tab==="com"?comunidad():S.tab==="cel"?celulas():S.tab==="tabl"?tablero():S.tab==="retos"?retos():S.tab==="equipo"&&isPastor()?equipo():panel();
   var q=$("q");if(q)q.oninput=function(){S.q=q.value;var p=q.selectionStart;draw();var n=$("q");if(n){n.focus();n.setSelectionRange(p,p)}}
   var aq=$("aq");if(aq)aq.oninput=function(){S.aq=aq.value;var p=aq.selectionStart;draw();var n=$("aq");if(n){n.focus();n.setSelectionRange(p,p)}}
 }
