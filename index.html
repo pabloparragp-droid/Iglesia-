@@ -67,6 +67,8 @@ details{margin:10px 0}summary{cursor:pointer;font-weight:700;color:var(--acc);fo
 .qopt[aria-checked="true"]{border-color:var(--b);background:var(--soft);font-weight:700}
 .grid2{display:grid;grid-template-columns:1fr 1fr;gap:8px}
 .grad-card{border:3px solid #D4AF37;background:linear-gradient(145deg,#FFFDF5 0%,#F3E5AB 100%);color:#1F2430;border-radius:18px;padding:22px 16px;text-align:center;box-shadow:0 8px 24px rgba(212,175,55,.25);margin:12px 0}
+.err-box{border:2px solid #D6336C;background:var(--card);border-radius:18px;padding:18px;margin:14px 0;box-shadow:var(--sh)}
+.err-code{background:var(--bg);border:1px solid var(--line);border-radius:12px;padding:10px 12px;font-family:monospace;font-size:14px;white-space:pre-wrap;overflow-x:auto;color:#D6336C;margin:10px 0}
 
 /* ===== BOTONES PLEGABLES CON EMOJI DE IDENTIDAD ===== */
 .sec-fold{border:1.5px solid var(--line);border-radius:18px;margin:12px 0;background:var(--card);box-shadow:var(--sh);overflow:hidden}
@@ -169,6 +171,28 @@ details{margin:10px 0}summary{cursor:pointer;font-weight:700;color:var(--acc);fo
 .menu-item-r{display:inline-flex;align-items:center;gap:8px;flex:none;color:var(--mute);font-weight:700}
 .sub-back{display:inline-flex;align-items:center;gap:6px;border:1.5px solid var(--line);background:var(--card);color:var(--ink);border-radius:999px;padding:9px 15px;font:700 16px system-ui,sans-serif;cursor:pointer;margin:6px 0 10px}
 
+/* ===== JUEGO DE CARTAS UNO MULTIJUGADOR ===== */
+.uno-table{background:radial-gradient(circle at center,#1E5631 0%,#123524 100%);border:3px solid #2E7D32;border-radius:20px;padding:14px;color:#fff;margin:10px 0;box-shadow:0 8px 24px rgba(0,0,0,.28)}
+.uno-opponents{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin-bottom:12px}
+.uno-opp{background:rgba(255,255,255,.12);border:2px solid rgba(255,255,255,.22);border-radius:14px;padding:8px 12px;text-align:center;min-width:96px;transition:all .2s}
+.uno-opp.turn{border-color:#FFD54F;background:rgba(255,213,79,.22);box-shadow:0 0 12px rgba(255,213,79,.45);transform:scale(1.04)}
+.uno-center{display:flex;align-items:center;justify-content:center;gap:18px;margin:14px 0;flex-wrap:wrap}
+.uno-card{width:76px;height:112px;border-radius:14px;border:4px solid #fff;display:inline-flex;flex-direction:column;align-items:center;justify-content:center;font-weight:900;color:#fff;box-shadow:0 5px 14px rgba(0,0,0,.35);position:relative;user-select:none;transition:transform .15s,box-shadow .15s;flex:none;cursor:pointer}
+.uno-card.sm{width:58px;height:86px;border-width:3px;border-radius:11px;font-size:16px}
+.uno-card.playable:hover,.uno-card.playable:active{transform:translateY(-10px) scale(1.05);box-shadow:0 10px 20px rgba(255,235,59,.55);border-color:#FFF59D}
+.uno-card.disabled{opacity:.58;cursor:not-allowed}
+.uno-c-R{background:linear-gradient(145deg,#E53935,#B71C1C)}
+.uno-c-B{background:linear-gradient(145deg,#1E88E5,#0D47A1)}
+.uno-c-G{background:linear-gradient(145deg,#43A047,#1B5E20)}
+.uno-c-Y{background:linear-gradient(145deg,#FBC02D,#F57F17);color:#1F2430;text-shadow:0 1px 0 rgba(255,255,255,.5)}
+.uno-c-W{background:conic-gradient(from 45deg,#E53935 0 90deg,#1E88E5 90deg 180deg,#FBC02D 180deg 270deg,#43A047 270deg 360deg);text-shadow:0 2px 4px rgba(0,0,0,.85)}
+.uno-back{background:repeating-linear-gradient(45deg,#1A1A2E,#1A1A2E 8px,#16213E 8px,#16213E 16px);border-color:#FFD54F}
+.uno-val{font-size:28px;line-height:1}
+.uno-corner{position:absolute;top:5px;left:7px;font-size:13px;font-weight:800}
+.uno-corner-b{position:absolute;bottom:5px;right:7px;font-size:13px;font-weight:800;transform:rotate(180deg)}
+.uno-hand{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;padding:10px 4px;margin-top:8px}
+.uno-color-dot{display:inline-block;width:16px;height:16px;border-radius:50%;border:2px solid #fff;vertical-align:middle}
+
 @media print{
   body{background:#fff!important;color:#000!important}
   .nav,.hdr-top,.who,.no-print,.btn,.chip,.chips{display:none!important}
@@ -179,7 +203,44 @@ details{margin:10px 0}summary{cursor:pointer;font-weight:700;color:var(--acc);fo
 </style></head><body><main><header id="hdr"></header><div id="app"><p class="note">Cargando...</p></div></main><nav class="nav" id="nav" style="display:none"></nav><div id="more_box"></div><div id="modal_box"></div>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.js"></script>
 <script>
-var SB=supabase.createClient("https://qszdcipapiiqtzryhnzl.supabase.co","sb_publishable_bQQXZdbBeMrD-kYbVJGT0A_UEtRHNnZ");
+function esc(s){return String(s==null?"":s).replace(/[&<>"]/g,function(c){return{"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]})}
+function safeGet(k,def){try{var v=localStorage.getItem(k);return v!==null?v:def}catch(e){return def}}
+function safeSet(k,v){try{localStorage.setItem(k,v)}catch(e){}}
+function lget(k,def){try{var v=localStorage.getItem("iccvgd_"+k);return v?JSON.parse(v):def}catch(e){return def}}
+function lset(k,v){try{localStorage.setItem("iccvgd_"+k,JSON.stringify(v))}catch(e){}}
+var $=function(i){return document.getElementById(i)};
+
+function showFatalError(stage,err){
+  var msg=(err&&(err.message||err.error_description||String(err)))||"Error desconocido";
+  var el=$("app");
+  if($("nav"))$("nav").style.display="none";
+  if(el){
+    el.innerHTML='<div class="err-box"><h3>⚠️ No se pudo completar la carga</h3>'
+      +'<p class="note">Etapa: <b>'+esc(stage||"Inicio")+'</b></p>'
+      +'<div class="err-code">'+esc(msg)+'</div>'
+      +'<button class="btn" onclick="retryBoot()">🔄 Reintentar ahora</button>'
+      +'<button class="btn alt" onclick="forceLoginScreen()">🔐 Ir a iniciar sesión</button>'
+      +'</div>';
+  }
+}
+window.addEventListener("error",function(ev){
+  if(ev&&ev.message)showFatalError("Script en navegador",ev.message+(ev.lineno?" (línea "+ev.lineno+")":""));
+});
+window.addEventListener("unhandledrejection",function(ev){
+  showFatalError("Promesa sin resolver",ev&&ev.reason?ev.reason:"Error de conexión");
+});
+
+var SB=null;
+try{
+  if(window.supabase&&typeof window.supabase.createClient==="function"){
+    SB=window.supabase.createClient("https://qszdcipapiiqtzryhnzl.supabase.co","sb_publishable_bQQXZdbBeMrD-kYbVJGT0A_UEtRHNnZ");
+  }else{
+    showFatalError("Carga de Supabase","No se cargó la librería de Supabase desde el CDN. Revisa tu conexión a internet o bloqueadores.");
+  }
+}catch(e){
+  showFatalError("Inicializar Supabase",e);
+}
+
 var ST=["Visitante","Nuevo creyente","Discípulo","Miembro","Servidor","Líder","Discipulador","Pastor"],COL={"Visitante":"#E07B12","Nuevo creyente":"#2F9E5B","Discípulo":"#1565C0","Miembro":"#00897B","Servidor":"#8E4FC7","Líder":"#B26A00","Discipulador":"#D6336C","Pastor":"#37474F"},ST_EMO={"Visitante":"👋","Nuevo creyente":"🌱","Discípulo":"📖","Miembro":"🪪","Servidor":"🤝","Líder":"🧭","Discipulador":"🎓","Pastor":"⛪"},CELLS=[],CE=[];
 
 // ===== PRINCIPIOS TRANSVERSALES APLICADOS EN TODO LO QUE SE ENSEÑA =====
@@ -283,17 +344,13 @@ function getWeeklyRS(){
 }
 var RS=getWeeklyRS();
 
-var S={tab:"ini",ui_mode:localStorage.getItem("iccvgd_ui_mode")||"simple",im:null,rd:null,rm:null,mm:null,ft:null,fm:null,fy:"all",rec:false,pw:false,q:"",aq:"",f:"Todos",fc:"Todas",fb:"Todos",sel:null,tb:null,lv:1,ia:null,cm:"or",pn:false,tn:false,T:{},rs:null,ri:0,cl:1,bad:[],ok:false,ev:"Culto dominical",dl_view:null,dl_open:null,dl_ans:{},dl_ed:null,dl_q:[],am:"lista",gd:null,more:false,pcell:"Todas",prayed:{},grad_name:"",tb_fold:{1:true},tb_lvl_filter:0,tb_disc_filter:"todos",ev_view:"tarjetas",dev_modal:false,tr_modal:false,chat_ch:"general",chat_priv_target:"",chat_msgs:[],worship_prog:[],worship_inv:[],worship_sub:null,wp_files:[],img_modal:null,retiro_cfg:{nombre:"Retiro Espiritual Iglesia ICCVGD",fecha:"",tarifa:0,lugar:"",notas:""},retiro_list:[],retiro_q:"",retiro_f:"todos"},U=null,ME=null,P=[],AT=[],EQ=[],AN=[],PR=[],TE=[],AR=[],AM=[],MR=[],RP=[],IC=[],EC=[],FN=[],DL=[],DP=[],AG=[],AGM=[],R0={},$=function(i){return document.getElementById(i)};
+var S={tab:"ini",ui_mode:safeGet("iccvgd_ui_mode","simple"),im:null,rd:null,rm:null,mm:null,ft:null,fm:null,fy:"all",rec:false,pw:false,q:"",aq:"",f:"Todos",fc:"Todas",fb:"Todos",sel:null,tb:null,lv:1,ia:null,cm:"or",pn:false,tn:false,T:{},rs:null,ri:0,cl:1,bad:[],ok:false,ev:"Culto dominical",dl_view:null,dl_open:null,dl_ans:{},dl_ed:null,dl_q:[],am:"lista",gd:null,more:false,pcell:"Todas",prayed:{},grad_name:"",tb_fold:{1:true},tb_lvl_filter:0,tb_disc_filter:"todos",ev_view:"tarjetas",dev_modal:false,tr_modal:false,chat_ch:"general",chat_priv_target:"",chat_msgs:[],worship_prog:[],worship_inv:[],worship_sub:null,wp_files:[],img_modal:null,retiro_cfg:{nombre:"Retiro Espiritual Iglesia ICCVGD",fecha:"",tarifa:0,lugar:"",notas:""},retiro_list:[],retiro_q:"",retiro_f:"todos",uno_view:false,uno_rooms:[],uno_room:null,uno_wild_idx:null,uno_join_code:"",uno_sub:null,uno_poll:null},U=null,ME=null,P=[],AT=[],EQ=[],AN=[],PR=[],TE=[],AR=[],AM=[],MR=[],RP=[],IC=[],EC=[],FN=[],DL=[],DP=[],AG=[],AGM=[],R0={};
 
 // ===== TEMA CLARO / PASTEL / OSCURO =====
-function getTheme(){return localStorage.getItem("iccvgd_theme")||(window.matchMedia&&window.matchMedia("(prefers-color-scheme:dark)").matches?"dark":"light")}
-function applyTheme(th){document.documentElement.setAttribute("data-theme",th);localStorage.setItem("iccvgd_theme",th)}
+function getTheme(){return safeGet("iccvgd_theme",null)||(window.matchMedia&&window.matchMedia("(prefers-color-scheme:dark)").matches?"dark":"light")}
+function applyTheme(th){document.documentElement.setAttribute("data-theme",th);safeSet("iccvgd_theme",th)}
 function toggleTheme(){var cur=getTheme(),next=cur==="light"?"pastel":(cur==="pastel"?"dark":"light");applyTheme(next);draw()}
-(function(){var saved=localStorage.getItem("iccvgd_theme");if(saved)document.documentElement.setAttribute("data-theme",saved)})();
-
-// ===== ALMACENAMIENTO LOCAL DE RESPALDO =====
-function lget(k,def){try{var v=localStorage.getItem("iccvgd_"+k);return v?JSON.parse(v):def}catch(e){return def}}
-function lset(k,v){try{localStorage.setItem("iccvgd_"+k,JSON.stringify(v))}catch(e){}}
+(function(){var saved=safeGet("iccvgd_theme",null);if(saved)document.documentElement.setAttribute("data-theme",saved)})();
 try{S.prayed=JSON.parse(localStorage.getItem("iccvgd_prayed")||"{}")}catch(e){S.prayed={}}
 function togglePray(id){S.prayed[id]=!S.prayed[id];try{localStorage.setItem("iccvgd_prayed",JSON.stringify(S.prayed))}catch(e){}toast(S.prayed[id]?"🙏 Te uniste en oración":"Marca retirada");draw()}
 
@@ -344,7 +401,6 @@ function foldBtn(id,emo,title,badge,col,inner,defOpen){
   return'<details class="sec-fold"'+(isOpen?' open':'')+' ontoggle="FOLDS[\''+id+'\']=this.open"><summary><span class="sec-tag"><span class="sec-emo">'+emo+'</span><span>'+title+'</span></span><span style="display:inline-flex;align-items:center;gap:8px">'+(badge!==null&&badge!==undefined?'<span class="pill" style="background:'+(col||'#1565C0')+'">'+badge+'</span>':'')+'<span class="sec-chev">▼</span></span></summary><div class="sec-fold-body">'+inner+'</div></details>';
 }
 
-function esc(s){return String(s==null?"":s).replace(/[&<>"]/g,function(c){return{"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]})}
 function fmtLines(s){return esc(s).replace(/\r?\n/g,"<br>")}
 function toast(t){var d=document.createElement("div");d.className="toast";d.textContent=t;document.body.appendChild(d);setTimeout(function(){d.remove()},2600)}
 function ini(n){return(n||"MI").trim().split(/\s+/).map(function(w){return w[0]}).slice(0,2).join("").toUpperCase()}
@@ -554,74 +610,101 @@ function renderHeader(){
 }
 
 function authv(){return'<div class="card"><img class="hero-transp-logo" src="icon-192.png" alt="Logo Mi iglesia" onerror="this.style.display=\'none\'"><h3>🔐 Entrar</h3><label>Correo</label><input id="em" type="email" autocomplete="username"><label>Contraseña (mínimo 6 caracteres)</label><input id="pw" type="password" autocomplete="current-password"><label>Tu nombre (solo al crear cuenta)</label><input id="nm"><button class="btn" onclick="auth(0)">Entrar</button><button class="btn alt" onclick="auth(1)">Crear cuenta</button><button class="btn alt" onclick="forgot()">Olvidé mi contraseña</button><p class="note">La primera cuenta creada es la del pastor. Las demás reciben su rol y célula desde Equipo.</p></div>'}
-async function auth(n){var e=$("em").value.trim(),p=$("pw").value,r;if(!e||p.length<6){toast("Escribe el correo y una contraseña de 6 o más caracteres");return}
-r=n?await SB.auth.signUp({email:e,password:p,options:{data:{name:$("nm").value.trim()}}}):await SB.auth.signInWithPassword({email:e,password:p});
-if(r.error){toast(r.error.message);return}
-if(n&&!r.data.session){toast("Revisa tu correo para confirmar la cuenta");return}
-await boot()}
-async function out(){await SB.auth.signOut();ME=null;U=null;P=[];draw()}
+async function auth(n){
+  if(!SB){showFatalError("Autenticación","Supabase no está inicializado.");return}
+  var e=$("em").value.trim(),p=$("pw").value,r;
+  if(!e||p.length<6){toast("Escribe el correo y una contraseña de 6 o más caracteres");return}
+  r=n?await SB.auth.signUp({email:e,password:p,options:{data:{name:$("nm").value.trim()}}}):await SB.auth.signInWithPassword({email:e,password:p});
+  if(r.error){toast(r.error.message);return}
+  if(n&&!r.data.session){toast("Revisa tu correo para confirmar la cuenta");return}
+  await boot()
+}
+async function out(){if(SB)await SB.auth.signOut();ME=null;U=null;P=[];draw()}
+function forceLoginScreen(){U=null;ME=null;S.rec=false;S.pw=false;draw()}
+async function retryBoot(){if($("app"))$("app").innerHTML='<p class="note">Reintentando conexión...</p>';await boot()}
+
 async function boot(){
   S.chat_msgs=lget("chat_msgs",[]);
   S.worship_prog=lget("worship_prog",[]);
-  S.worship_inv=lget("worship_inv",[]);S.retiro_cfg=lget("retiro_cfg",{nombre:"Retiro Espiritual Iglesia ICCVGD",fecha:"",tarifa:0,lugar:"",notas:""});S.retiro_list=lget("retiro_list",[]);
-  var s=await SB.auth.getSession();U=s.data.session&&s.data.session.user;if(!U){ME=null;draw();return}
-  var r=await SB.from("profiles").select("*").eq("id",U.id).single();
-  var rawMe=r.data||{role:"pendiente",cell:null,name:""};
-  var savedCombos=lget("role_combos",{});
-  if(Array.isArray(rawMe.roles)&&rawMe.roles.length){rawMe.role=rawMe.roles[0]}
-  else if(Array.isArray(savedCombos[U.id])&&savedCombos[U.id].length){rawMe.roles=savedCombos[U.id];rawMe.role=rawMe.roles[0]}
-  else{rawMe.roles=[rawMe.role||"pendiente"]}
-  ME=rawMe;
-  if(ME.role!=="pendiente"){$("app").innerHTML='<p class="note">Cargando…</p>';await load()}
-  draw();checkSub()
-}
-async function load(){
-  var d=new Date(Date.now()-42*864e5).toLocaleDateString("en-CA"),pa=isPastor()||isCellLeaderOrAsst(),pd=isDiscipulador(),none=Promise.resolve({data:[]});
-  var R=await Promise.all([
-    SB.from("people_all").select("*").order("name"),
-    SB.from("attendance").select("person_id,event_date,event,present").gte("event_date",d),
-    SB.from("retos").select("key,pts").eq("user_id",U.id),
-    pa?SB.from("people").select("*"):pd?SB.from("people_tel").select("*"):none,
-    SB.from("attendance_report").select("*"),
-    SB.from("attendance_monthly").select("*"),
-    SB.from("cells").select("*").order("name"),
-    SB.from("announcements").select("*").order("event_date",{ascending:true}),
-    SB.from("prayers").select("*").order("created_at",{ascending:false}),
-    SB.from("testimonies").select("*").order("created_at",{ascending:false}),
-    isPastor()?SB.from("profiles").select("*").order("name"):none,
-    SB.from("monthly_reports").select("*"),
-    SB.from("reports_public").select("*"),
-    canEditFinanzas()?SB.from("income_categories").select("*").order("name"):none,
-    canEditFinanzas()?SB.from("expense_categories").select("*").order("name"):none,
-    canEditFinanzas()?SB.from("finance_entries").select("*").order("entry_date",{ascending:false}):none,
-    SB.from("disciple_lessons").select("*").order("level",{ascending:true}).order("is_final",{ascending:true}).order("step",{ascending:true}),
-    SB.from("disciple_progress").select("*").eq("user_id",U.id),
-    SB.from("attendance_general").select("*").order("event_date",{ascending:false}).limit(30),
-    SB.from("attendance_general_monthly").select("*")
-  ]);
-  if(R[0].error)toast("Error al cargar: "+R[0].error.message);
-  P=R[0].data||[];AT=R[1].data||[];R0={};(R[2].data||[]).forEach(function(x){R0[x.key]=x.pts});
-  var x=R[3].data||[],mp={};
-  if(pa){x.forEach(function(r){mp[r.id]=r});P.forEach(function(p){var y=mp[p.id];if(y){p.tel=y.tel;p.note=y.note;if(y.birthday)p.birthday=y.birthday;if(y.birth_date)p.birth_date=y.birth_date}})}
-  else if(pd){x.forEach(function(r){mp[r.id]=r.tel});P.forEach(function(p){if(mp[p.id]!==undefined)p.tel=mp[p.id]})}
-  var localBdays=lget("member_birthdays",{});
-  P.forEach(function(p){
-    if(localBdays[p.id]){p.birthday=localBdays[p.id];p.birth_date=localBdays[p.id];}
-    if(isCoordinador()&&!pa&&!pd){delete p.tel;delete p.note;}
-  });
-  AR=R[4].data||[];AM=R[5].data||[];if(!R[6].error){CE=R[6].data||[];CELLS=CE.map(function(c){return c.name})}
-  AN=R[7].data||[];PR=R[8].data||[];TE=R[9].data||[];
-  if(isPastor()){
+  S.worship_inv=lget("worship_inv",[]);
+  S.retiro_cfg=lget("retiro_cfg",{nombre:"Retiro Espiritual Iglesia ICCVGD",fecha:"",tarifa:0,lugar:"",notas:""});
+  S.retiro_list=lget("retiro_list",[]);
+  if(!SB){showFatalError("Inicializar Supabase","No se pudo conectar con Supabase.");return}
+  try{
+    var s=await SB.auth.getSession();
+    if(s.error)throw s.error;
+    U=(s.data&&s.data.session&&s.data.session.user)||null;
+    if(!U){ME=null;draw();return}
+    var r=await SB.from("profiles").select("*").eq("id",U.id).maybeSingle();
+    if(r.error)throw r.error;
+    var rawMe=r.data||{role:"pendiente",cell:null,name:""};
     var savedCombos=lget("role_combos",{});
-    EQ=(R[10].data||[]).map(function(q){
-      if(Array.isArray(q.roles)&&q.roles.length)return q;
-      if(Array.isArray(savedCombos[q.id])&&savedCombos[q.id].length){q.roles=savedCombos[q.id];return q}
-      q.roles=[q.role||"pendiente"];return q;
-    });
+    if(Array.isArray(rawMe.roles)&&rawMe.roles.length){rawMe.role=rawMe.roles[0]}
+    else if(Array.isArray(savedCombos[U.id])&&savedCombos[U.id].length){rawMe.roles=savedCombos[U.id];rawMe.role=rawMe.roles[0]}
+    else{rawMe.roles=[rawMe.role||"pendiente"]}
+    ME=rawMe;
+    if(ME.role!=="pendiente"){
+      if($("app"))$("app").innerHTML='<p class="note">Cargando datos de la iglesia…</p>';
+      await load();
+    }
+    draw();
+    checkSub();
+  }catch(e){
+    showFatalError("Sesión o perfil en Supabase",e);
   }
-  MR=R[11].data||[];RP=R[12].data||[];
-  if(canEditFinanzas()){IC=R[13].data||[];EC=R[14].data||[];FN=R[15].data||[]}
-  DL=(R[16]&&!R[16].error)?(R[16].data||[]):[];DP=(R[17]&&!R[17].error)?(R[17].data||[]):[];AG=(R[18]&&!R[18].error)?(R[18].data||[]):[];var dzMap=lget("general_diezmadores",{});AG.forEach(function(g){var k=(g.event_date||"")+"|"+(g.event||"Culto dominical");if(g.diezmadores==null&&dzMap[k]!=null)g.diezmadores=dzMap[k]});AGM=(R[19]&&!R[19].error)?(R[19].data||[]):[];setT()
+}
+
+async function load(){
+  try{
+    var d=new Date(Date.now()-42*864e5).toLocaleDateString("en-CA"),pa=isPastor()||isCellLeaderOrAsst(),pd=isDiscipulador(),none=Promise.resolve({data:[]});
+    var R=await Promise.all([
+      SB.from("people_all").select("*").order("name"),
+      SB.from("attendance").select("person_id,event_date,event,present").gte("event_date",d),
+      SB.from("retos").select("key,pts").eq("user_id",U.id),
+      pa?SB.from("people").select("*"):pd?SB.from("people_tel").select("*"):none,
+      SB.from("attendance_report").select("*"),
+      SB.from("attendance_monthly").select("*"),
+      SB.from("cells").select("*").order("name"),
+      SB.from("announcements").select("*").order("event_date",{ascending:true}),
+      SB.from("prayers").select("*").order("created_at",{ascending:false}),
+      SB.from("testimonies").select("*").order("created_at",{ascending:false}),
+      isPastor()?SB.from("profiles").select("*").order("name"):none,
+      SB.from("monthly_reports").select("*"),
+      SB.from("reports_public").select("*"),
+      canEditFinanzas()?SB.from("income_categories").select("*").order("name"):none,
+      canEditFinanzas()?SB.from("expense_categories").select("*").order("name"):none,
+      canEditFinanzas()?SB.from("finance_entries").select("*").order("entry_date",{ascending:false}):none,
+      SB.from("disciple_lessons").select("*").order("level",{ascending:true}).order("is_final",{ascending:true}).order("step",{ascending:true}),
+      SB.from("disciple_progress").select("*").eq("user_id",U.id),
+      SB.from("attendance_general").select("*").order("event_date",{ascending:false}).limit(30),
+      SB.from("attendance_general_monthly").select("*")
+    ]);
+    if(R[0].error)throw R[0].error;
+    P=R[0].data||[];AT=R[1].data||[];R0={};(R[2].data||[]).forEach(function(x){R0[x.key]=x.pts});
+    var x=R[3].data||[],mp={};
+    if(pa){x.forEach(function(r){mp[r.id]=r});P.forEach(function(p){var y=mp[p.id];if(y){p.tel=y.tel;p.note=y.note;if(y.birthday)p.birthday=y.birthday;if(y.birth_date)p.birth_date=y.birth_date}})}
+    else if(pd){x.forEach(function(r){mp[r.id]=r.tel});P.forEach(function(p){if(mp[p.id]!==undefined)p.tel=mp[p.id]})}
+    var localBdays=lget("member_birthdays",{});
+    P.forEach(function(p){
+      if(localBdays[p.id]){p.birthday=localBdays[p.id];p.birth_date=localBdays[p.id];}
+      if(isCoordinador()&&!pa&&!pd){delete p.tel;delete p.note;}
+    });
+    AR=R[4].data||[];AM=R[5].data||[];if(!R[6].error){CE=R[6].data||[];CELLS=CE.map(function(c){return c.name})}
+    AN=R[7].data||[];PR=R[8].data||[];TE=R[9].data||[];
+    if(isPastor()){
+      var savedCombos=lget("role_combos",{});
+      EQ=(R[10].data||[]).map(function(q){
+        if(Array.isArray(q.roles)&&q.roles.length)return q;
+        if(Array.isArray(savedCombos[q.id])&&savedCombos[q.id].length){q.roles=savedCombos[q.id];return q}
+        q.roles=[q.role||"pendiente"];return q;
+      });
+    }
+    MR=R[11].data||[];RP=R[12].data||[];
+    if(canEditFinanzas()){IC=R[13].data||[];EC=R[14].data||[];FN=R[15].data||[]}
+    DL=(R[16]&&!R[16].error)?(R[16].data||[]):[];DP=(R[17]&&!R[17].error)?(R[17].data||[]):[];AG=(R[18]&&!R[18].error)?(R[18].data||[]):[];var dzMap=lget("general_diezmadores",{});AG.forEach(function(g){var k=(g.event_date||"")+"|"+(g.event||"Culto dominical");if(g.diezmadores==null&&dzMap[k]!=null)g.diezmadores=dzMap[k]});AGM=(R[19]&&!R[19].error)?(R[19].data||[]):[];setT()
+  }catch(e){
+    showFatalError("Cargar datos de la aplicación",e);
+  }
 }
 function setT(){var t=today();S.T={};AT.forEach(function(x){if(x.event_date===t&&x.event===S.ev&&x.present)S.T[x.person_id]=true})}
 
@@ -830,12 +913,18 @@ function go(s){if(!opn(s)){toast("Completa la etapa anterior para abrir esta");r
 function pick(j){var r=RS[S.rs].R[S.ri],k=S.rs+"-"+S.ri;if(j===r.a){S.ok=true;if(R0[k]===undefined){R0[k]=Math.max(1,4-S.cl);SB.from("retos").upsert({user_id:U.id,key:k,pts:R0[k]})}}else{S.bad.push(j);toast("Esa no es. Pide otra pista o intenta de nuevo")}draw()}
 function nx(){var s=RS[S.rs];if(S.ri<s.R.length-1){S.ri++;S.cl=1;S.bad=[];S.ok=false}else{S.rs=null;toast("Etapa completada")}draw()}
 function retos(){
+  if(S.uno_view)return renderUnoModule();
   RS=getWeeklyRS();
   if(S.rs===null){
     var t=pts(),maxP=RS.reduce(function(acc,s){return acc+s.R.length*3},0);
     var ti=t>=Math.round(maxP*0.66)?"Erudito":t>=Math.round(maxP*0.33)?"Estudioso":"Explorador";
     var wNum=getWeekIndex()+1;
-    var h='<button class="btn alt no-print" style="margin:8px 0" onclick="switchTab(\'ini\')">← Volver a Inicio</button><div class="card t-lila"><span class="pill" style="background:#8E4FC7">🗓️ Semana bíblica #'+wNum+'</span><h3 style="margin-top:8px">🧩 Retos, misterios y desafíos</h3>'+svgRadialGauge(t,maxP,ti)+'</div>';
+    var h='<button class="btn alt no-print" style="margin:8px 0" onclick="switchTab(\'ini\')">← Volver a Inicio</button>'
+      +'<div class="card t-azul" style="display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap">'
+      +'<div class="grow"><span class="pill" style="background:#D6336C">🃏 Juego en Vivo · Multijugador</span><h3 style="margin-top:6px">UNO Juvenil en Línea</h3><p class="note" style="margin:4px 0 0">Juega en salas de 2 a 6 jugadores. Si cierras o recargas el navegador, vuelves directo a tu misma mano y turno.</p></div>'
+      +'<button class="btn sm" style="margin:0;background:#1565C0;width:auto" onclick="openUnoHub()">🎮 Entrar a Salas UNO</button>'
+      +'</div>'
+      +'<div class="card t-lila"><span class="pill" style="background:#8E4FC7">🗓️ Semana bíblica #'+wNum+'</span><h3 style="margin-top:8px">🧩 Retos, misterios y desafíos</h3>'+svgRadialGauge(t,maxP,ti)+'</div>';
 
     var myName=(ME&&ME.name)?ME.name:(U&&U.email?U.email:"Tú");
     var myCell=(ME&&ME.cell)?ME.cell:"Tu cuenta";
@@ -861,6 +950,356 @@ function retos(){
   if(S.ok)h+='<div class="card"><b>¡Correcto! +'+R0[S.rs+"-"+S.ri]+' puntos</b><p>'+esc(r.x)+'</p><details><summary>📖 '+esc(r.v)+'</summary><p>'+esc(r.va)+'</p></details><button class="btn" onclick="nx()">'+(S.ri<s.R.length-1?"Siguiente desafío →":"Terminar reto ✓")+'</button></div>';
   return h
 }
+
+// ===== JUEGO DE CARTAS UNO MULTIJUGADOR =====
+var UNO_COLORS=["R","B","G","Y"];
+var UNO_CNAMES={R:"Rojo",B:"Azul",G:"Verde",Y:"Amarillo",W:"Comodín"};
+var UNO_CHEX={R:"#E53935",B:"#1E88E5",G:"#43A047",Y:"#FBC02D",W:"#37474F"};
+
+function buildUnoDeck(){
+  var d=[];
+  UNO_COLORS.forEach(function(c){
+    d.push({c:c,v:"0"});
+    ["1","2","3","4","5","6","7","8","9","+2","REV","SKIP"].forEach(function(v){
+      d.push({c:c,v:v});
+      d.push({c:c,v:v});
+    });
+  });
+  for(var i=0;i<4;i++){
+    d.push({c:"W",v:"WILD"});
+    d.push({c:"W",v:"+4"});
+  }
+  for(var j=d.length-1;j>0;j--){
+    var k=Math.floor(Math.random()*(j+1));
+    var tmp=d[j];d[j]=d[k];d[k]=tmp;
+  }
+  return d;
+}
+function unoCardLabel(v){return v==="REV"?"⇄":(v==="SKIP"?"⊘":(v==="WILD"?"🌈":v))}
+function canPlayUnoCard(card,topCard,curColor){
+  if(!card||!topCard)return false;
+  if(card.c==="W")return true;
+  if(card.c===curColor)return true;
+  if(card.v===topCard.v)return true;
+  return false;
+}
+function stopUnoSync(){
+  if(S.uno_poll){clearInterval(S.uno_poll);S.uno_poll=null;}
+  if(S.uno_sub&&SB){try{SB.removeChannel(S.uno_sub);}catch(e){}S.uno_sub=null;}
+}
+function startUnoSync(roomId){
+  stopUnoSync();
+  if(!roomId||!SB)return;
+  try{
+    S.uno_sub=SB.channel("uno_room_"+roomId)
+      .on("postgres_changes",{event:"*",schema:"public",table:"uno_games",filter:"id=eq."+roomId},function(payload){
+        if(payload&&payload.new){
+          S.uno_room=payload.new;
+          lset("uno_active_room",payload.new);
+          if(S.tab==="retos"&&S.uno_view)draw();
+        }
+      }).subscribe();
+  }catch(e){}
+  S.uno_poll=setInterval(function(){
+    if(S.tab!=="retos"||!S.uno_view||!S.uno_room){stopUnoSync();return;}
+    refreshUnoRoom(S.uno_room.id,true);
+  },3000);
+}
+async function openUnoHub(){S.uno_view=true;S.uno_wild_idx=null;draw();await loadUnoRoomsAndRestore();}
+function closeUnoHub(){stopUnoSync();S.uno_view=false;S.uno_wild_idx=null;draw();}
+
+async function loadUnoRoomsAndRestore(){
+  if(!SB)return;
+  var r=await SB.from("uno_games").select("*").in("status",["waiting","playing","finished"]).order("updated_at",{ascending:false}).limit(25);
+  if(!r.error&&Array.isArray(r.data)){
+    S.uno_rooms=r.data;
+    var myActive=r.data.filter(function(g){
+      var pls=Array.isArray(g.players)?g.players:[];
+      return g.status!=="finished"&&U&&pls.some(function(p){return p.id===U.id});
+    })[0];
+    if(myActive){
+      S.uno_room=myActive;
+      lset("uno_active_room",myActive);
+      startUnoSync(myActive.id);
+      toast("🔄 Partida recuperada: volviste a tu misma mano y turno");
+      draw();
+      return;
+    }
+    if(S.uno_room){
+      var same=r.data.filter(function(g){return g.id===S.uno_room.id})[0];
+      if(same){S.uno_room=same;startUnoSync(same.id);}
+      else{S.uno_room=null;stopUnoSync();}
+    }
+    draw();
+  }else{
+    var saved=lget("uno_active_room",null);
+    if(saved&&saved.players&&U&&saved.players.some(function(p){return p.id===U.id})){
+      S.uno_room=saved;
+      toast("⚠️ Tabla uno_games pendiente en Supabase: cargando respaldo local");
+    }
+    draw();
+  }
+}
+
+async function refreshUnoRoom(roomId,silent){
+  if(!SB)return;
+  var r=await SB.from("uno_games").select("*").eq("id",roomId).single();
+  if(!r.error&&r.data){
+    var changed=JSON.stringify(S.uno_room)!==JSON.stringify(r.data);
+    S.uno_room=r.data;
+    lset("uno_active_room",r.data);
+    if(changed&&S.tab==="retos"&&S.uno_view)draw();
+  }else if(!silent){toast("No se pudo actualizar la sala");}
+}
+
+async function createUnoRoom(){
+  if(!SB||!U)return;
+  var code=Math.random().toString(36).substring(2,6).toUpperCase();
+  var myName=(ME&&ME.name)?ME.name:(U.email||"Jugador");
+  var payload={room_code:code,host_id:U.id,status:"waiting",players:[{id:U.id,name:myName,uno:false}],hands:{},deck:[],discard:[],current_color:"R",turn_index:0,direction:1,winner_name:null,last_action:myName+" creó la sala "+code,updated_at:new Date().toISOString()};
+  var r=await SB.from("uno_games").insert(payload).select().single();
+  if(r.error){toast("Ejecuta el SQL de uno_games en Supabase: "+r.error.message);return;}
+  S.uno_room=r.data;lset("uno_active_room",r.data);startUnoSync(r.data.id);
+  toast("Sala "+code+" creada. Comparte el código con los jóvenes.");draw();
+}
+
+async function joinUnoRoom(roomId,codeInput){
+  if(!SB||!U)return;
+  var target=null;
+  if(roomId){
+    var r1=await SB.from("uno_games").select("*").eq("id",roomId).single();
+    if(!r1.error)target=r1.data;
+  }else if(codeInput){
+    var clean=codeInput.trim().toUpperCase();
+    var r2=await SB.from("uno_games").select("*").eq("room_code",clean).in("status",["waiting","playing"]).order("created_at",{ascending:false}).limit(1);
+    if(!r2.error&&r2.data&&r2.data.length)target=r2.data[0];
+  }
+  if(!target){toast("Sala no encontrada o ya finalizada");return;}
+  var pls=Array.isArray(target.players)?target.players.slice():[];
+  var already=pls.some(function(p){return p.id===U.id});
+  if(already){
+    S.uno_room=target;lset("uno_active_room",target);startUnoSync(target.id);
+    toast("Reconectado a la sala "+target.room_code);draw();return;
+  }
+  if(target.status!=="waiting"){toast("Esta partida ya inició");return;}
+  if(pls.length>=6){toast("La sala ya tiene el máximo de 6 jugadores");return;}
+  var myName=(ME&&ME.name)?ME.name:(U.email||"Jugador");
+  pls.push({id:U.id,name:myName,uno:false});
+  var upd=await SB.from("uno_games").update({players:pls,last_action:myName+" se unió a la sala",updated_at:new Date().toISOString()}).eq("id",target.id).select().single();
+  if(upd.error){toast("Error al entrar: "+upd.error.message);return;}
+  S.uno_room=upd.data;lset("uno_active_room",upd.data);startUnoSync(upd.data.id);
+  toast("Entraste a la sala "+upd.data.room_code);draw();
+}
+
+async function startUnoGame(){
+  var g=S.uno_room;
+  if(!g||!U||g.host_id!==U.id)return;
+  var pls=Array.isArray(g.players)?g.players:[];
+  if(pls.length<2){toast("Se necesitan al menos 2 jugadores para iniciar");return;}
+  var deck=buildUnoDeck(),hands={};
+  pls.forEach(function(p){p.uno=false;hands[p.id]=deck.splice(0,7);});
+  var first=deck.pop();
+  while(first&&first.c==="W"){deck.unshift(first);first=deck.pop();}
+  var upd=await SB.from("uno_games").update({status:"playing",players:pls,hands:hands,deck:deck,discard:[first],current_color:first.c,turn_index:0,direction:1,winner_name:null,last_action:"¡Partida iniciada! Turno de "+pls[0].name,updated_at:new Date().toISOString()}).eq("id",g.id).select().single();
+  if(upd.error){toast("No se pudo iniciar: "+upd.error.message);return;}
+  S.uno_room=upd.data;lset("uno_active_room",upd.data);draw();
+}
+
+function nextUnoTurnIdx(cur,dir,total,step){var s=step||1;return(((cur+dir*s)%total)+total)%total;}
+function drawFromUnoDeck(deck,discard,count){
+  var pulled=[];
+  for(var i=0;i<count;i++){
+    if(!deck.length){
+      if(discard.length>1){
+        var top=discard.pop();
+        while(discard.length){deck.push(discard.pop());}
+        for(var j=deck.length-1;j>0;j--){var k=Math.floor(Math.random()*(j+1));var t=deck[j];deck[j]=deck[k];deck[k]=t;}
+        discard.push(top);
+      }else{deck=buildUnoDeck();}
+    }
+    if(deck.length)pulled.push(deck.pop());
+  }
+  return{pulled:pulled,deck:deck,discard:discard};
+}
+
+async function playUnoCard(cardIdx,chosenColor){
+  var g=S.uno_room;
+  if(!g||g.status!=="playing"||!U)return;
+  var pls=JSON.parse(JSON.stringify(g.players||[]));
+  var myIdx=pls.findIndex(function(p){return p.id===U.id});
+  if(myIdx<0||g.turn_index!==myIdx){toast("Espera tu turno");return;}
+  var hands=JSON.parse(JSON.stringify(g.hands||{}));
+  var myHand=hands[U.id]||[];
+  var card=myHand[cardIdx];
+  var discard=JSON.parse(JSON.stringify(g.discard||[]));
+  var topCard=discard[discard.length-1];
+  if(!canPlayUnoCard(card,topCard,g.current_color)){toast("Esa carta no coincide con color ni símbolo");return;}
+  if(card.c==="W"&&!chosenColor){S.uno_wild_idx=cardIdx;draw();return;}
+  S.uno_wild_idx=null;
+  myHand.splice(cardIdx,1);
+  hands[U.id]=myHand;
+  discard.push(card);
+  var deck=JSON.parse(JSON.stringify(g.deck||[]));
+  var dir=g.direction||1;
+  var nPlayers=pls.length;
+  var newColor=card.c==="W"?chosenColor:card.c;
+  var myName=pls[myIdx].name;
+  var actionTxt=myName+" jugó "+UNO_CNAMES[newColor]+" "+unoCardLabel(card.v);
+
+  if(myHand.length===0){
+    var winUpd=await SB.from("uno_games").update({status:"finished",players:pls,hands:hands,deck:deck,discard:discard,current_color:newColor,winner_name:myName,last_action:"🏆 ¡"+myName+" ganó la partida!",updated_at:new Date().toISOString()}).eq("id",g.id).select().single();
+    if(!winUpd.error){S.uno_room=winUpd.data;lset("uno_active_room",winUpd.data);}
+    draw();return;
+  }
+  if(myHand.length===1&&!pls[myIdx].uno){
+    var pen=drawFromUnoDeck(deck,discard,2);
+    deck=pen.deck;discard=pen.discard;
+    hands[U.id]=myHand.concat(pen.pulled);
+    actionTxt+=" · ⚠️ ¡Olvidó cantar UNO! (+2 cartas)";
+  }else if(myHand.length>1){pls[myIdx].uno=false;}
+  else if(myHand.length===1&&pls[myIdx].uno){actionTxt+=" · 📣 ¡CANTÓ UNO!";}
+
+  var step=1;
+  if(card.v==="REV"){if(nPlayers===2){step=2;}else{dir=-dir;}actionTxt+=" (Cambio de sentido)";}
+  else if(card.v==="SKIP"){step=2;actionTxt+=" (Salta turno)";}
+  else if(card.v==="+2"){var victimIdx=nextUnoTurnIdx(myIdx,dir,nPlayers,1);var res2=drawFromUnoDeck(deck,discard,2);deck=res2.deck;discard=res2.discard;hands[pls[victimIdx].id]=(hands[pls[victimIdx].id]||[]).concat(res2.pulled);pls[victimIdx].uno=false;step=2;actionTxt+=" (+2 para "+pls[victimIdx].name+")";}
+  else if(card.v==="+4"){var victim4Idx=nextUnoTurnIdx(myIdx,dir,nPlayers,1);var res4=drawFromUnoDeck(deck,discard,4);deck=res4.deck;discard=res4.discard;hands[pls[victim4Idx].id]=(hands[pls[victim4Idx].id]||[]).concat(res4.pulled);pls[victim4Idx].uno=false;step=2;actionTxt+=" (+4 para "+pls[victim4Idx].name+")";}
+
+  var nextIdx=nextUnoTurnIdx(myIdx,dir,nPlayers,step);
+  actionTxt+=" · Turno de "+pls[nextIdx].name;
+  var upd=await SB.from("uno_games").update({players:pls,hands:hands,deck:deck,discard:discard,current_color:newColor,turn_index:nextIdx,direction:dir,last_action:actionTxt,updated_at:new Date().toISOString()}).eq("id",g.id).select().single();
+  if(upd.error){toast("Error de sincronización: "+upd.error.message);return;}
+  S.uno_room=upd.data;lset("uno_active_room",upd.data);draw();
+}
+
+async function drawUnoCardAction(){
+  var g=S.uno_room;
+  if(!g||g.status!=="playing"||!U)return;
+  var pls=JSON.parse(JSON.stringify(g.players||[]));
+  var myIdx=pls.findIndex(function(p){return p.id===U.id});
+  if(myIdx<0||g.turn_index!==myIdx){toast("No es tu turno");return;}
+  var hands=JSON.parse(JSON.stringify(g.hands||{}));
+  var deck=JSON.parse(JSON.stringify(g.deck||[]));
+  var discard=JSON.parse(JSON.stringify(g.discard||[]));
+  var res=drawFromUnoDeck(deck,discard,1);
+  deck=res.deck;discard=res.discard;
+  hands[U.id]=(hands[U.id]||[]).concat(res.pulled);
+  pls[myIdx].uno=false;
+  var nextIdx=nextUnoTurnIdx(myIdx,g.direction||1,pls.length,1);
+  var myName=pls[myIdx].name;
+  var upd=await SB.from("uno_games").update({players:pls,hands:hands,deck:deck,discard:discard,turn_index:nextIdx,last_action:myName+" robó 1 carta · Turno de "+pls[nextIdx].name,updated_at:new Date().toISOString()}).eq("id",g.id).select().single();
+  if(!upd.error){S.uno_room=upd.data;lset("uno_active_room",upd.data);}
+  draw();
+}
+
+async function callUnoShout(){
+  var g=S.uno_room;
+  if(!g||g.status!=="playing"||!U)return;
+  var pls=JSON.parse(JSON.stringify(g.players||[]));
+  var myIdx=pls.findIndex(function(p){return p.id===U.id});
+  if(myIdx<0)return;
+  pls[myIdx].uno=true;
+  var upd=await SB.from("uno_games").update({players:pls,last_action:"📣 ¡"+pls[myIdx].name+" gritó UNO!",updated_at:new Date().toISOString()}).eq("id",g.id).select().single();
+  if(!upd.error){S.uno_room=upd.data;lset("uno_active_room",upd.data);toast("📣 ¡UNO activado! Ya puedes bajar tu penúltima carta.");}
+  draw();
+}
+
+async function leaveUnoRoom(){
+  var g=S.uno_room;
+  stopUnoSync();
+  if(g&&g.status==="waiting"&&U&&SB){
+    var pls=(g.players||[]).filter(function(p){return p.id!==U.id});
+    if(!pls.length){await SB.from("uno_games").delete().eq("id",g.id);}
+    else{var newHost=g.host_id===U.id?pls[0].id:g.host_id;await SB.from("uno_games").update({players:pls,host_id:newHost,updated_at:new Date().toISOString()}).eq("id",g.id);}
+  }
+  S.uno_room=null;S.uno_wild_idx=null;
+  try{localStorage.removeItem("iccvgd_uno_active_room");}catch(e){}
+  await loadUnoRoomsAndRestore();
+}
+
+function renderUnoModule(){
+  var h='<button class="btn alt no-print" style="margin:8px 0" onclick="closeUnoHub()">← Volver a Retos Bíblicos</button>';
+  var g=S.uno_room;
+  if(!g){
+    h+='<div class="card t-azul"><h3>🃏 UNO Juvenil Multijugador</h3><p class="note">Crea una sala o únete con el código de 4 letras. El estado completo de tu mano y tu turno queda guardado en la base de datos: si recargas o cierras el navegador, regresarás exactamente a tu partida.</p>'
+      +'<button class="btn" onclick="createUnoRoom()">➕ Crear nueva sala UNO</button>'
+      +'<div style="display:flex;gap:8px;margin-top:12px">'
+      +'<input id="uno_code_in" placeholder="Código (Ej. A7K2)" maxlength="6" style="text-transform:uppercase;font-weight:700" value="'+esc(S.uno_join_code)+'" oninput="S.uno_join_code=this.value">'
+      +'<button class="btn alt" style="margin:0;width:auto;white-space:nowrap" onclick="joinUnoRoom(null,S.uno_join_code)">🚪 Unirse</button>'
+      +'</div></div>';
+    var openRooms=(S.uno_rooms||[]).filter(function(r){return r.status==="waiting"||(r.status==="playing"&&U&&(r.players||[]).some(function(p){return p.id===U.id}))});
+    var roomsHtml=openRooms.length?openRooms.map(function(r){
+      var pls=Array.isArray(r.players)?r.players:[];
+      var isMine=U&&pls.some(function(p){return p.id===U.id});
+      var rid=esc(r.id);
+      return'<div class="card row"><span class="av" style="background:'+(isMine?"#2F9E5B":"#1565C0")+'">🃏</span><span class="grow"><b>Sala '+esc(r.room_code)+'</b><small>'+pls.length+'/6 jugadores: '+esc(pls.map(function(p){return p.name.split(" ")[0]}).join(", "))+'</small></span><button class="chip" style="background:'+(isMine?"#2F9E5B":"#1565C0")+';color:#fff;border:0" onclick="joinUnoRoom(\''+rid+'\',null)">'+(isMine?"🔄 Reanudar":"Entrar")+'</button></div>';
+    }).join(""):'<p class="note">No hay salas abiertas en este momento. ¡Crea la primera!</p>';
+    h+=foldBtn("uno_salas","🏠","Salas disponibles en vivo",openRooms.length,"#1565C0",roomsHtml,true);
+    h+='<button class="btn alt sm" onclick="loadUnoRoomsAndRestore()">🔄 Actualizar lista de salas</button>';
+    return h;
+  }
+  var gid=esc(g.id);
+  var pls=Array.isArray(g.players)?g.players:[];
+  if(g.status==="waiting"){
+    var isHost=U&&g.host_id===U.id;
+    h+='<div class="card t-lila" style="text-align:center"><span class="pill" style="background:#8E4FC7">Sala de espera</span><h2 style="font-size:34px;margin:8px 0;letter-spacing:4px">'+esc(g.room_code)+'</h2><p class="note">Comparte este código con los jóvenes (2 a 6 jugadores). Si alguien recarga la página, seguirá dentro de la sala.</p></div>';
+    h+='<div class="card"><b>👥 Jugadores conectados ('+pls.length+'/6)</b>'
+      +pls.map(function(p,idx){return'<div style="display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:1px solid var(--line)"><span>'+(idx===0?"👑 ":"🎮 ")+'<b>'+esc(p.name)+'</b></span><span class="pill" style="background:#2F9E5B">Listo</span></div>'}).join("")
+      +(isHost?'<button class="btn" onclick="startUnoGame()">🚀 Repartir cartas e iniciar partida</button>':'<p class="note" style="margin-top:10px">⏳ Esperando a que el anfitrión inicie la partida...</p>')
+      +'<div class="grid2" style="margin-top:8px"><button class="btn alt sm" style="margin:0" onclick="refreshUnoRoom(\''+gid+'\',false)">🔄 Sincronizar</button><button class="btn alt sm" style="margin:0;color:#D6336C" onclick="leaveUnoRoom()">🚪 Salir de sala</button></div>'
+      +'</div>';
+    return h;
+  }
+  if(g.status==="finished"){
+    h+='<div class="grad-card"><div style="font-size:48px">🏆🎉</div><h3>¡'+esc(g.winner_name||"Ganador")+' ganó la partida!</h3><p>Sala <b>'+esc(g.room_code)+'</b> finalizada y guardada en el historial.</p><button class="btn" onclick="leaveUnoRoom()">Volver al Lobby de Salas</button></div>';
+    return h;
+  }
+  var hands=g.hands||{};
+  var myHand=U&&Array.isArray(hands[U.id])?hands[U.id]:[];
+  var myIdx=U?pls.findIndex(function(p){return p.id===U.id}):-1;
+  var isMyTurn=myIdx>-1&&g.turn_index===myIdx;
+  var activePlayer=pls[g.turn_index]||{name:"Jugador"};
+  var discard=Array.isArray(g.discard)?g.discard:[];
+  var topCard=discard[discard.length-1]||{c:"R",v:"0"};
+  var curCol=g.current_color||topCard.c;
+
+  h+='<div class="card" style="padding:12px 14px;display:flex;justify-content:space-between;align-items:center;gap:8px;flex-wrap:wrap">'
+    +'<div><b>Sala '+esc(g.room_code)+'</b> · <span style="color:var(--acc);font-weight:700">'+(isMyTurn?"🟢 ¡ES TU TURNO!":"⏳ Turno de "+esc(activePlayer.name))+'</span><br><small class="note">'+esc(g.last_action||"")+'</small></div>'
+    +'<button class="chip" onclick="refreshUnoRoom(\''+gid+'\',false)" title="Sincronizar estado">🔄</button>'
+    +'</div>';
+
+  h+='<div class="uno-table"><div class="uno-opponents">';
+  pls.forEach(function(p,idx){
+    var cnt=(hands[p.id]||[]).length;
+    var turnCls=idx===g.turn_index?" turn":"";
+    h+='<div class="uno-opp'+turnCls+'"><b style="display:block;font-size:15px">'+esc(p.name.split(" ")[0])+(U&&p.id===U.id?" (Tú)":"")+'</b><span style="font-size:14px">🃏 '+cnt+' carta'+(cnt===1?"":"s")+'</span>'+(cnt===1?'<br><span class="pill" style="background:#D6336C;font-size:11px;padding:2px 7px">'+(p.uno?"¡UNO!":"⚠️ Sin UNO")+'</span>':'')+'</div>';
+  });
+  h+='</div><div class="uno-center">';
+  h+='<div style="text-align:center"><button class="uno-card uno-back" onclick="drawUnoCardAction()" '+(isMyTurn?'':'disabled')+' title="Robar carta del mazo"><span style="font-size:22px">🃏</span><small style="font-size:12px;margin-top:4px">ROBAR</small></button><br><small style="font-size:13px">Mazo ('+(g.deck||[]).length+')</small></div>';
+  h+='<div style="text-align:center"><div class="uno-card uno-c-'+esc(topCard.c)+'" style="cursor:default"><span class="uno-corner">'+esc(unoCardLabel(topCard.v))+'</span><span class="uno-val">'+esc(unoCardLabel(topCard.v))+'</span><span class="uno-corner-b">'+esc(unoCardLabel(topCard.v))+'</span></div><br><small style="font-size:13px">Descarte</small></div>';
+  h+='<div style="text-align:center;background:rgba(0,0,0,.28);padding:10px 14px;border-radius:14px"><small style="display:block;font-size:13px">Color activo</small><div style="margin:6px 0;font-weight:800;font-size:17px"><span class="uno-color-dot" style="background:'+UNO_CHEX[curCol]+'"></span> '+UNO_CNAMES[curCol]+'</div><small style="font-size:13px">Sentido: '+(g.direction===1?"↻ Horario":"↺ Inverso")+'</small></div>';
+  h+='</div>';
+
+  if(S.uno_wild_idx!==null&&isMyTurn){
+    h+='<div style="background:rgba(0,0,0,.65);padding:12px;border-radius:14px;text-align:center;margin:8px 0"><b>🌈 Elige el nuevo color para el comodín:</b><div style="display:flex;gap:8px;justify-content:center;flex-wrap:wrap;margin-top:8px">'
+      +UNO_COLORS.map(function(col){return'<button class="chip" style="background:'+UNO_CHEX[col]+';color:'+(col==="Y"?"#1F2430":"#fff")+';border:2px solid #fff" onclick="playUnoCard('+S.uno_wild_idx+',\''+col+'\')">'+UNO_CNAMES[col]+'</button>';}).join("")
+      +'<button class="chip" onclick="S.uno_wild_idx=null;draw()">Cancelar</button></div></div>';
+  }
+  if(myHand.length<=2){
+    var saidUno=pls[myIdx]&&pls[myIdx].uno;
+    h+='<div style="text-align:center;margin:8px 0"><button class="btn sm" style="background:'+(saidUno?"#2F9E5B":"#D6336C")+';width:auto;padding:10px 22px;border:2px solid #fff" onclick="callUnoShout()">'+(saidUno?"✅ ¡UNO cantado!":"📣 ¡GRITAR UNO! (Antes de bajar tu penúltima carta)")+'</button></div>';
+  }
+  h+='<div style="text-align:center;margin-top:8px"><small style="font-size:14px;opacity:.9">Tu mano ('+myHand.length+' cartas) · Guardada en la nube</small></div><div class="uno-hand">';
+  myHand.forEach(function(card,idx){
+    var playable=isMyTurn&&canPlayUnoCard(card,topCard,curCol);
+    h+='<button class="uno-card uno-c-'+esc(card.c)+(playable?" playable":" disabled")+'" onclick="playUnoCard('+idx+',null)" '+(playable?"":"disabled")+'>'
+      +'<span class="uno-corner">'+esc(unoCardLabel(card.v))+'</span><span class="uno-val">'+esc(unoCardLabel(card.v))+'</span><span class="uno-corner-b">'+esc(unoCardLabel(card.v))+'</span></button>';
+  });
+  h+='</div></div>';
+  h+='<div class="grid2"><button class="btn alt sm" style="margin:0" onclick="refreshUnoRoom(\''+gid+'\',false)">🔄 Sincronizar mesa</button><button class="btn alt sm" style="margin:0;color:#D6336C" onclick="S.uno_room=null;stopUnoSync();draw()">Salir de vista de mesa</button></div>';
+  return h;
+}
+
 
 // ===== TABLERO TIPO TRELLO POR NIVELES 1, 2 Y 3 (CON ID 1 LETRA + 1 NÚMERO CONSECUTIVO) =====
 var LV=["Nivel 1 · Básico","Nivel 2 · Intermedio","Nivel 3 · Avanzado","Nivel 4 · Ministerio","Sirviendo en la iglesia"],MX={1:8,2:12,3:12,4:12,5:12},SC={al_dia:["#2F9E5B","Al día"],atrasado:["#E07B12","Atrasado"],llamada:["#D6336C","Llamar o visitar"],listo:["#1565C0","Listo para subir"]},SO=["llamada","atrasado","listo","al_dia"];
@@ -1486,7 +1925,7 @@ function renderRoleWelcomeCard(){
 function setUiMode(m){
   S.ui_mode=m;
   S.ini_sub=null;
-  localStorage.setItem("iccvgd_ui_mode",m);
+  safeSet("iccvgd_ui_mode",m);
   toast(m==="simple"?"✨ Vista Simple por menús activada":"📋 Vista Clásica activada");
   draw();
 }
@@ -2425,6 +2864,7 @@ function retiro(){
 // ===== NAVEGACIÓN INFERIOR COMPACTA CON PÍLDORA ACTIVA Y MENÚ "MÁS" =====
 function switchTab(id){
   S.tab=id;S.sel=null;S.tb=null;S.ce=null;S.ia=null;S.pn=false;S.tn=false;S.ft=null;S.dl_view=null;S.dl_open=null;S.dl_ed=null;S.more=false;S.ini_sub=null;
+  if(id!=="retos")stopUnoSync();
   draw();
 }
 function draw(){
@@ -2460,7 +2900,7 @@ function draw(){
   var aq=$("aq");if(aq)aq.oninput=function(){S.aq=aq.value;var p=aq.selectionStart;draw();var n=$("aq");if(n){n.focus();n.setSelectionRange(p,p)}}
 }
 if(location.hash.indexOf("type=recovery")>-1)S.rec=true;
-SB.auth.onAuthStateChange(function(ev){if(ev==="PASSWORD_RECOVERY"){S.rec=true;draw()}});
+if(SB&&SB.auth&&SB.auth.onAuthStateChange){SB.auth.onAuthStateChange(function(ev){if(ev==="PASSWORD_RECOVERY"){S.rec=true;draw()}});}
 if("serviceWorker" in navigator)navigator.serviceWorker.register("sw.js").catch(function(){});
 boot();
 </script></body></html>
