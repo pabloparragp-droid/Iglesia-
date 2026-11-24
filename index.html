@@ -11,7 +11,6 @@ h3{font-size:23px}
 header{padding:14px 0 8px}
 .hdr-top{display:flex;align-items:center;justify-content:space-between;gap:10px;background:var(--card);border:1px solid var(--line);border-radius:18px;padding:12px 16px;box-shadow:var(--sh);margin-bottom:8px}
 .hdr-brand{display:flex;align-items:center;gap:12px;min-width:0}
-.hdr-logo{width:48px;height:48px;border-radius:12px;object-fit:contain;background:transparent!important;border:0;flex:none}
 .hdr-brand h1{font-size:26px;color:var(--acc);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .hdr-brand p{margin:2px 0 0;color:var(--mute);font-size:17px}
 .theme-btn{border:1.5px solid var(--line);background:var(--soft);color:var(--ink);border-radius:999px;padding:9px 15px;font:700 16px system-ui,sans-serif;cursor:pointer;flex:none;transition:transform .15s}
@@ -81,8 +80,6 @@ details{margin:10px 0}summary{cursor:pointer;font-weight:700;color:var(--acc);fo
 .sec-chev{font-size:15px;color:var(--mute);transition:transform .2s;flex:none}
 .sec-fold[open]>summary .sec-chev{transform:rotate(180deg)}
 
-/* ===== LOGO TRANSPARENTE INICIO Y MODAL ===== */
-.hero-transp-logo{width:76px;height:76px;object-fit:contain;background:transparent!important;border:0!important;box-shadow:none!important;border-radius:0!important;display:block;margin:0 auto 8px}
 .modal-bg{position:fixed;left:0;right:0;top:0;bottom:0;background:rgba(0,0,0,.52);z-index:25;display:flex;align-items:center;justify-content:center;padding:14px;animation:fadeIn .15s}
 .modal-box{background:var(--card);color:var(--ink);width:100%;max-width:640px;max-height:86vh;overflow-y:auto;border-radius:20px;padding:18px;border:1.5px solid var(--line);box-shadow:0 12px 32px rgba(0,0,0,.28)}
 .chat-box{max-height:360px;overflow-y:auto;padding:8px;background:var(--bg);border:1px solid var(--line);border-radius:14px;margin:10px 0}
@@ -1806,9 +1803,9 @@ var ROLE_GUIDE={
     ]
   },
   coordinador:{
-    desc:"Puedes coordinar el servicio dominical, publicar anuncios y mantener al día los cumpleaños de los miembros.",
+    desc:"Puedes coordinar el servicio dominical, publicar avisos y eventos, y mantener al día los cumpleaños de los miembros.",
     tips:[
-      {e:"📢",t:"Publicar un anuncio general en Inicio",fn:"S.ia=0;draw()"},
+      {e:"📢",t:"Publicar un aviso o evento general en Inicio",fn:"S.ia=0;draw()"},
       {e:"🎂",t:"Agregar o actualizar cumpleaños en las tarjetas de Registro",fn:"switchTab('reg')"},
       {e:"✅",t:"Tomar asistencia o conteo general del culto dominical",fn:"switchTab('asis')"},
       {e:"📝",t:"Enviar tu informe mensual en Rendición",fn:"switchTab('rend')"}
@@ -1926,15 +1923,15 @@ function setUiMode(m){
   S.ui_mode=m;
   S.ini_sub=null;
   safeSet("iccvgd_ui_mode",m);
-  toast(m==="simple"?"✨ Vista Simple por menús activada":"📋 Vista Clásica activada");
+  toast(m==="simple"?"Vista Simple por menús activada":"📋 Vista Clásica activada");
   draw();
 }
 function renderUiModeSwitch(){
   var isSimple=S.ui_mode!=="clasica";
   return'<div class="mode-switch no-print">'
-    +'<div style="min-width:0"><b style="font-size:16px;display:block">✨ Estilo de pantalla</b><small class="note" style="margin:0;font-size:14px">'+(isSimple?"Vista simple en menús":"Vista clásica completa")+'</small></div>'
+    +'<div style="min-width:0"><b style="font-size:16px;display:block">Estilo de pantalla</b><small class="note" style="margin:0;font-size:14px">'+(isSimple?"Vista simple en menús":"Vista clásica completa")+'</small></div>'
     +'<div class="mode-pill">'
-    +'<button aria-pressed="'+isSimple+'" onclick="setUiMode(\'simple\')">✨ Simple</button>'
+    +'<button aria-pressed="'+isSimple+'" onclick="setUiMode(\'simple\')">Simple</button>'
     +'<button aria-pressed="'+(!isSimple)+'" onclick="setUiMode(\'clasica\')">📋 Clásica</button>'
     +'</div></div>';
 }
@@ -2090,12 +2087,12 @@ function inicio(){
   h+=foldBtn("ini_cal","🗓️","Calendario del año "+yr,an.length,"#8E4FC7",calInner,false);
   return h
 }
-function aform(){var pa=isPastor(),co=isCoordinador()&&!pa&&!isCellLeaderOrAsst(),defKind=co?"anuncio":"evento",defAud=(pa||co)?"todos":ME.cell,a=S.ia?AN.filter(function(x){return x.id===S.ia})[0]:{kind:defKind,title:"",body:"",event_date:"",event_time:"",place:"",annual:false,audience:defAud};if(!a){S.ia=null;return inicio()}
+function aform(){var pa=isPastor(),co=isCoordinador()&&!pa&&!isCellLeaderOrAsst(),defAud=(pa||co)?"todos":ME.cell,a=S.ia?AN.filter(function(x){return x.id===S.ia})[0]:{kind:"evento",title:"",body:"",event_date:"",event_time:"",place:"",annual:false,audience:defAud};if(!a){S.ia=null;return inicio()}
 var o=function(v,l,s){return'<option value="'+esc(v)+'"'+(s===v?" selected":"")+'>'+esc(l)+'</option>'};
-var tipoOpts=co?o("anuncio","Anuncio",a.kind):o("evento","Evento (con fecha)",a.kind)+o("anuncio","Anuncio",a.kind);
+var tipoOpts=o("evento","Evento (con fecha)",a.kind)+o("anuncio","Anuncio / Aviso",a.kind);
 var audHtml=(pa||co)?'<label>Dirigido a</label><select id="au">'+o("todos","Toda la iglesia",a.audience)+CELLS.map(function(c){return o(c,c,a.audience)}).join("")+'</select>'+(pa?'<label style="display:flex;gap:8px;align-items:center"><input id="aa" type="checkbox" style="width:22px;height:22px"'+(a.annual?" checked":"")+'> Fijar anuncio / Actividad principal del año</label>':''):'<p class="note">Se publicará para '+esc(ME.cell)+'.</p>';
-return'<div class="card"><h3>📝 '+(S.ia?"Editar publicación":"Publicar")+'</h3><label>Tipo</label><select id="at">'+tipoOpts+'</select><label>Título</label><input id="ati" value="'+esc(a.title)+'"><label>Detalle (usa Enter para separar líneas o ítems)</label><textarea id="ab" rows="4">'+esc(a.body)+'</textarea><label>Fecha (opcional en anuncios)</label><input id="ad" type="date" value="'+esc(a.event_date)+'"><label>Hora</label><input id="ah" value="'+esc(a.event_time)+'" placeholder="Ej. 6:00 p. m."><label>Lugar</label><input id="ap" value="'+esc(a.place)+'">'+audHtml+'<button class="btn" onclick="asave()">💾 Guardar</button>'+(S.ia?'<button class="btn alt" onclick="adel()">🗑️ Eliminar</button>':'')+'<button class="btn alt" onclick="S.ia=null;draw()">Cancelar</button></div>'}
-async function asave(){var ti=$("ati").value.trim();if(!ti){toast("Escribe el título");return}var pa=isPastor(),co=isCoordinador()&&!pa&&!isCellLeaderOrAsst(),d={kind:co?"anuncio":$("at").value,title:ti,body:$("ab").value,event_date:$("ad").value||null,event_time:$("ah").value,place:$("ap").value,audience:(pa||co)?($("au")?$("au").value:"todos"):ME.cell,annual:pa&&$("aa")&&$("aa").checked};
+return'<div class="card"><h3>📝 '+(S.ia?"Editar publicación":"Publicar aviso o evento")+'</h3><label>Tipo</label><select id="at">'+tipoOpts+'</select><label>Título</label><input id="ati" value="'+esc(a.title)+'"><label>Detalle (usa Enter para separar líneas o ítems)</label><textarea id="ab" rows="4">'+esc(a.body)+'</textarea><label>Fecha (obligatoria en eventos, opcional en avisos)</label><input id="ad" type="date" value="'+esc(a.event_date)+'"><label>Hora</label><input id="ah" value="'+esc(a.event_time)+'" placeholder="Ej. 6:00 p. m."><label>Lugar</label><input id="ap" value="'+esc(a.place)+'">'+audHtml+'<button class="btn" onclick="asave()">💾 Guardar</button>'+(S.ia?'<button class="btn alt" onclick="adel()">🗑️ Eliminar</button>':'')+'<button class="btn alt" onclick="S.ia=null;draw()">Cancelar</button></div>'}
+async function asave(){var ti=$("ati").value.trim();if(!ti){toast("Escribe el título");return}var pa=isPastor(),co=isCoordinador()&&!pa&&!isCellLeaderOrAsst(),d={kind:$("at").value,title:ti,body:$("ab").value,event_date:$("ad").value||null,event_time:$("ah").value,place:$("ap").value,audience:(pa||co)?($("au")?$("au").value:"todos"):ME.cell,annual:pa&&$("aa")&&$("aa").checked};
 if(d.kind==="evento"&&!d.event_date){toast("Elige la fecha del evento");return}
 var r=S.ia?await SB.from("announcements").update(d).eq("id",S.ia):await SB.from("announcements").insert(d);
 if(r.error){toast("No se pudo guardar: "+r.error.message);return}await load();S.ia=null;toast("Publicado");draw()}
@@ -2103,7 +2100,7 @@ async function adel(){if(!confirm("¿Eliminar esta publicación?"))return;var r=
 
 // ===== COMUNIDAD (ORACIÓN + TESTIMONIOS + CHAT PÚBLICO Y PRIVADO POR GRUPO) =====
 function comunidad(){
-  return'<div class="chips"><button class="chip" aria-pressed="'+(S.cm==="or")+'" onclick="S.cm=\'or\';S.pn=false;S.tn=false;draw()">🙏 Oración</button><button class="chip" aria-pressed="'+(S.cm==="te")+'" onclick="S.cm=\'te\';S.pn=false;S.tn=false;draw()">✨ Testimonios</button><button class="chip" aria-pressed="'+(S.cm==="ch")+'" onclick="S.cm=\'ch\';S.pn=false;S.tn=false;draw()">💬 Chat</button></div>'+(S.cm==="or"?oracion():S.cm==="te"?testim():chatView())
+  return'<div class="chips"><button class="chip" aria-pressed="'+(S.cm==="or")+'" onclick="S.cm=\'or\';S.pn=false;S.tn=false;draw()">🙏 Oración</button><button class="chip" aria-pressed="'+(S.cm==="te")+'" onclick="S.cm=\'te\';S.pn=false;S.tn=false;draw()">🕊️ Testimonios</button><button class="chip" aria-pressed="'+(S.cm==="ch")+'" onclick="S.cm=\'ch\';S.pn=false;S.tn=false;draw()">💬 Chat</button></div>'+(S.cm==="or"?oracion():S.cm==="te"?testim():chatView())
 }
 function chatView(){
   var isPriv=S.chat_ch==="privado";
@@ -2156,10 +2153,10 @@ var r=await SB.from("prayers").insert({body:b,for_whom:$("pf").value.trim()||"Yo
 if(r.error){toast("No se pudo enviar: "+r.error.message);return}await load();S.pn=false;toast("Petición enviada");draw()}
 async function pans(id,v){var r=await SB.from("prayers").update({answered:v}).eq("id",id);if(r.error){toast("Error: "+r.error.message);return}await load();draw()}
 async function pdel(id){if(!confirm("¿Eliminar esta petición?"))return;var r=await SB.from("prayers").delete().eq("id",id);if(r.error){toast("Error: "+r.error.message);return}await load();draw()}
-function testim(){if(S.tn)return'<div class="card"><h3>✨ Mi testimonio</h3><label>Título</label><input id="tt"><label>Cuéntalo</label><textarea id="tb" rows="6"></textarea><label style="display:flex;gap:8px;align-items:center"><input id="tx" type="checkbox" style="width:22px;height:22px"> Doy permiso para compartirlo con la iglesia</label><p class="note">El pastor lo revisará antes de publicarlo.</p><button class="btn" onclick="tsend()">Enviar</button><button class="btn alt" onclick="S.tn=false;draw()">Cancelar</button></div>';
+function testim(){if(S.tn)return'<div class="card"><h3>🕊️ Mi testimonio</h3><label>Título</label><input id="tt"><label>Cuéntalo</label><textarea id="tb" rows="6"></textarea><label style="display:flex;gap:8px;align-items:center"><input id="tx" type="checkbox" style="width:22px;height:22px"> Doy permiso para compartirlo con la iglesia</label><p class="note">El pastor lo revisará antes de publicarlo.</p><button class="btn" onclick="tsend()">Enviar</button><button class="btn alt" onclick="S.tn=false;draw()">Cancelar</button></div>';
 var pa=isPastor();
 var teHtml=TE.length?TE.map(function(x){return'<div class="card"><b>'+esc(x.title)+'</b> '+(x.status==="pendiente"?'<span class="pill" style="background:#E07B12">En revisión</span>':'')+'<p>'+fmtLines(x.body)+'</p><p class="note">'+esc(x.author_name||"")+'</p>'+(pa&&x.status==="pendiente"?'<button class="btn sm" onclick="tpub('+x.id+')">Aprobar y publicar</button>':'')+(pa||x.author_id===U.id?'<button class="btn alt sm" onclick="tdel('+x.id+')">Eliminar</button>':'')+'</div>'}).join(""):'<p class="note">Aún no hay testimonios.</p>';
-return'<button class="btn" onclick="S.tn=true;draw()">➕ Escribir mi testimonio</button>'+foldBtn("te_list","✨","Testimonios compartidos",TE.length,"#8E4FC7",teHtml,true)}
+return'<button class="btn" onclick="S.tn=true;draw()">➕ Escribir mi testimonio</button>'+foldBtn("te_list","🕊️","Testimonios compartidos",TE.length,"#8E4FC7",teHtml,true)}
 async function tsend(){var ti=$("tt").value.trim(),b=$("tb").value.trim();if(!ti||!b){toast("Escribe el título y tu testimonio");return}if(!$("tx").checked){toast("Marca el permiso para poder enviarlo");return}
 var r=await SB.from("testimonies").insert({title:ti,body:b,consent:true,author_name:ME.name||U.email});if(r.error){toast("No se pudo enviar: "+r.error.message);return}await load();S.tn=false;toast("Enviado. El pastor lo revisará");draw()}
 async function tpub(id){var r=await SB.from("testimonies").update({status:"publicado"}).eq("id",id);if(r.error){toast("Error: "+r.error.message);return}await load();toast("Testimonio publicado");draw()}
@@ -2282,7 +2279,45 @@ return foldBtn("rv_it_"+x.id,ROL_EMO[x.role]||"📝",esc(x.author_name||"")+(x.c
 
 // ===== FINANZAS =====
 var FM=function(n){return"$"+Math.round(n).toLocaleString("es-CO")};
-function fcat(e){var inc=e.type==="income",l=inc?IC:EC,id=inc?e.income_category_id:e.expense_category_id;return l.filter(function(x){return x.id===id})[0]||{name:"Sin categoría",color:"#999"}}
+var DEFAULT_EXPENSE_CATS=[
+  {name:"Gastos de pastores",color:"#1565C0"},
+  {name:"Arriendo y servicios públicos",color:"#E07B12"},
+  {name:"Mantenimiento y aseo",color:"#00897B"},
+  {name:"Ayuda social y misericordia",color:"#2F9E5B"},
+  {name:"Alabanza y sonido",color:"#8E4FC7"},
+  {name:"Evangelismo y misiones",color:"#D6336C"},
+  {name:"Materiales y papelería",color:"#5C6BC0"},
+  {name:"Eventos y refrigerios",color:"#F4511E"},
+  {name:"Otros gastos",color:"#546E7A"}
+];
+function getExpenseCategories(){
+  var list=EC.slice();
+  DEFAULT_EXPENSE_CATS.forEach(function(dc,idx){
+    var exists=list.some(function(x){return(x.name||"").trim().toLowerCase()===dc.name.toLowerCase()});
+    if(!exists)list.push({id:-(idx+1),name:dc.name,color:dc.color,is_virtual:true});
+  });
+  return list;
+}
+function fcat(e){
+  var inc=e.type==="income",l=inc?IC:getExpenseCategories(),id=inc?e.income_category_id:e.expense_category_id;
+  var found=l.filter(function(x){return x.id===id})[0];
+  if(found)return found;
+  if(!inc&&e.description&&e.description.indexOf("[")===0){
+    var end=e.description.indexOf("]");
+    if(end>1){
+      var tag=e.description.slice(1,end);
+      var byTag=l.filter(function(x){return x.name.toLowerCase()===tag.toLowerCase()})[0];
+      if(byTag)return byTag;
+      return{name:tag,color:"#546E7A"};
+    }
+  }
+  return{name:"Sin categoría",color:"#999"};
+}
+function fdescClean(e){
+  var d=e.description||"";
+  if(d.indexOf("[")===0){var end=d.indexOf("]");if(end>1)return d.slice(end+1).trim();}
+  return d;
+}
 function fyears(){var ys=[today().slice(0,4)];FN.forEach(function(e){var y=e.entry_date.slice(0,4);if(ys.indexOf(y)<0)ys.push(y)});return ys.sort().reverse()}
 function fmon(){var ms=[today().slice(0,7)];FN.forEach(function(e){var k=e.entry_date.slice(0,7);if(ms.indexOf(k)<0)ms.push(k)});return ms.sort().reverse()}
 function finanzas(){if(S.ft)return fform();
@@ -2316,17 +2351,35 @@ if(incKeys.length||expKeys.length){
 }
 
 h+='<div class="grid2 no-print" style="margin-bottom:10px"><button class="btn" style="margin:0" onclick="S.ft=\'income\';draw()">➕ Ingreso</button><button class="btn alt" style="margin:0" onclick="S.ft=\'expense\';draw()">➖ Egreso</button></div>';
-var movHtml=l.length?l.map(function(e){var c=fcat(e),inc=e.type==="income";return'<div class="card row"><span style="width:4px;height:40px;border-radius:2px;background:'+esc(c.color||"#999")+';flex:none"></span><span class="grow"><b>'+esc(c.name)+'</b><small>'+esc(e.description||"")+' · '+e.entry_date+'</small></span><b style="color:'+(inc?"#2F9E5B":"#E07B12")+'">'+(inc?"+":"-")+FM(+e.amount)+'</b><button class="chip no-print" onclick="fdel('+e.id+')">🗑️</button></div>'}).join(""):'<p class="note">No hay movimientos en este periodo.</p>';
+var movHtml=l.length?l.map(function(e){var c=fcat(e),inc=e.type==="income";return'<div class="card row"><span style="width:4px;height:40px;border-radius:2px;background:'+esc(c.color||"#999")+';flex:none"></span><span class="grow"><b>'+esc(c.name)+'</b><small>'+esc(fdescClean(e))+' · '+e.entry_date+'</small></span><b style="color:'+(inc?"#2F9E5B":"#E07B12")+'">'+(inc?"+":"-")+FM(+e.amount)+'</b><button class="chip no-print" onclick="fdel('+e.id+')">🗑️</button></div>'}).join(""):'<p class="note">No hay movimientos en este periodo.</p>';
 h+=foldBtn("fin_mov","🧾","Movimientos del periodo",l.length,"#2F9E5B",movHtml,false);
 return h+'<div class="grid2 no-print" style="margin-top:10px"><button class="btn alt" style="margin:0" onclick="fcsv()">📥 Exportar CSV</button><button class="btn alt" style="margin:0" onclick="window.print()">🖨️ Imprimir / PDF</button></div>'}
-function fform(){var inc=S.ft==="income",cs=inc?IC:EC;
-return'<div class="card"><h3>'+(inc?"➕ Registrar ingreso":"➖ Registrar egreso")+'</h3><label>Categoría</label><select id="fn_c">'+cs.map(function(c){return'<option value="'+c.id+'">'+esc(c.name)+'</option>'}).join("")+'</select><label>Monto</label><input id="fn_a" type="number" min="0" step="any" inputmode="decimal" placeholder="0"><label>Descripción (opcional)</label><input id="fn_d" placeholder="Ej. Ofrenda del domingo"><label>Fecha</label><input id="fn_f" type="date" value="'+today()+'"><button class="btn" onclick="fsave()">💾 Guardar</button><button class="btn alt" onclick="S.ft=null;draw()">Cancelar</button></div>'}
-async function fsave(){var a=parseFloat($("fn_a").value),f=$("fn_f").value,c=parseInt($("fn_c").value);if(!(a>0)){toast("Escribe un monto mayor a cero");return}if(!f){toast("Elige la fecha");return}if(!c){toast("No hay categorías. Ejecuta el SQL de finanzas");return}
-var d={type:S.ft,amount:a,description:$("fn_d").value.trim(),entry_date:f};d[S.ft==="income"?"income_category_id":"expense_category_id"]=c;
+function fform(){var inc=S.ft==="income",cs=inc?IC:getExpenseCategories();
+var extraEgreso=!inc?'<label>Beneficiario / Subconcepto (opcional)</label><input id="fn_sub" placeholder="Ej. Pastor, recibo de luz, transporte, etc.">':'';
+return'<div class="card"><h3>'+(inc?"➕ Registrar ingreso":"➖ Registrar egreso")+'</h3><label>Categoría</label><select id="fn_c">'+cs.map(function(c){return'<option value="'+c.id+'">'+esc(c.name)+'</option>'}).join("")+'</select>'+extraEgreso+'<label>Monto</label><input id="fn_a" type="number" min="0" step="any" inputmode="decimal" placeholder="0"><label>Detalle / Descripción (opcional)</label><input id="fn_d" placeholder="'+(inc?"Ej. Ofrenda del domingo":"Ej. Pago mensual o soporte")+'">'+'<label>Fecha</label><input id="fn_f" type="date" value="'+today()+'"><button class="btn" onclick="fsave()">💾 Guardar</button><button class="btn alt" onclick="S.ft=null;draw()">Cancelar</button></div>'}
+async function fsave(){var a=parseFloat($("fn_a").value),f=$("fn_f").value,c=parseInt($("fn_c").value);if(!(a>0)){toast("Escribe un monto mayor a cero");return}if(!f){toast("Elige la fecha");return}if(!c){toast("Selecciona una categoría");return}
+var desc=$("fn_d").value.trim(),sub=$("fn_sub")?$("fn_sub").value.trim():"";
+if(sub)desc=sub+(desc?" · "+desc:"");
+var catIdToUse=c;
+if(S.ft==="expense"&&c<0){
+  var vCat=getExpenseCategories().filter(function(x){return x.id===c})[0];
+  if(vCat){
+    var insCat=await SB.from("expense_categories").insert({name:vCat.name,color:vCat.color}).select().single();
+    if(!insCat.error&&insCat.data&&insCat.data.id){
+      catIdToUse=insCat.data.id;
+    }else{
+      var fallbackId=(EC[0]&&EC[0].id)||null;
+      catIdToUse=fallbackId;
+      desc="["+vCat.name+"]"+(desc?" "+desc:"");
+    }
+  }
+}
+var d={type:S.ft,amount:a,description:desc,entry_date:f};
+if(catIdToUse)d[S.ft==="income"?"income_category_id":"expense_category_id"]=catIdToUse;
 var r=await SB.from("finance_entries").insert(d);if(r.error){toast("No se pudo guardar: "+r.error.message);return}await load();S.ft=null;S.fy="all";S.fm=f.slice(0,7);toast("Movimiento registrado");draw()}
 async function fdel(id){if(!confirm("¿Eliminar este movimiento?"))return;var r=await SB.from("finance_entries").delete().eq("id",id);if(r.error){toast("Error: "+r.error.message);return}await load();draw()}
 function fcsv(){var m=S.fm,l=S.fy!=="all"?FN.filter(function(e){return e.entry_date.slice(0,4)===S.fy}):FN.filter(function(e){return e.entry_date.slice(0,7)===m}),q=function(s){return'"'+String(s==null?"":s).replace(/"/g,'""')+'"'},c="Tipo,Categoría,Monto,Descripción,Fecha\n",ti=0,te=0;
-l.forEach(function(e){c+=[q(e.type==="income"?"Ingreso":"Egreso"),q(fcat(e).name),e.amount,q(e.description),e.entry_date].join(",")+"\n";if(e.type==="income")ti+=+e.amount;else te+=+e.amount});
+l.forEach(function(e){c+=[q(e.type==="income"?"Ingreso":"Egreso"),q(fcat(e).name),e.amount,q(fdescClean(e)),e.entry_date].join(",")+"\n";if(e.type==="income")ti+=+e.amount;else te+=+e.amount});
 c+="\nTotal ingresos,,"+ti+"\nTotal egresos,,"+te+"\nBalance,,"+(ti-te)+"\n";
 var tag=S.fy!=="all"?S.fy:m;
 var a=document.createElement("a");a.href=URL.createObjectURL(new Blob(["\ufeff"+c],{type:"text/csv;charset=utf-8"}));a.download="finanzas_"+tag+".csv";a.click()}
@@ -2577,7 +2630,7 @@ var r=await SB.from("people").delete().eq("id",p.id);if(r.error){toast("No se pu
 
 function equipo(){
   var o=function(a,v){return a.map(function(x){return'<option'+(x===v?" selected":"")+'>'+x+'</option>'}).join("")};
-  var reglas='<p class="note">Puedes asignar uno o varios roles: Pastor, Líder de célula, Asistente de líder, Líder de alabanza, Asistencia de alabanza, Líder de servidores, Coordinador (publica anuncios y edita cumpleaños sin ver datos restringidos de miembros), Discipulador, Servidor y Miembro. Solo el Pastor ve Finanzas; el Pastor, el Líder de alabanza y Asistencia de alabanza pueden ver y editar el inventario de instrumentos.</p>';
+  var reglas='<p class="note">Puedes asignar uno o varios roles: Pastor, Líder de célula, Asistente de líder, Líder de alabanza, Asistencia de alabanza, Líder de servidores, Coordinador (publica avisos y eventos, y edita cumpleaños sin ver datos restringidos de miembros), Discipulador, Servidor y Miembro. Solo el Pastor ve Finanzas; el Pastor, el Líder de alabanza y Asistencia de alabanza pueden ver y editar el inventario de instrumentos.</p>';
   var h='<button class="btn alt" style="margin:8px 0" onclick="switchTab(\'ini\')">← Volver a Inicio</button><div class="card"><h3>⚙️ Equipo de líderes ('+EQ.length+')</h3></div>'+foldBtn("eq_reg","📜","Reglas de roles y permisos",null,"#1565C0",reglas,false);
   return h+EQ.map(function(q){
     var me=q.id===U.id;
