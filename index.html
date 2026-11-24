@@ -190,6 +190,33 @@ details{margin:10px 0}summary{cursor:pointer;font-weight:700;color:var(--acc);fo
 .uno-hand{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;padding:10px 4px;margin-top:8px}
 .uno-color-dot{display:inline-block;width:16px;height:16px;border-radius:50%;border:2px solid #fff;vertical-align:middle}
 
+
+/* ===== TARJETAS DE LUJO (PROPÓSITO Y RESÚMENES POR NIVEL) ===== */
+.lux-grid{display:grid;grid-template-columns:1fr;gap:12px;margin:12px 0}
+.lux-card{position:relative;border-radius:20px;padding:18px 18px 16px;overflow:hidden;border:2px solid #D4AF37;background:linear-gradient(145deg,var(--card) 0%,var(--soft) 100%);box-shadow:0 8px 22px rgba(212,175,55,.18);transition:transform .16s}
+.lux-card::before{content:"";position:absolute;top:0;left:0;right:0;height:5px;background:linear-gradient(90deg,#D4AF37,#F3E5AB,#D4AF37)}
+.lux-card.lv1{border-color:#1565C0;box-shadow:0 8px 22px rgba(21,101,192,.16)}
+.lux-card.lv1::before{background:linear-gradient(90deg,#1565C0,#64B5F6,#1565C0)}
+.lux-card.lv2{border-color:#2F9E5B;box-shadow:0 8px 22px rgba(47,158,91,.16)}
+.lux-card.lv2::before{background:linear-gradient(90deg,#2F9E5B,#81C784,#2F9E5B)}
+.lux-card.lv3{border-color:#8E4FC7;box-shadow:0 8px 22px rgba(142,79,199,.16)}
+.lux-card.lv3::before{background:linear-gradient(90deg,#8E4FC7,#BA68C8,#8E4FC7)}
+.lux-card.purp{border-color:#D4AF37;background:linear-gradient(145deg,#FFFDF7 0%,#F9F1D8 100%);color:#1F2430}
+:root[data-theme="dark"] .lux-card.purp{background:linear-gradient(145deg,#232018 0%,#2E2819 100%);color:#EAEFF7}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .lux-card.purp{background:linear-gradient(145deg,#232018 0%,#2E2819 100%);color:#EAEFF7}}
+.lux-hdr{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:8px}
+.lux-kicker{font:800 12px system-ui,sans-serif;letter-spacing:1.2px;text-transform:uppercase;color:#B2891E}
+.lux-card.lv1 .lux-kicker{color:#1565C0}
+.lux-card.lv2 .lux-kicker{color:#2F9E5B}
+.lux-card.lv3 .lux-kicker{color:#8E4FC7}
+.lux-verse{margin-top:10px;padding:9px 12px;border-radius:12px;background:rgba(212,175,55,.12);border-left:4px solid #D4AF37;font-style:italic;font-size:16px}
+.step-group-fold{border:1.5px solid var(--line);border-radius:12px;margin:4px 0;background:var(--card);overflow:hidden}
+.step-group-fold>summary{list-style:none;padding:11px 12px;display:flex;align-items:center;justify-content:space-between;gap:8px;cursor:pointer;font:700 16px system-ui,sans-serif;color:var(--ink);background:var(--card)}
+.step-group-fold>summary::-webkit-details-marker{display:none}
+.step-group-fold[open]>summary{background:var(--soft);border-bottom:1px solid var(--line)}
+.step-group-body{padding:8px 9px;background:var(--bg)}
+.badge-chip{display:inline-flex;align-items:center;gap:5px;padding:4px 10px;border-radius:999px;font:700 13px system-ui,sans-serif;background:linear-gradient(135deg,#FFF8DC,#F3E5AB);color:#5C4300;border:1px solid #D4AF37;margin:3px 4px 0 0}
+
 @media print{
   body{background:#fff!important;color:#000!important}
   .nav,.hdr-top,.who,.no-print,.btn,.chip,.chips{display:none!important}
@@ -341,7 +368,7 @@ function getWeeklyRS(){
 }
 var RS=getWeeklyRS();
 
-var S={tab:"ini",ui_mode:safeGet("iccvgd_ui_mode","simple"),im:null,rd:null,rm:null,mm:null,ft:null,fm:null,fy:"all",rec:false,pw:false,q:"",aq:"",f:"Todos",fc:"Todas",fb:"Todos",sel:null,tb:null,lv:1,ia:null,cm:"or",pn:false,tn:false,T:{},rs:null,ri:0,cl:1,bad:[],ok:false,ev:"Culto dominical",dl_view:null,dl_open:null,dl_ans:{},dl_ed:null,dl_q:[],am:"lista",gd:null,more:false,pcell:"Todas",prayed:{},grad_name:"",tb_fold:{1:true},tb_lvl_filter:0,tb_disc_filter:"todos",ev_view:"tarjetas",dev_modal:false,tr_modal:false,chat_ch:"general",chat_priv_target:"",chat_msgs:[],worship_prog:[],worship_inv:[],worship_sub:null,wp_files:[],img_modal:null,retiro_cfg:{nombre:"Retiro Espiritual Iglesia ICCVGD",fecha:"",tarifa:0,lugar:"",notas:""},retiro_list:[],retiro_q:"",retiro_f:"todos",uno_view:false,uno_rooms:[],uno_room:null,uno_wild_idx:null,uno_join_code:"",uno_sub:null,uno_poll:null},U=null,ME=null,P=[],AT=[],EQ=[],AN=[],PR=[],TE=[],AR=[],AM=[],MR=[],RP=[],IC=[],EC=[],FN=[],DL=[],DP=[],AG=[],AGM=[],R0={};
+var S={tab:"ini",ui_mode:safeGet("iccvgd_ui_mode","simple"),im:null,rd:null,rm:null,mm:null,ft:null,fm:null,fy:"all",rec:false,pw:false,q:"",aq:"",f:"Todos",fc:"Todas",fb:"Todos",sel:null,tb:null,lv:1,ia:null,cm:"or",pn:false,tn:false,T:{},rs:null,ri:0,cl:1,bad:[],ok:false,ev:"Culto dominical",dl_view:null,dl_open:null,dl_ans:{},dl_ed:null,dl_q:[],am:"lista",gd:null,more:false,pcell:"Todas",prayed:{},grad_name:"",tb_fold:{1:true},tb_lvl_filter:0,tb_disc_filter:"todos",lux_edit:false,ev_view:"tarjetas",dev_modal:false,tr_modal:false,chat_ch:"general",chat_priv_target:"",chat_msgs:[],worship_prog:[],worship_inv:[],worship_sub:null,wp_files:[],img_modal:null,retiro_cfg:{nombre:"Retiro Espiritual Iglesia ICCVGD",fecha:"",tarifa:0,lugar:"",notas:""},retiro_list:[],retiro_q:"",retiro_f:"todos",uno_view:false,uno_rooms:[],uno_room:null,uno_wild_idx:null,uno_join_code:"",uno_sub:null,uno_poll:null},U=null,ME=null,P=[],AT=[],EQ=[],AN=[],PR=[],TE=[],AR=[],AM=[],MR=[],RP=[],IC=[],EC=[],FN=[],DL=[],DP=[],AG=[],AGM=[],R0={};
 
 // ===== TEMA CLARO / PASTEL / OSCURO =====
 function getTheme(){return safeGet("iccvgd_theme",null)||(window.matchMedia&&window.matchMedia("(prefers-color-scheme:dark)").matches?"dark":"light")}
@@ -1305,8 +1332,8 @@ function renderUnoModule(){
 }
 
 
-// ===== TABLERO TIPO TRELLO POR NIVELES 1, 2 Y 3 (CON ID 1 LETRA + 1 NÚMERO CONSECUTIVO) =====
-var LV=["Nivel 1 · Básico","Nivel 2 · Intermedio","Nivel 3 · Avanzado","Nivel 4 · Ministerio","Sirviendo en la iglesia"],MX={1:8,2:12,3:12,4:12,5:12},SC={al_dia:["#2F9E5B","Al día"],atrasado:["#E07B12","Atrasado"],llamada:["#D6336C","Llamar o visitar"],listo:["#1565C0","Listo para subir"]},SO=["llamada","atrasado","listo","al_dia"];
+// ===== TABLERO TIPO TRELLO POR NIVELES 1, 2 Y 3 (TODAS LAS LECCIONES CON COLOR + INSIGNIAS + TARJETAS DE LUJO) =====
+var LV=["Nivel 1 · Básico","Nivel 2 · Intermedio","Nivel 3 · Avanzado","Nivel 4 · Ministerio","Sirviendo en la iglesia"],MX={1:8,2:12,3:12,4:12,5:12},SC={al_dia:["#2F9E5B","Al día"],atrasado:["#E07B12","Atrasado"],llamada:["#D6336C","Llamar o visitar"],listo:["#1565C0","Listo para subir"]},SO=["listo","al_dia"];
 var RT={
   pastor:["ini","reg","asis","alabanza","retiro","panel","cel","tabl","inf","rend","com","retos","fin","equipo"],
   tesorero:["ini","reg","alabanza","retiro","panel","cel","tabl","inf","rend","com","retos"],
@@ -1314,7 +1341,7 @@ var RT={
   asistencia_alabanza:["ini","reg","asis","alabanza","retiro","panel","cel","tabl","inf","rend","com","retos"],
   lider_servidores:["ini","reg","asis","alabanza","retiro","panel","cel","tabl","inf","rend","com","retos"],
   lider_celula:["ini","reg","asis","alabanza","retiro","panel","cel","tabl","inf","rend","com","retos"],
-  asistente_lider:["ini","reg","asis","alabanza","retiro","panel","cel","tabl","inf","rend","com","retos"],
+  asistente_lider:["ini","reg","alabanza","retiro","panel","cel","tabl","inf","rend","com","retos"],
   lider:["ini","reg","asis","alabanza","retiro","panel","cel","tabl","inf","rend","com","retos"],
   coordinador:["ini","reg","asis","alabanza","retiro","panel","cel","tabl","inf","rend","com","retos"],
   discipulador:["ini","reg","alabanza","retiro","panel","cel","tabl","inf","rend","com","retos"],
@@ -1330,8 +1357,129 @@ function allowedTabsForMe(){
   return out.length?out:RT.discipulo;
 }
 var CC="57",MSG={llamada:"Hola {n}, soy de la iglesia. Pensé en ti y quería saber cómo estás. ¿Puedo orar por ti o visitarte esta semana?",atrasado:"Hola {n}, ¿cómo estás? Noté que tu paso del discipulado se quedó atrás. ¿Cómo te puedo ayudar para ponerte al día? Estoy contigo.",listo:"¡Felicitaciones, {n}! Terminaste tu nivel y estás listo para el siguiente. ¿Hablamos esta semana para continuar?",al_dia:"Hola {n}, ¡sigue adelante! Estoy orando por ti. ¿Cómo vas con tu paso de esta semana?",falta:"Hola {n}, te extrañamos en la reunión. Pensé en ti y quería saber cómo estás.",cumple:"¡Feliz cumpleaños, {n}! 🎂🎉 Dios te bendiga abundantemente en este nuevo año de vida. De parte de tu familia de Iglesia ICCVGD."};
-function wab(p,k){var d=String(p.tel||"").replace(/\D/g,"");if(d.length===10)d=CC+d;var u="https://wa.me/"+(d.length>=11?d:"")+"?text="+encodeURIComponent(MSG[k].replace("{n}",p.name.split(" ")[0]));
+function wab(p,k){var d=String(p.tel||"").replace(/\D/g,"");if(d.length===10)d=CC+d;var u="https://wa.me/"+(d.length>=11?d:"")+"?text="+encodeURIComponent(MSG[k||"al_dia"].replace("{n}",p.name.split(" ")[0]));
 return'<a class="btn sm" style="display:block;text-align:center;text-decoration:none;background:#25D366" href="'+u+'" target="_blank" rel="noopener">💬 Escribir por WhatsApp</a>'}
+
+// ===== GESTIÓN DE INSIGNIAS ASIGNADAS POR PASTOR, LÍDERES Y DISCIPULADORES =====
+var INSIGNIAS_CATALOGO=[
+  "🛡️ Escudo de la Fe",
+  "🌱 Nueva Creación en Cristo",
+  "📖 Fiel en la Palabra",
+  "🙏 Constante en Oración",
+  "🔥 Guiado por el Espíritu",
+  "🤝 Corazón de Servicio",
+  "🎓 Nivel 1 Completado",
+  "🏆 Nivel 2 Completado",
+  "👑 Nivel 3 Completado"
+];
+function getDiscipleBadges(personId){
+  var map=lget("disciple_badges",{});
+  return Array.isArray(map[personId])?map[personId]:[];
+}
+function toggleDiscipleBadge(personId,badgeLabel){
+  var p=P.filter(function(x){return x.id===personId})[0];
+  if(!p||!canMove(p)){toast("No tienes permiso para asignar insignias a este discípulo");return}
+  var map=lget("disciple_badges",{});
+  var list=Array.isArray(map[personId])?map[personId].slice():[];
+  var idx=list.indexOf(badgeLabel);
+  if(idx>-1){list.splice(idx,1);toast("Insignia retirada");}
+  else{list.push(badgeLabel);toast("🏅 Insignia asignada: "+badgeLabel);}
+  if(list.length)map[personId]=list;else delete map[personId];
+  lset("disciple_badges",map);
+  draw();
+}
+function addCustomDiscipleBadge(personId){
+  var p=P.filter(function(x){return x.id===personId})[0];
+  if(!p||!canMove(p)){toast("No tienes permiso para asignar insignias");return}
+  var el=$("custom_badge_"+personId);
+  var val=el?el.value.trim():"";
+  if(!val){toast("Escribe el nombre de la insignia");return}
+  var label=(/^[^\w\s]/.test(val)?"":"🏅 ")+val;
+  var map=lget("disciple_badges",{});
+  var list=Array.isArray(map[personId])?map[personId].slice():[];
+  if(list.indexOf(label)<0)list.push(label);
+  map[personId]=list;
+  lset("disciple_badges",map);
+  toast("🏅 Insignia asignada");
+  draw();
+}
+
+// ===== TARJETAS DE LUJO: PROPÓSITO DEL DISCIPULADO Y RESÚMENES POR NIVEL =====
+var DEFAULT_LUXURY_CARDS={
+  proposito:"Formar discípulos arraigados en su identidad como nueva creación en Cristo, que caminan guiados por el Espíritu Santo y sirven con amor en la unidad del cuerpo.",
+  cita:"«Por tanto, id, y haced discípulos a todas las naciones... enseñándoles que guarden todas las cosas que os he mandado.» — Mateo 28:19-20",
+  nv1:"Cimentar al nuevo creyente en la seguridad de salvación, la nueva vida en Cristo, la oración diaria, la lectura bíblica y la comunión en el cuerpo.",
+  nv2:"Profundizar en la vida guiada por el Espíritu Santo, el carácter de Cristo, el discernimiento espiritual y la victoria cotidiana sobre la carne.",
+  nv3:"Capacitar siervos y multiplicadores listos para acompañar a otros, liderar células de cuidado y edificar la iglesia con madurez doctrinal."
+};
+function getLuxuryCards(){
+  var saved=lget("discipulado_luxury_cards",null);
+  return Object.assign({},DEFAULT_LUXURY_CARDS,saved||{});
+}
+function saveLuxuryCards(){
+  var cur=getLuxuryCards();
+  cur.proposito=($("lx_prop")?$("lx_prop").value.trim():"")||DEFAULT_LUXURY_CARDS.proposito;
+  cur.cita=($("lx_cita")?$("lx_cita").value.trim():"")||DEFAULT_LUXURY_CARDS.cita;
+  cur.nv1=($("lx_nv1")?$("lx_nv1").value.trim():"")||DEFAULT_LUXURY_CARDS.nv1;
+  cur.nv2=($("lx_nv2")?$("lx_nv2").value.trim():"")||DEFAULT_LUXURY_CARDS.nv2;
+  cur.nv3=($("lx_nv3")?$("lx_nv3").value.trim():"")||DEFAULT_LUXURY_CARDS.nv3;
+  lset("discipulado_luxury_cards",cur);
+  S.lux_edit=false;
+  toast("✨ Tarjetas de lujo actualizadas");
+  draw();
+}
+function renderLuxuryCardsSection(allB){
+  var lx=getLuxuryCards();
+  var c1=allB.filter(function(p){return p.level===1}).length;
+  var c2=allB.filter(function(p){return p.level===2}).length;
+  var c3=allB.filter(function(p){return p.level===3}).length;
+  var canEditLux=isPastor()||isDiscipulador()||isCellLeaderOrAsst();
+
+  var inner='<div class="lux-grid">';
+  inner+='<div class="lux-card purp">'
+    +'<div class="lux-hdr"><span class="lux-kicker">✨ Propósito del Discipulado</span><span style="font-size:24px">👑</span></div>'
+    +'<h3 style="font-size:21px;margin-bottom:6px">Formando vidas a la estatura de Cristo</h3>'
+    +'<p style="margin:0;font-size:17px;line-height:1.55">'+fmtLines(lx.proposito)+'</p>'
+    +'<div class="lux-verse">'+esc(lx.cita)+'</div>'
+    +'</div>';
+
+  inner+='<div class="lux-card lv1">'
+    +'<div class="lux-hdr"><span class="lux-kicker">📘 Nivel 1 · Básico (8 lecciones)</span><span class="pill" style="background:#1565C0">'+c1+' discípulos</span></div>'
+    +'<h3 style="font-size:20px;margin-bottom:4px">Fundamento y Nueva Identidad</h3>'
+    +'<p style="margin:0;font-size:16px;line-height:1.5">'+fmtLines(lx.nv1)+'</p>'
+    +'</div>';
+
+  inner+='<div class="lux-card lv2">'
+    +'<div class="lux-hdr"><span class="lux-kicker">📗 Nivel 2 · Intermedio (12 lecciones)</span><span class="pill" style="background:#2F9E5B">'+c2+' discípulos</span></div>'
+    +'<h3 style="font-size:20px;margin-bottom:4px">Crecimiento y Vida en el Espíritu</h3>'
+    +'<p style="margin:0;font-size:16px;line-height:1.5">'+fmtLines(lx.nv2)+'</p>'
+    +'</div>';
+
+  inner+='<div class="lux-card lv3">'
+    +'<div class="lux-hdr"><span class="lux-kicker">📙 Nivel 3 · Avanzado (12 lecciones)</span><span class="pill" style="background:#8E4FC7">'+c3+' discípulos</span></div>'
+    +'<h3 style="font-size:20px;margin-bottom:4px">Servicio, Liderazgo y Multiplicación</h3>'
+    +'<p style="margin:0;font-size:16px;line-height:1.5">'+fmtLines(lx.nv3)+'</p>'
+    +'</div>';
+  inner+='</div>';
+
+  if(canEditLux){
+    if(!S.lux_edit){
+      inner+='<button class="btn alt sm" onclick="S.lux_edit=true;draw()">✍️ Editar contenido de tarjetas de lujo</button>';
+    }else{
+      inner+='<div class="card" style="border:2px solid #D4AF37">'
+        +'<h3>✍️ Editar Tarjetas de Lujo</h3>'
+        +'<label>Propósito general del discipulado</label><textarea id="lx_prop" rows="3">'+esc(lx.proposito)+'</textarea>'
+        +'<label>Versículo lema</label><input id="lx_cita" value="'+esc(lx.cita)+'">'
+        +'<label>Resumen Nivel 1 · Básico</label><textarea id="lx_nv1" rows="2">'+esc(lx.nv1)+'</textarea>'
+        +'<label>Resumen Nivel 2 · Intermedio</label><textarea id="lx_nv2" rows="2">'+esc(lx.nv2)+'</textarea>'
+        +'<label>Resumen Nivel 3 · Avanzado</label><textarea id="lx_nv3" rows="2">'+esc(lx.nv3)+'</textarea>'
+        +'<div class="grid2"><button class="btn" style="margin:0" onclick="saveLuxuryCards()">💾 Guardar</button><button class="btn alt" style="margin:0" onclick="S.lux_edit=false;draw()">Cancelar</button></div>'
+        +'</div>';
+    }
+  }
+  return foldBtn("tbl_lux","👑","Tarjetas de Lujo · Propósito y Resúmenes de Nivel","3 Niveles","#D4AF37",inner,true);
+}
+
 // ===== GESTIÓN DE MÚLTIPLES DISCIPULADORES POR DISCÍPULO =====
 function getDiscipleDisciplers(p){
   var map=lget("disciple_disciplers",{});
@@ -1364,7 +1512,6 @@ function canMove(p){
 }
 function ED(){return isPastor()||isCellLeaderOrAsst()}
 
-// Genera ID consecutivo de 1 letra + 1 número (A1..A9, B1..B9, C1..C9...) según orden de registro/tablero
 function buildDiscipleCodeMap(boardList){
   var sorted=boardList.slice().sort(function(a,b){return(a.id||0)-(b.id||0)});
   var map={};
@@ -1377,7 +1524,6 @@ function buildDiscipleCodeMap(boardList){
   return map;
 }
 
-// Movimiento rápido de lección o nivel directamente desde el tablero tipo Trello
 async function quickMoveDisciple(personId,deltaStep,deltaLvl){
   var p=P.filter(function(x){return x.id===personId})[0];
   if(!p||!canMove(p)){toast("No tienes permiso para mover esta ficha");return}
@@ -1530,15 +1676,14 @@ function renderAlabanzaModule(){
   var h='<button class="btn alt no-print" style="margin:8px 0" onclick="switchTab(\'ini\')">← Volver a Inicio</button>';
   h+='<div class="card t-azul" style="text-align:center;padding:18px 16px"><span class="pill" style="background:#1565C0;font-size:13px">Ministerio Musical</span><h3 style="margin-top:6px">🎸 Alabanza</h3><p class="note" style="margin:4px 0 0">Selecciona una opción para gestionar o consultar</p></div>';
 
-  // Cuadrícula minimalista de iconos elegantes 2x2
-  var tile1={id:"prog",ico:"🎶",bg:"#1565C0",title:"Programación",sub:"Turnos y repertorio",cnt:S.worship_prog.length,fn:"S.worship_sub=(S.worship_sub===\'prog\'?null:\'prog\');draw()"};
-  var tile2={id:"archivos",ico:"🎼",bg:"#8E4FC7",title:"Partituras y Fotos",sub:"PDF y acordes",cnt:totalFiles,fn:"S.worship_sub=(S.worship_sub===\'archivos\'?null:\'archivos\');draw()"};
+  var tile1={id:"prog",ico:"🎶",bg:"#1565C0",title:"Programación",sub:"Turnos y repertorio",cnt:S.worship_prog.length,fn:"S.worship_sub=(S.worship_sub==='prog'?null:'prog');draw()"};
+  var tile2={id:"archivos",ico:"🎼",bg:"#8E4FC7",title:"Partituras y Fotos",sub:"PDF y acordes",cnt:totalFiles,fn:"S.worship_sub=(S.worship_sub==='archivos'?null:'archivos');draw()"};
   var tile3=canSeeInv
-    ?{id:"nuevo",ico:"✍️",bg:"#2F9E5B",title:"Programar Grupo",sub:"Crear nuevo servicio",cnt:null,fn:"S.worship_sub=(S.worship_sub===\'nuevo\'?null:\'nuevo\');draw()"}
-    :{id:"asis_w",ico:"✅",bg:"#2F9E5B",title:"Asistencia",sub:"Ensayos y cultos",cnt:null,fn:"S.ev=\'Alabanza y servidores\';switchTab(\'asis\')"};
+    ?{id:"nuevo",ico:"✍️",bg:"#2F9E5B",title:"Programar Grupo",sub:"Crear nuevo servicio",cnt:null,fn:"S.worship_sub=(S.worship_sub==='nuevo'?null:'nuevo');draw()"}
+    :{id:"asis_w",ico:"✅",bg:"#2F9E5B",title:"Asistencia",sub:"Ensayos y cultos",cnt:null,fn:"S.ev='Alabanza y servidores';switchTab('asis')"};
   var tile4=canSeeInv
-    ?{id:"inv",ico:"🥁",bg:"#E07B12",title:"Inventario",sub:"Instrumentos y sonido",cnt:S.worship_inv.length,fn:"S.worship_sub=(S.worship_sub===\'inv\'?null:\'inv\');draw()"}
-    :{id:"chat_w",ico:"💬",bg:"#00897B",title:"Chat Alabanza",sub:"Equipo musical",cnt:null,fn:"S.tab=\'com\';S.cm=\'ch\';S.chat_ch=\'privado\';S.chat_priv_target=\'Alabanza\';draw()"};
+    ?{id:"inv",ico:"🥁",bg:"#E07B12",title:"Inventario",sub:"Instrumentos y sonido",cnt:S.worship_inv.length,fn:"S.worship_sub=(S.worship_sub==='inv'?null:'inv');draw()"}
+    :{id:"chat_w",ico:"💬",bg:"#00897B",title:"Chat Alabanza",sub:"Equipo musical",cnt:null,fn:"S.tab='com';S.cm='ch';S.chat_ch='privado';S.chat_priv_target='Alabanza';draw()"};
 
   var tiles=[tile1,tile2,tile3,tile4];
   h+='<div class="ala-grid">'
@@ -1552,7 +1697,6 @@ function renderAlabanzaModule(){
     }).join("")
     +'</div>';
 
-  // Vista de detalle limpia según el ícono seleccionado en la cuadrícula 2x2
   if(sub==="nuevo"&&canSeeInv){
     var draftFilesHtml=S.wp_files.length?'<div class="att-list">'+S.wp_files.map(function(f,idx){
       return'<span class="att-chip">'+(f.kind==="pdf"?"📄 ":"🖼️ ")+esc(f.name)+' <button type="button" style="border:0;background:none;color:#D6336C;font-weight:800;cursor:pointer;padding:0 2px" onclick="removeDraftWorshipFile('+idx+')">✕</button></span>';
@@ -1615,6 +1759,58 @@ function renderAlabanzaModule(){
   return h;
 }
 
+function renderDiscipleCardInBoard(p,tc,st,cid,sStyle,codeMap){
+  var stCol=(p.status==="listo")?"#1565C0":"#2F9E5B";
+  var stLbl=(p.status==="listo")?"Listo para subir":"Al día";
+  var movable=canMove(p);
+  var pct=Math.min(100,Math.round(((p.step||1)/tc.maxSt)*100));
+  var discNames=getDisciplerNames(p);
+  var badges=getDiscipleBadges(p.id);
+
+  var card='<details class="disc-fold" style="border-color:'+sStyle.bd+'">';
+  card+='<summary><span style="display:inline-flex;align-items:center;gap:8px;min-width:0"><span class="disc-id" style="background:'+sStyle.bd+'">'+esc(cid)+'</span><span style="font-size:16px;font-weight:700;color:var(--ink);overflow:hidden;text-overflow:ellipsis;white-space:nowrap">'+(movable?"★ ":"")+esc(p.name)+(badges.length?' 🏅'+badges.length:'')+'</span></span><span style="display:inline-flex;align-items:center;gap:6px;flex:none"><span style="width:10px;height:10px;border-radius:50%;background:'+stCol+';display:inline-block" title="'+stLbl+'"></span><span style="font-size:13px;color:var(--mute)">▼</span></span></summary>';
+  card+='<div class="disc-body">';
+  card+='<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:4px"><span class="pill" style="background:'+stCol+';font-size:13px">'+stLbl+'</span><small class="note"><b>'+pct+'%</b> · Nivel '+tc.lv+' · Lección '+st+'</small></div>';
+  card+='<div class="pbar" style="height:8px;margin:6px 0"><i style="width:'+pct+'%;background:'+sStyle.bd+'"></i></div>';
+  card+='<p style="margin:4px 0"><b>🏘️ Célula:</b> '+esc(p.cell||"Sin célula")+'</p>';
+  card+='<p style="margin:4px 0"><b>🎓 Discipulador(es):</b> '+(discNames.length?esc(discNames.join(", ")):"Sin asignar")+'</p>';
+  if(p.companion)card+='<p style="margin:4px 0"><b>🤝 Compañero:</b> '+esc(p.companion)+'</p>';
+  if(p.started)card+='<p style="margin:4px 0"><b>📅 Inicio:</b> '+fd(p.started)+'</p>';
+
+  // Insignias asignadas al discípulo
+  card+='<div style="margin:6px 0;padding:8px;border-radius:10px;background:var(--bg);border:1px solid var(--line)">';
+  card+='<b style="font-size:14px">🏅 Insignias obtenidas ('+badges.length+')</b>';
+  if(badges.length){
+    card+='<div style="margin-top:4px">'+badges.map(function(b){return'<span class="badge-chip">'+esc(b)+'</span>'}).join("")+'</div>';
+  }else{
+    card+='<p class="note" style="margin:3px 0 0;font-size:14px">Aún sin insignias asignadas.</p>';
+  }
+  if(movable){
+    card+='<details style="margin:6px 0 0"><summary style="font-size:14px;color:var(--acc)">➕ Asignar / quitar insignias</summary>';
+    card+='<div style="display:flex;flex-wrap:wrap;gap:5px;margin-top:6px">';
+    INSIGNIAS_CATALOGO.forEach(function(bg){
+      var has=badges.indexOf(bg)>-1;
+      card+='<button type="button" class="chip" style="font-size:13px;padding:5px 9px;'+(has?'background:#D4AF37;border-color:#B2891E;color:#1F2430':'')+'" onclick="toggleDiscipleBadge('+p.id+',\''+esc(bg)+'\')">'+(has?'✓ ':'+ ')+esc(bg)+'</button>';
+    });
+    card+='</div>';
+    card+='<div style="display:flex;gap:5px;margin-top:6px"><input id="custom_badge_'+p.id+'" placeholder="Insignia personalizada..." style="font-size:14px;padding:7px 9px"><button type="button" class="chip" style="font-size:13px;padding:6px 10px" onclick="addCustomDiscipleBadge('+p.id+')">Agregar</button></div>';
+    card+='</details>';
+  }
+  card+='</div>';
+
+  if(movable){
+    card+='<div class="disc-ctrl">';
+    if(st>1||tc.lv>1)card+='<button onclick="quickMoveDisciple('+p.id+',-1,0)" title="Retroceder lección">⬅️ Lección</button>';
+    card+='<button style="background:'+sStyle.bd+';color:#fff;border-color:'+sStyle.bd+'" onclick="quickMoveDisciple('+p.id+',1,0)" title="Avanzar siguiente lección">Lección ➡️</button>';
+    if(tc.lv>1)card+='<button onclick="quickMoveDisciple('+p.id+',0,-1)" title="Bajar nivel">⬇️ Nivel '+(tc.lv-1)+'</button>';
+    if(tc.lv<5)card+='<button style="background:#2F9E5B;color:#fff;border-color:#2F9E5B" onclick="quickMoveDisciple('+p.id+',0,1)" title="Subir de nivel">⬆️ Nivel '+(tc.lv+1)+'</button>';
+    card+='</div>';
+  }
+  card+='<button class="btn alt sm" style="margin-top:8px" onclick="S.tb='+p.id+';draw()">⚙️ Editar nivel, lección, insignias y discipuladores</button>';
+  card+='</div></details>';
+  return card;
+}
+
 function tablero(){
   if(ME.role==="discipulo")return renderDiscipuladoHub(false);
   if(S.dl_view==="editor"&&isPastor())return renderLessonEditor();
@@ -1625,10 +1821,16 @@ function tablero(){
   var codeMap=buildDiscipleCodeMap(allB);
   var B=S.tb_disc_filter==="mios"?allB.filter(function(p){return canMove(p)}):allB;
 
-  var h='<div class="card"><h3>🗂️ Tablero de Discipulado (Niveles 1, 2 y 3)</h3><p class="note">Columnas por nivel con lecciones ascendentes y fichas desplegables con ID consecutivo. Toca el nombre de un discípulo para ver su avance y moverlo.</p><button class="btn alt" style="margin:0" onclick="S.dl_view=\'lessons\';S.dl_open=null;draw()">📖 Lecciones de Discipulado</button>';
+  var h='<div class="card"><h3>🗂️ Tablero de Discipulado (Niveles 1, 2 y 3)</h3><p class="note">Todas las lecciones de cada nivel aparecen en su celda con su color correspondiente. Cuando hay más de un discípulo en una lección, se agrupan en un desplegable para mantener el tablero limpio.</p><button class="btn alt" style="margin:0" onclick="S.dl_view=\'lessons\';S.dl_open=null;draw()">📖 Lecciones de Discipulado</button>';
   h+='<div class="chips" style="margin-top:8px"><button class="chip" aria-pressed="'+(S.tb_disc_filter==="todos")+'" onclick="S.tb_disc_filter=\'todos\';draw()">👥 Todos ('+allB.length+')</button><button class="chip" aria-pressed="'+(S.tb_disc_filter==="mios")+'" onclick="S.tb_disc_filter=\'mios\';draw()">★ Mis discípulos</button></div></div>';
 
-  h+='<div class="stats">'+SO.map(function(k){return'<div class="stat" style="background:'+SC[k][0]+'"><b>'+B.filter(function(p){return p.status===k}).length+'</b>'+SC[k][1]+'</div>'}).join("")+'</div>';
+  // Tarjetas de lujo con propósito del discipulado y resúmenes de cada nivel
+  h+=renderLuxuryCardsSection(allB);
+
+  // Indicadores limpios (sin atrasado ni visitar/llamar)
+  var listoCnt=B.filter(function(p){return p.status==="listo"}).length;
+  var alDiaCnt=B.filter(function(p){return p.status!=="listo"}).length;
+  h+='<div class="stats"><div class="stat" style="background:#1565C0"><b>'+listoCnt+'</b>Listo para subir</div><div class="stat" style="background:#2F9E5B"><b>'+alDiaCnt+'</b>Al día</div></div>';
 
   // PALETA DE COLORES POR NÚMERO DE LECCIÓN DENTRO DE LA COLUMNA
   var STEP_PALETTE=[
@@ -1646,12 +1848,19 @@ function tablero(){
     {bg:"rgba(0,105,92,.13)",bd:"#00695C"}
   ];
 
-  // TABLERO TIPO TRELLO: COLUMNAS PARA NIVEL 1, NIVEL 2 Y NIVEL 3
+  // TABLERO TIPO TRELLO: COLUMNAS PARA NIVEL 1, NIVEL 2 Y NIVEL 3 CON TODAS LAS LECCIONES VISIBLES
   var trelloCols=[
     {lv:1,title:"📘 Nivel 1 · Básico",maxSt:8,col:"#1565C0"},
     {lv:2,title:"📗 Nivel 2 · Intermedio",maxSt:12,col:"#2F9E5B"},
     {lv:3,title:"📙 Nivel 3 · Avanzado",maxSt:12,col:"#8E4FC7"}
   ];
+
+  var dbLessonsByLv={1:{},2:{},3:{}};
+  DL.forEach(function(dl){
+    if(dl.level>=1&&dl.level<=3&&!dl.is_final&&dl.step>=1){
+      dbLessonsByLv[dl.level][dl.step]=dl.title;
+    }
+  });
 
   h+='<div class="trello-board">';
   trelloCols.forEach(function(tc){
@@ -1659,67 +1868,49 @@ function tablero(){
     h+='<div class="trello-col">';
     h+='<div class="trello-col-hdr" style="background:'+tc.col+'"><span>'+tc.title+'</span><span class="pill" style="background:rgba(255,255,255,.25)">'+inLvl.length+'</span></div>';
 
-    // Lecciones ascendentes dentro de cada columna de nivel con color por número de lección
-    var hasAnyInCol=false;
+    // Renderizar TODAS las lecciones del nivel (1..maxSt) cada una en su celda/tarjeta con su color
     for(var st=1;st<=tc.maxSt;st++){
       var grp=inLvl.filter(function(p){return(p.step||1)===st});
-      if(!grp.length)continue;
-      hasAnyInCol=true;
       var sStyle=STEP_PALETTE[(st-1)%STEP_PALETTE.length];
+      var lTitle=dbLessonsByLv[tc.lv]&&dbLessonsByLv[tc.lv][st]?(" · "+esc(dbLessonsByLv[tc.lv][st])):"";
       h+='<div class="trello-step-box" style="background:'+sStyle.bg+';border-color:'+sStyle.bd+';border-left:6px solid '+sStyle.bd+'">';
-      h+='<div class="trello-step-hdr" style="color:'+sStyle.bd+';border-bottom-color:'+sStyle.bd+'"><span>📖 Lección '+st+' de '+tc.maxSt+'</span><span class="pill" style="background:'+sStyle.bd+'">'+grp.length+'</span></div>';
+      h+='<div class="trello-step-hdr" style="color:'+sStyle.bd+';border-bottom-color:'+sStyle.bd+'"><span>📖 Lección '+st+' de '+tc.maxSt+lTitle+'</span><span class="pill" style="background:'+sStyle.bd+'">'+grp.length+'</span></div>';
 
-      grp.forEach(function(p){
-        var cid=codeMap[p.id]||("A"+p.id);
-        var stCol=SC[p.status]?SC[p.status][0]:sStyle.bd;
-        var stLbl=SC[p.status]?SC[p.status][1]:"Al día";
-        var movable=canMove(p);
-        var pct=Math.min(100,Math.round(((p.step||1)/tc.maxSt)*100));
-
-        var discNames=getDisciplerNames(p);
-        // En el tablero se ve el número de ficha y el nombre del discípulo; en el desplegable están los controles y demás datos
-        h+='<details class="disc-fold" style="border-color:'+sStyle.bd+'">';
-        h+='<summary><span style="display:inline-flex;align-items:center;gap:8px;min-width:0"><span class="disc-id" style="background:'+sStyle.bd+'">'+esc(cid)+'</span><span style="font-size:16px;font-weight:700;color:var(--ink);overflow:hidden;text-overflow:ellipsis;white-space:nowrap">'+(movable?"★ ":"")+esc(p.name)+'</span></span><span style="display:inline-flex;align-items:center;gap:6px;flex:none"><span style="width:10px;height:10px;border-radius:50%;background:'+stCol+';display:inline-block" title="'+stLbl+'"></span><span style="font-size:13px;color:var(--mute)">▼</span></span></summary>';
-        h+='<div class="disc-body">';
-        h+='<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:4px"><span class="pill" style="background:'+stCol+';font-size:13px">'+stLbl+'</span><small class="note"><b>'+pct+'%</b> · Nivel '+tc.lv+' · Lección '+st+'</small></div>';
-        h+='<div class="pbar" style="height:8px;margin:6px 0"><i style="width:'+pct+'%;background:'+sStyle.bd+'"></i></div>';
-        h+='<p style="margin:4px 0"><b>🏘️ Célula:</b> '+esc(p.cell||"Sin célula")+'</p>';
-        h+='<p style="margin:4px 0"><b>🎓 Discipulador(es):</b> '+(discNames.length?esc(discNames.join(", ")):"Sin asignar")+'</p>';
-        if(p.companion)h+='<p style="margin:4px 0"><b>🤝 Compañero:</b> '+esc(p.companion)+'</p>';
-        if(p.started)h+='<p style="margin:4px 0"><b>📅 Inicio:</b> '+fd(p.started)+'</p>';
-
-        if(movable){
-          h+='<div class="disc-ctrl">';
-          if(st>1||tc.lv>1)h+='<button onclick="quickMoveDisciple('+p.id+',-1,0)" title="Retroceder lección">⬅️ Lección</button>';
-          h+='<button style="background:'+sStyle.bd+';color:#fff;border-color:'+sStyle.bd+'" onclick="quickMoveDisciple('+p.id+',1,0)" title="Avanzar siguiente lección">Lección ➡️</button>';
-          if(tc.lv>1)h+='<button onclick="quickMoveDisciple('+p.id+',0,-1)" title="Bajar nivel">⬇️ Nivel '+(tc.lv-1)+'</button>';
-          if(tc.lv<5)h+='<button style="background:#2F9E5B;color:#fff;border-color:#2F9E5B" onclick="quickMoveDisciple('+p.id+',0,1)" title="Subir de nivel">⬆️ Nivel '+(tc.lv+1)+'</button>';
-          h+='</div>';
-        }
-        h+='<button class="btn alt sm" style="margin-top:8px" onclick="S.tb='+p.id+';draw()">⚙️ Editar nivel, lección y discipuladores</button>';
+      if(!grp.length){
+        h+='<p class="note" style="margin:2px 0 0;font-size:14px;opacity:.78">Sin discípulos en esta lección</p>';
+      }else if(grp.length===1){
+        var pOnly=grp[0];
+        var cidOnly=codeMap[pOnly.id]||("A"+pOnly.id);
+        h+=renderDiscipleCardInBoard(pOnly,tc,st,cidOnly,sStyle,codeMap);
+      }else{
+        // Más de un discípulo en esta celda/tarjeta -> desplegable que anuncia el número de discípulos
+        h+='<details class="step-group-fold" style="border-color:'+sStyle.bd+'">';
+        h+='<summary><span style="display:inline-flex;align-items:center;gap:8px"><span class="pill" style="background:'+sStyle.bd+';font-size:14px">👥 '+grp.length+'</span><span>Hay '+grp.length+' discípulos en esta lección</span></span><span style="font-size:13px;color:var(--mute)">▼</span></summary>';
+        h+='<div class="step-group-body">';
+        grp.forEach(function(p){
+          var cid=codeMap[p.id]||("A"+p.id);
+          h+=renderDiscipleCardInBoard(p,tc,st,cid,sStyle,codeMap);
+        });
         h+='</div></details>';
-      });
-
+      }
       h+='</div>';
-    }
-    if(!hasAnyInCol){
-      h+='<div class="trello-step-box"><p class="note" style="margin:0;text-align:center">Sin discípulos en '+tc.title+' todavía.</p></div>';
     }
     h+='</div>';
   });
   h+='</div>';
 
-  // Niveles 4 y Ministerio (resumen plegable por si hay personas allí)
+  // Niveles 4 y Ministerio
   var advP=B.filter(function(p){return p.level>=4});
   if(advP.length){
     var advHtml=advP.map(function(p){
       var cid=codeMap[p.id]||("A"+p.id);
-      return'<div class="card row"><span class="disc-id" style="background:#E07B12">'+esc(cid)+'</span><span class="grow"><b>'+esc(p.name)+'</b><small>'+LV[p.level-1]+' · Paso '+(p.step||1)+'</small></span><button class="chip" onclick="S.tb='+p.id+';draw()">Abrir</button></div>';
+      var bgs=getDiscipleBadges(p.id);
+      return'<div class="card row"><span class="disc-id" style="background:#E07B12">'+esc(cid)+'</span><span class="grow"><b>'+esc(p.name)+(bgs.length?' 🏅'+bgs.length:'')+'</b><small>'+LV[p.level-1]+' · Paso '+(p.step||1)+'</small></span><button class="chip" onclick="S.tb='+p.id+';draw()">Abrir</button></div>';
     }).join("");
     h+=foldBtn("tbl_adv","🎓","Nivel 4 · Ministerio y Servicio",advP.length,"#E07B12",advHtml,false);
   }
 
-  var cartInner='<p class="note">Cada columna representa un discípulo agrupado por su nivel; la altura indica la lección o paso actual (toca una columna para editar).</p>'+svgCartesianDiscipulado(B)+'<div class="chart-leg"><span><i style="background:#2F9E5B"></i>Al día</span><span><i style="background:#E07B12"></i>Atrasado</span><span><i style="background:#D6336C"></i>Llamar/visitar</span><span><i style="background:#1565C0"></i>Listo para subir</span></div>';
+  var cartInner='<p class="note">Cada columna representa un discípulo agrupado por su nivel; la altura indica la lección o paso actual (toca una columna para editar).</p>'+svgCartesianDiscipulado(B)+'<div class="chart-leg"><span><i style="background:#2F9E5B"></i>Al día</span><span><i style="background:#1565C0"></i>Listo para subir</span></div>';
   h+=foldBtn("tbl_cart","📐","Gráfico cartesiano de avance",B.length,"#1565C0",cartInner,false);
 
   var o=ED()?P.filter(function(p){return!p.level&&(isPastor()||p.cell===ME.cell)}):[];
@@ -1731,7 +1922,11 @@ var codeMap=buildDiscipleCodeMap(P.filter(function(x){return x.level}));
 var cid=codeMap[p.id]||"";
 var curDiscIds=getDiscipleDisciplers(p);
 var discNames=getDisciplerNames(p);
-if(!canMove(p))return'<div class="card"><h3>'+(cid?'['+esc(cid)+'] ':'')+esc(p.name)+'</h3><p class="note">'+LV[p.level-1]+' · Paso '+p.step+(MX[p.level]?" de "+MX[p.level]:"")+'</p><p>Estado: '+SC[p.status][1]+'</p><p><b>🎓 Discipulador(es):</b> '+(discNames.length?esc(discNames.join(", ")):"Sin asignar")+'</p>'+(p.companion?'<p>Compañero: '+esc(p.companion)+'</p>':'')+'<button class="btn alt" onclick="S.tb=null;draw()">← Volver</button></div>';
+var curBadges=getDiscipleBadges(p.id);
+var cleanStatus=(p.status==="listo")?"listo":"al_dia";
+
+if(!canMove(p))return'<div class="card"><h3>'+(cid?'['+esc(cid)+'] ':'')+esc(p.name)+'</h3><p class="note">'+LV[p.level-1]+' · Paso '+p.step+(MX[p.level]?" de "+MX[p.level]:"")+'</p><p>Estado: '+(SC[cleanStatus]?SC[cleanStatus][1]:"Al día")+'</p><p><b>🎓 Discipulador(es):</b> '+(discNames.length?esc(discNames.join(", ")):"Sin asignar")+'</p>'+(curBadges.length?'<p><b>🏅 Insignias:</b> '+curBadges.map(function(b){return'<span class="badge-chip">'+esc(b)+'</span>'}).join("")+'</p>':'')+(p.companion?'<p>Compañero: '+esc(p.companion)+'</p>':'')+'<button class="btn alt" onclick="S.tb=null;draw()">← Volver</button></div>';
+
 var mx=MX[p.level]||12,st=[];for(var i=1;i<=mx;i++)st.push(i);
 var discPool=EQ.filter(function(q){var rs=Array.isArray(q.roles)&&q.roles.length?q.roles:[q.role];return rs.indexOf("discipulador")>-1||rs.indexOf("pastor")>-1||rs.indexOf("lider")>-1||rs.indexOf("lider_celula")>-1});
 var discSelectorHtml='<label>🎓 Discipuladores asignados (puedes marcar varios)</label><div style="background:var(--bg);border:1.5px solid var(--line);border-radius:12px;padding:10px 12px;max-height:190px;overflow-y:auto">'
@@ -1740,7 +1935,21 @@ var discSelectorHtml='<label>🎓 Discipuladores asignados (puedes marcar varios
     return'<label style="display:flex;gap:8px;align-items:center;font-weight:600;margin:6px 0;font-size:17px"><input type="checkbox" class="tdi_chk" value="'+esc(q.id)+'" style="width:20px;height:20px"'+(chk?" checked":"")+'> '+esc(q.name||q.id)+'</label>';
   }).join(""):'<p class="note" style="margin:0">No hay discipuladores registrados en Equipo.</p>')
   +'</div>';
-return'<div class="card"><h3>'+(cid?'<span class="disc-id" style="background:#1565C0;margin-right:6px">'+esc(cid)+'</span>':'')+esc(p.name)+'</h3><p class="note">'+LV[p.level-1]+'</p><label>Nivel</label><select id="tlv" onchange="var m=(+this.value===1?8:12);var s=$(\'tp\');s.innerHTML=\'\';for(var k=1;k<=m;k++)s.innerHTML+=\'<option>\'+k+\'</option>\'">'+[1,2,3,4,5].map(function(lv){return'<option value="'+lv+'"'+(p.level===lv?" selected":"")+'>'+LV[lv-1]+'</option>'}).join("")+'</select><label>Estado</label><select id="ts">'+SO.map(function(k){return'<option value="'+k+'"'+(p.status===k?" selected":"")+'>'+SC[k][1]+'</option>'}).join("")+'</select><label>Lección / Paso actual</label><select id="tp">'+st.map(function(i){return'<option'+(i===p.step?" selected":"")+'>'+i+'</option>'}).join("")+'</select>'+discSelectorHtml+'<label>Compañero de crecimiento</label><input id="tc" value="'+esc(p.companion)+'"><label>Fecha de inicio</label><input id="td" type="date" value="'+esc(p.started)+'">'+(p.tel?wab(p,p.status):'')+'<button class="btn" onclick="tsave(0)">💾 Guardar</button>'+(p.level<5?'<button class="btn alt" onclick="tsave(1)">⬆️ Pasar al siguiente nivel</button>':'')+(ED()?'<button class="btn alt" onclick="tsave(2)">Quitar del tablero</button>':'')+'<button class="btn alt" onclick="S.tb=null;draw()">← Volver</button></div>'}
+
+var badgesSelectorHtml='<label>🏅 Insignias del discípulo (toca para asignar o quitar)</label><div style="background:var(--bg);border:1.5px solid var(--line);border-radius:12px;padding:10px 12px">'
+  +'<div style="display:flex;flex-wrap:wrap;gap:6px">'
+  +INSIGNIAS_CATALOGO.map(function(bg){
+    var has=curBadges.indexOf(bg)>-1;
+    return'<button type="button" class="chip" style="font-size:14px;padding:6px 11px;'+(has?'background:#D4AF37;border-color:#B2891E;color:#1F2430':'')+'" onclick="toggleDiscipleBadge('+p.id+',\''+esc(bg)+'\')">'+(has?'✓ ':'+ ')+esc(bg)+'</button>';
+  }).join("")
+  +'</div>'
+  +curBadges.filter(function(b){return INSIGNIAS_CATALOGO.indexOf(b)<0}).map(function(b){
+    return'<button type="button" class="chip" style="font-size:14px;padding:6px 11px;margin-top:6px;background:#D4AF37;border-color:#B2891E;color:#1F2430" onclick="toggleDiscipleBadge('+p.id+',\''+esc(b)+'\')">✓ '+esc(b)+'</button>';
+  }).join("")
+  +'<div style="display:flex;gap:6px;margin-top:8px"><input id="custom_badge_'+p.id+'" placeholder="Nueva insignia personalizada..." style="font-size:15px;padding:8px 10px"><button type="button" class="chip" onclick="addCustomDiscipleBadge('+p.id+')">➕ Agregar</button></div>'
+  +'</div>';
+
+return'<div class="card"><h3>'+(cid?'<span class="disc-id" style="background:#1565C0;margin-right:6px">'+esc(cid)+'</span>':'')+esc(p.name)+'</h3><p class="note">'+LV[p.level-1]+'</p><label>Nivel</label><select id="tlv" onchange="var m=(+this.value===1?8:12);var s=$(\'tp\');s.innerHTML=\'\';for(var k=1;k<=m;k++)s.innerHTML+=\'<option>\'+k+\'</option>\'">'+[1,2,3,4,5].map(function(lv){return'<option value="'+lv+'"'+(p.level===lv?" selected":"")+'>'+LV[lv-1]+'</option>'}).join("")+'</select><label>Estado</label><select id="ts">'+SO.map(function(k){return'<option value="'+k+'"'+(cleanStatus===k?" selected":"")+'>'+SC[k][1]+'</option>'}).join("")+'</select><label>Lección / Paso actual</label><select id="tp">'+st.map(function(i){return'<option'+(i===p.step?" selected":"")+'>'+i+'</option>'}).join("")+'</select>'+badgesSelectorHtml+discSelectorHtml+'<label>Compañero de crecimiento</label><input id="tc" value="'+esc(p.companion)+'"><label>Fecha de inicio</label><input id="td" type="date" value="'+esc(p.started)+'">'+(p.tel?wab(p,cleanStatus):'')+'<button class="btn" onclick="tsave(0)">💾 Guardar</button>'+(p.level<5?'<button class="btn alt" onclick="tsave(1)">⬆️ Pasar al siguiente nivel</button>':'')+(ED()?'<button class="btn alt" onclick="tsave(2)">Quitar del tablero</button>':'')+'<button class="btn alt" onclick="S.tb=null;draw()">← Volver</button></div>'}
 async function tsave(m){var p=P.filter(function(x){return x.id===S.tb})[0],selLv=$("tlv")?+$("tlv").value:p.level,d={level:selLv,status:$("ts").value,step:+$("tp").value,companion:$("tc").value,started:$("td").value||null};
 if(m===1){d.level=Math.min(5,selLv+1);d.step=1;d.status="al_dia"}if(m===2){d.level=null;d.step=1;d.status="al_dia"}
 var l=d.level;d.lvl=l?(l<5?"Nivel "+l+" · Paso "+d.step:"Sirviendo en la iglesia"):"";
@@ -2223,7 +2432,8 @@ if(coordOnly){
   if(calUrl)h+='<a class="btn alt sm" style="display:block;text-align:center;text-decoration:none" href="'+calUrl+'" target="_blank" rel="noopener">📅 Agregar cumpleaños a Google Calendar</a>';
 }else{
   var dNames=getDisciplerNames(p);
-  h+=(p.lvl?'<p class="note">Avance: '+esc(p.lvl)+'</p>':'')+(dNames.length?'<p>🎓 <b>Discipulador(es):</b> '+esc(dNames.join(", "))+'</p>':'')+'<p>Bautismo: '+(p.bap?"Bautizado":"Sin bautizar")+'</p>'+(b?'<p>🎂 Cumpleaños: '+fd(b)+'</p>':'')+(calUrl?'<a class="btn alt sm" style="display:block;text-align:center;text-decoration:none" href="'+calUrl+'" target="_blank" rel="noopener">📅 Agregar cumpleaños a Google Calendar</a>':'')+(p.tel?'<p>Teléfono: '+esc(p.tel)+'</p>'+wab(p,"al_dia"):'');
+  var pBadges=getDiscipleBadges(p.id);
+  h+=(p.lvl?'<p class="note">Avance: '+esc(p.lvl)+'</p>':'')+(dNames.length?'<p>🎓 <b>Discipulador(es):</b> '+esc(dNames.join(", "))+'</p>':'')+(pBadges.length?'<p>🏅 <b>Insignias:</b><br>'+pBadges.map(function(bg){return'<span class="badge-chip">'+esc(bg)+'</span>'}).join("")+'</p>':'')+'<p>Bautismo: '+(p.bap?"Bautizado":"Sin bautizar")+'</p>'+(b?'<p>🎂 Cumpleaños: '+fd(b)+'</p>':'')+(calUrl?'<a class="btn alt sm" style="display:block;text-align:center;text-decoration:none" href="'+calUrl+'" target="_blank" rel="noopener">📅 Agregar cumpleaños a Google Calendar</a>':'')+(p.tel?'<p>Teléfono: '+esc(p.tel)+'</p>'+wab(p,"al_dia"):'');
 }
 h+='<button class="btn alt" onclick="S.sel=null;draw()">← Volver</button></div>';
 return h}
@@ -2563,6 +2773,11 @@ function renderDiscipuladoHub(embedded){
   h+='<small><b>'+doneCount+' de '+stepsOnly.length+' aprobadas ('+pct+'%)</b></small>';
   if(graduated)h+='<div style="margin-top:8px"><span class="badge">🛡️ Escudo de la Fe · Nivel 1 Completado</span></div>';
   else if(doneCount>0)h+='<div style="margin-top:8px"><span class="badge">🌱 En progreso ('+doneCount+'/'+stepsOnly.length+')</span></div>';
+  var myPersonRec=P.filter(function(x){return(ME&&ME.name&&x.name&&x.name.toLowerCase()===ME.name.toLowerCase())})[0];
+  var myAssignedBadges=myPersonRec?getDiscipleBadges(myPersonRec.id):[];
+  if(myAssignedBadges.length){
+    h+='<div style="margin-top:8px"><b>🏅 Tus insignias otorgadas:</b><br>'+myAssignedBadges.map(function(bg){return'<span class="badge-chip">'+esc(bg)+'</span>'}).join("")+'</div>';
+  }
   if(isPastor()){
     h+='<button class="btn alt no-print" onclick="S.dl_view=\'editor\';S.dl_ed=null;draw()">✏️ Administrar / Subir Lecciones (Pastor)</button>';
   }
