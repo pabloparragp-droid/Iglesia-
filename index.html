@@ -368,7 +368,7 @@ function getWeeklyRS(){
 }
 var RS=getWeeklyRS();
 
-var S={tab:"ini",ui_mode:safeGet("iccvgd_ui_mode","simple"),im:null,rd:null,rm:null,mm:null,ft:null,fm:null,fy:"all",rec:false,pw:false,q:"",aq:"",f:"Todos",fc:"Todas",fb:"Todos",sel:null,tb:null,lv:1,ia:null,cm:"or",pn:false,tn:false,T:{},rs:null,ri:0,cl:1,bad:[],ok:false,ev:"Culto dominical",dl_view:null,dl_open:null,dl_ans:{},dl_ed:null,dl_q:[],am:"lista",gd:null,more:false,pcell:"Todas",prayed:{},grad_name:"",tb_fold:{1:true},tb_lvl_filter:0,tb_disc_filter:"todos",lux_edit:false,ev_view:"tarjetas",dev_modal:false,tr_modal:false,chat_ch:"general",chat_priv_target:"",chat_msgs:[],worship_prog:[],worship_inv:[],worship_sub:null,wp_files:[],img_modal:null,retiro_cfg:{nombre:"Retiro Espiritual Iglesia ICCVGD",fecha:"",tarifa:0,lugar:"",notas:""},retiro_list:[],retiro_q:"",retiro_f:"todos",uno_view:false,uno_rooms:[],uno_room:null,uno_wild_idx:null,uno_join_code:"",uno_sub:null,uno_poll:null},U=null,ME=null,P=[],AT=[],EQ=[],AN=[],PR=[],TE=[],AR=[],AM=[],MR=[],RP=[],IC=[],EC=[],FN=[],DL=[],DP=[],AG=[],AGM=[],R0={};
+var S={tab:"ini",ui_mode:safeGet("iccvgd_ui_mode","simple"),im:null,rd:null,rm:null,mm:null,ft:null,fm:null,fy:"all",rec:false,pw:false,q:"",aq:"",f:"Todos",fc:"Todas",fb:"Todos",sel:null,tb:null,lv:1,ia:null,cm:"or",pn:false,tn:false,T:{},rs:null,ri:0,cl:1,bad:[],ok:false,ev:"Culto dominical",dl_view:null,dl_open:null,dl_ans:{},dl_ed:null,dl_q:[],am:"lista",gd:null,more:false,pcell:"Todas",prayed:{},grad_name:"",tb_fold:{1:true},tb_lvl_filter:0,tb_disc_filter:"todos",lux_edit:false,ev_view:"tarjetas",dev_modal:false,tr_modal:false,chat_ch:"general",chat_priv_target:"",chat_msgs:[],worship_prog:[],worship_inv:[],worship_funds:[],worship_sub:null,wp_files:[],img_modal:null,retiro_cfg:{nombre:"Retiro Espiritual Iglesia ICCVGD",fecha:"",tarifa:0,lugar:"",notas:""},retiro_list:[],retiro_q:"",retiro_f:"todos",uno_view:false,uno_rooms:[],uno_room:null,uno_wild_idx:null,uno_join_code:"",uno_sub:null,uno_poll:null},U=null,ME=null,P=[],AT=[],EQ=[],AN=[],PR=[],TE=[],AR=[],AM=[],MR=[],RP=[],IC=[],EC=[],FN=[],DL=[],DP=[],AG=[],AGM=[],R0={};
 
 // ===== TEMA CLARO / PASTEL / OSCURO =====
 function getTheme(){return safeGet("iccvgd_theme",null)||(window.matchMedia&&window.matchMedia("(prefers-color-scheme:dark)").matches?"dark":"light")}
@@ -651,6 +651,7 @@ async function boot(){
   S.chat_msgs=lget("chat_msgs",[]);
   S.worship_prog=lget("worship_prog",[]);
   S.worship_inv=lget("worship_inv",[]);
+  S.worship_funds=lget("worship_funds",[]);
   S.retiro_cfg=lget("retiro_cfg",{nombre:"Retiro Espiritual Iglesia ICCVGD",fecha:"",tarifa:0,lugar:"",notas:""});
   S.retiro_list=lget("retiro_list",[]);
   if(!SB){showFatalError("Inicializar Supabase","No se pudo conectar con Supabase.");return}
@@ -782,17 +783,40 @@ filtInner+='<label>🏷️ Filtrar por etapa</label><div class="chips">'+["Todos
 var activeFilt=(S.f!=="Todos"||S.fc!=="Todas"||S.fb!=="Todos");
 h+=foldBtn("reg_filt","🎛️","Filtros por célula, bautismo y etapa",activeFilt?"Activos":null,"#E07B12",filtInner,activeFilt);
 
+function getMemberCargoLabel(p){
+  var eqMatch=(EQ||[]).filter(function(q){
+    return (q.name&&p.name&&q.name.trim().toLowerCase()===p.name.trim().toLowerCase());
+  })[0];
+  if(eqMatch){
+    var rs=Array.isArray(eqMatch.roles)&&eqMatch.roles.length?eqMatch.roles:[eqMatch.role];
+    var validRs=rs.filter(function(r){return r&&r!=="pendiente"&&r!=="discipulo"});
+    if(validRs.length){
+      return validRs.map(function(r){return(ROLE_META[r]&&ROLE_META[r].lbl)||r}).join(" · ");
+    }
+  }
+  return p.stage||"Miembro";
+}
+function memberGeneralRow(p){
+  var cargo=getMemberCargoLabel(p);
+  var dNames=getDisciplerNames(p);
+  return'<div class="card"><button class="row" style="border:0;background:none;padding:0" onclick="S.sel='+p.id+';draw()">'
+    +'<span class="av" style="background:'+(COL[p.stage]||"#1565C0")+'">'+esc(ini(p.name))+'</span>'
+    +'<span class="grow"><b>'+esc(p.name)+'</b><small>🏷️ Cargo: <b>'+esc(cargo)+'</b> · '+esc(p.cell||"Sin célula")+(dNames.length?" · 🎓 "+esc(dNames.join(", ")):"")+'</small></span>'
+    +'<span class="pill" style="background:'+(COL[p.stage]||"#1565C0")+'">'+esc(cargo)+'</span>'
+    +'</button></div>';
+}
 if(!l.length){
   h+='<p class="note">Nadie coincide con los filtros actuales.</p>';
-}else if(S.q.trim()||S.f!=="Todos"){
-  h+=l.map(function(p){return row(p,"S.sel="+p.id+";draw()")}).join("");
 }else{
-  ST.forEach(function(st){
-    var grp=l.filter(function(p){return p.stage===st});
-    if(grp.length){
-      h+=foldBtn("reg_st_"+st,ST_EMO[st]||"👤",st+"s",grp.length,COL[st],grp.map(function(p){return row(p,"S.sel="+p.id+";draw()")}).join(""),false);
-    }
-  });
+  h+=foldBtn("reg_all_general","📋","Lista general de todos los miembros y sus cargos",l.length,"#1565C0",l.map(memberGeneralRow).join(""),true);
+  if(!S.q.trim()&&S.f==="Todos"){
+    ST.forEach(function(st){
+      var grp=l.filter(function(p){return p.stage===st});
+      if(grp.length){
+        h+=foldBtn("reg_st_"+st,ST_EMO[st]||"👤",st+"s",grp.length,COL[st],grp.map(function(p){return row(p,"S.sel="+p.id+";draw()")}).join(""),false);
+      }
+    });
+  }
 }
 return h}
 function form(){var p=S.sel?P.filter(function(x){return x.id===S.sel})[0]:{name:"",tel:"",stage:"Visitante",cell:isPastor()?"":ME.cell,lvl:"",bap:false,note:"",birthday:""};
@@ -851,35 +875,53 @@ async function gdel(id){
   if(r.error){toast("No se pudo eliminar: "+r.error.message);return}
   await load();toast("Conteo eliminado");draw();
 }
-function agen(){var t=S.gd||today(),ex=AG.filter(function(g){return g.event_date===t&&g.event==="Culto dominical"})[0]||{},tot=gtt(ex);
-var h='<div class="card"><h3>🔢 Conteo general del culto</h3><p class="note">Anota cuántas personas hay por grupo, sin nombres. Si ese mismo día tomaste asistencia por lista, usa solo una de las dos para no duplicar.</p><label>Fecha</label><input type="date" value="'+t+'" onchange="S.gd=this.value;draw()">';
-GR.forEach(function(g){h+='<label>'+g[4]+' '+g[1]+'</label><input id="'+g[2]+'" type="number" min="0" inputmode="numeric" value="'+(ex[g[0]]||0)+'" oninput="gtot()">'});
-h+='<div style="margin-top:12px;padding:12px;border-radius:14px;background:var(--soft);border:1.5px solid var(--line)"><label style="margin-top:0">'+DZ[4]+' '+DZ[1]+' (registro del día)</label><input id="'+DZ[2]+'" type="number" min="0" inputmode="numeric" value="'+(ex[DZ[0]]||0)+'"><small class="note">Se guarda de forma independiente al total de asistentes físicos para no duplicar personas.</small></div>';
-h+='<p><b>Total asistentes: <span id="gt">'+tot+'</span> · 🪙 Diezmadores: '+(ex.diezmadores||0)+'</b></p><label>Notas (opcional)</label><input id="gn" value="'+esc(ex.notes)+'"><button class="btn" onclick="gsave()">💾 '+(ex.id?"Actualizar conteo":"Guardar conteo")+'</button></div>';
-if(AG.length){
-  var last=AG[0];
-  var donutItems=GR.map(function(g){return{label:g[1],val:last[g[0]]||0,color:g[3]}});
-  var secInner=svgDonutChart(donutItems)+'<div class="picto-grid">';
-  GR.forEach(function(g){
-    var v=last[g[0]]||0,iconsCount=Math.min(10,Math.ceil(v/3)),iconsStr="";
-    for(var k=0;k<iconsCount;k++)iconsStr+=g[4];
-    secInner+='<div class="picto-item"><small><b>'+g[1]+'</b></small><div class="picto-icons">'+(iconsStr||"—")+'</div><b style="color:'+g[3]+'">'+v+'</b></div>';
-  });
-  secInner+='</div>';
-  h+=foldBtn("ag_sec","🍩","Sectores del último conteo ("+fd(last.event_date)+")",gtt(last),"#1565C0",secInner,false);
-}
-var rec=AG.slice(0,8);
-if(rec.length){
-  var recInner=rec.map(function(g){return'<div class="card"><div style="display:flex;justify-content:space-between;align-items:center"><b>'+fd(g.event_date)+' · total '+gtt(g)+' · 🪙 '+(g.diezmadores||0)+' diezmadores</b>'+(isPastor()&&g.id?'<button class="chip" style="color:#D6336C;border-color:#D6336C" onclick="gdel('+g.id+')">🗑️ Borrar</button>':'')+'</div><p class="note">Damas '+(g.damas||0)+' · Caballeros '+(g.caballeros||0)+' · Niños '+(g.ninos||0)+' · Jóvenes '+(g.jovenes||0)+' · Ancianos '+(g.ancianos||0)+' · Visitantes '+(g.visitantes||0)+' · Diezmadores '+(g.diezmadores||0)+'</p></div>'}).join("");
-  h+=foldBtn("ag_rec","🗓️","Historial de últimos conteos",rec.length,"#00897B",recInner,false);
-}
-return h}
-async function gsave(){var t=S.gd||today(),v=function(i){var el=$(i);return el?Math.max(0,parseInt(el.value)||0):0},dzVal=v("g7"),d={event_date:t,event:"Culto dominical",damas:v("g1"),caballeros:v("g2"),ninos:v("g3"),jovenes:v("g4"),ancianos:v("g5"),visitantes:v("g6"),diezmadores:dzVal,notes:$("gn").value.trim()};
-var r=await SB.from("attendance_general").upsert(d,{onConflict:"event_date,event"});if(r.error&&r.error.message&&r.error.message.indexOf("diezmadores")>-1){delete d.diezmadores;r=await SB.from("attendance_general").upsert(d,{onConflict:"event_date,event"});if(!r.error){var dzMap=lget("general_diezmadores",{});dzMap[t+"|Culto dominical"]=dzVal;lset("general_diezmadores",dzMap);await load();toast("Conteo guardado (agrega la columna diezmadores en Supabase para sincronizar en nube)");draw();return}}if(r.error){toast("No se pudo guardar: "+r.error.message);return}await load();toast("Conteo guardado");draw()}
+function agen(evKey,cellName){
+  var evName=evKey||(cellName?"Célula: "+cellName:"Culto dominical");
+  var titleLbl=cellName?("Conteo general · Célula "+esc(cellName)):(evName==="Célula"?"Conteo general de Células":"Conteo general del culto");
+  var t=S.gd||today(),ex=AG.filter(function(g){return g.event_date===t&&g.event===evName})[0]||{},tot=gtt(ex);
+  var cellSelHtml="";
+  if(!cellName&&evName!=="Culto dominical"){
+    var availCells=isPastor()?CELLS:(ME.cell?[ME.cell]:CELLS);
+    if(availCells.length){
+      if(!S.gcell||availCells.indexOf(S.gcell)<0)S.gcell=availCells[0];
+      evName="Célula: "+S.gcell;
+      ex=AG.filter(function(g){return g.event_date===t&&g.event===evName})[0]||{};
+      tot=gtt(ex);
+      titleLbl="Conteo general · Célula "+esc(S.gcell);
+      cellSelHtml='<label>🏘️ Selecciona la célula</label><select onchange="S.gcell=this.value;draw()">'+availCells.map(function(c){return'<option value="'+esc(c)+'"'+(S.gcell===c?" selected":"")+'>'+esc(c)+'</option>'}).join("")+'</select>';
+    }
+  }
+  var h='<div class="card"><h3>🔢 '+titleLbl+'</h3><p class="note">Anota cuántas personas asistieron por grupo, sin nombres. Si ese día tomaste asistencia por lista, usa solo una para no duplicar.</p>'+cellSelHtml+'<label>Fecha</label><input type="date" value="'+t+'" onchange="S.gd=this.value;draw()">';
+  GR.forEach(function(g){h+='<label>'+g[4]+' '+g[1]+'</label><input id="'+g[2]+'" type="number" min="0" inputmode="numeric" value="'+(ex[g[0]]||0)+'" oninput="gtot()">'});
+  if(evName==="Culto dominical"){
+    h+='<div style="margin-top:12px;padding:12px;border-radius:14px;background:var(--soft);border:1.5px solid var(--line)"><label style="margin-top:0">'+DZ[4]+' '+DZ[1]+' (registro del día)</label><input id="'+DZ[2]+'" type="number" min="0" inputmode="numeric" value="'+(ex[DZ[0]]||0)+'"><small class="note">Se guarda de forma independiente al total de asistentes físicos para no duplicar personas.</small></div>';
+  }
+  h+='<p><b>Total asistentes: <span id="gt">'+tot+'</span>'+(evName==="Culto dominical"?' · 🪙 Diezmadores: '+(ex.diezmadores||0):'')+'</b></p><label>Notas (opcional)</label><input id="gn" value="'+esc(ex.notes)+'"><button class="btn" onclick="gsave(\''+esc(evName)+'\')">💾 '+(ex.id?"Actualizar conteo":"Guardar conteo")+'</button></div>';
+  var evAG=AG.filter(function(g){return g.event===evName});
+  if(evAG.length){
+    var last=evAG[0];
+    var donutItems=GR.map(function(g){return{label:g[1],val:last[g[0]]||0,color:g[3]}});
+    var secInner=svgDonutChart(donutItems)+'<div class="picto-grid">';
+    GR.forEach(function(g){
+      var v=last[g[0]]||0,iconsCount=Math.min(10,Math.ceil(v/3)),iconsStr="";
+      for(var k=0;k<iconsCount;k++)iconsStr+=g[4];
+      secInner+='<div class="picto-item"><small><b>'+g[1]+'</b></small><div class="picto-icons">'+(iconsStr||"—")+'</div><b style="color:'+g[3]+'">'+v+'</b></div>';
+    });
+    secInner+='</div>';
+    h+=foldBtn("ag_sec_"+evName,"🍩","Sectores del último conteo ("+fd(last.event_date)+")",gtt(last),"#1565C0",secInner,false);
+  }
+  var rec=evAG.slice(0,8);
+  if(rec.length){
+    var recInner=rec.map(function(g){return'<div class="card"><div style="display:flex;justify-content:space-between;align-items:center"><b>'+fd(g.event_date)+' · total '+gtt(g)+(evName==="Culto dominical"?' · 🪙 '+(g.diezmadores||0)+' diezmadores':'')+'</b>'+((isPastor()||isCellLeaderOrAsst())&&g.id?'<button class="chip" style="color:#D6336C;border-color:#D6336C" onclick="gdel('+g.id+')">🗑️ Borrar</button>':'')+'</div><p class="note">Damas '+(g.damas||0)+' · Caballeros '+(g.caballeros||0)+' · Niños '+(g.ninos||0)+' · Jóvenes '+(g.jovenes||0)+' · Ancianos '+(g.ancianos||0)+' · Visitantes '+(g.visitantes||0)+(evName==="Culto dominical"?' · Diezmadores '+(g.diezmadores||0):'')+'</p></div>'}).join("");
+    h+=foldBtn("ag_rec_"+evName,"🗓️","Historial de últimos conteos",rec.length,"#00897B",recInner,false);
+  }
+  return h}
+async function gsave(evParam){var evName=evParam||"Culto dominical",t=S.gd||today(),v=function(i){var el=$(i);return el?Math.max(0,parseInt(el.value)||0):0},dzVal=v("g7"),d={event_date:t,event:evName,damas:v("g1"),caballeros:v("g2"),ninos:v("g3"),jovenes:v("g4"),ancianos:v("g5"),visitantes:v("g6"),diezmadores:dzVal,notes:$("gn").value.trim()};
+var r=await SB.from("attendance_general").upsert(d,{onConflict:"event_date,event"});if(r.error&&r.error.message&&r.error.message.indexOf("diezmadores")>-1){delete d.diezmadores;r=await SB.from("attendance_general").upsert(d,{onConflict:"event_date,event"});if(!r.error){var dzMap=lget("general_diezmadores",{});dzMap[t+"|"+evName]=dzVal;lset("general_diezmadores",dzMap);await load();toast("Conteo guardado");draw();return}}if(r.error){toast("No se pudo guardar: "+r.error.message);return}await load();toast("Conteo general guardado ("+evName+")");draw()}
 function asis(){var evs=allowedEvents();if(evs.indexOf(S.ev)<0){S.ev=evs[0];setT()}
-var gen=isPastor()||isCoordinador();if(!gen)S.am="lista";
-var ch=gen?'<div class="chips"><button class="chip" aria-pressed="'+(S.am!=="gen")+'" onclick="S.am=\'lista\';draw()">✅ Lista de personas</button><button class="chip" aria-pressed="'+(S.am==="gen")+'" onclick="S.am=\'gen\';draw()">🔢 Conteo general</button></div>':'';
-return ch+(S.am==="gen"?agen():alistv(evs))}
+var gen=isPastor()||isCoordinador()||(S.ev==="Célula"&&isCellLeaderOrAsst());if(!gen)S.am="lista";
+var ch=gen?'<div class="chips"><button class="chip" aria-pressed="'+(S.am!=="gen")+'" onclick="S.am=\'lista\';draw()">✅ Lista de personas</button><button class="chip" aria-pressed="'+(S.am==="gen")+'" onclick="S.am=\'gen\';draw()">🔢 Conteo general'+(S.ev==="Célula"?" de célula":"")+'</button></div>':'';
+return ch+(S.am==="gen"?agen(S.ev==="Célula"?"Célula":"Culto dominical",null):alistv(evs))}
 function asisRow(p){return'<div class="card row"><span class="av" style="background:'+(COL[p.stage]||"#1565C0")+'">'+esc(ini(p.name))+'</span><span class="grow"><b>'+esc(p.name)+'</b><small>'+esc(p.cell||"Sin célula")+'</small></span><button class="tog" aria-pressed="'+!!S.T[p.id]+'" onclick="S.T['+p.id+']=!S.T['+p.id+'];draw()">'+(S.T[p.id]?"✓ Presente":"Marcar")+'</button></div>'}
 function alistv(evs){var allL=alist(),L=allL.filter(function(p){return p.name.toLowerCase().indexOf(S.aq.toLowerCase())>-1}),n=allL.filter(function(p){return S.T[p.id]}).length;
 var h='<div class="card"><h3>✅ Asistencia de hoy</h3><p class="note">Toca el botón de cada persona que llegó. Estos datos alimentan el informe mensual.</p><label>Reunión</label><select onchange="setev(this.value)">'+evs.map(function(e){return'<option'+(e===S.ev?" selected":"")+'>'+e+'</option>'}).join("")+'</select>';
@@ -1361,17 +1403,49 @@ function wab(p,k){var d=String(p.tel||"").replace(/\D/g,"");if(d.length===10)d=C
 return'<a class="btn sm" style="display:block;text-align:center;text-decoration:none;background:#25D366" href="'+u+'" target="_blank" rel="noopener">💬 Escribir por WhatsApp</a>'}
 
 // ===== GESTIÓN DE INSIGNIAS ASIGNADAS POR PASTOR, LÍDERES Y DISCIPULADORES =====
-var INSIGNIAS_CATALOGO=[
-  "🛡️ Escudo de la Fe",
-  "🌱 Nueva Creación en Cristo",
-  "📖 Fiel en la Palabra",
-  "🙏 Constante en Oración",
-  "🔥 Guiado por el Espíritu",
-  "🤝 Corazón de Servicio",
-  "🎓 Nivel 1 Completado",
-  "🏆 Nivel 2 Completado",
-  "👑 Nivel 3 Completado"
-];
+var INSIGNIAS_POR_NIVEL={
+  1:[
+    "📖 Gusto por la lectura de la Biblia",
+    "🙏 Hábito de oración diaria",
+    "🌱 Nueva Creación en Cristo",
+    "⛪ Compromiso con la congregación",
+    "💬 Comparte su fe con alegría",
+    "🛡️ Escudo de la Fe · Nivel 1"
+  ],
+  2:[
+    "🔥 Sensibilidad y guía del Espíritu",
+    "🕊️ Dominio propio y victoria sobre la carne",
+    "🤝 Espíritu de servicio en el cuerpo",
+    "📚 Meditación profunda de la Palabra",
+    "💛 Amor y reconciliación fraternal",
+    "🏆 Identidad Firme · Nivel 2"
+  ],
+  3:[
+    "🧭 Corazón de cuidado y pastoreo",
+    "🎓 Capacidad para enseñar y discipular",
+    "🏡 Anfitrión / Líder de célula en formación",
+    "⚖️ Discernimiento bíblico y madurez",
+    "🌍 Pasión por la misión y multiplicación",
+    "👑 Siervo Multiplicador · Nivel 3"
+  ],
+  4:[
+    "🔥 Liderazgo ministerial consolidado",
+    "🤝 Mentor de nuevos líderes"
+  ],
+  5:[
+    "⛪ Columna de servicio en la iglesia"
+  ]
+};
+var INSIGNIAS_CATALOGO=[].concat(
+  INSIGNIAS_POR_NIVEL[1],
+  INSIGNIAS_POR_NIVEL[2],
+  INSIGNIAS_POR_NIVEL[3],
+  INSIGNIAS_POR_NIVEL[4],
+  INSIGNIAS_POR_NIVEL[5]
+);
+function getBadgesForLevel(lv){
+  return INSIGNIAS_POR_NIVEL[lv]||INSIGNIAS_CATALOGO;
+}
 function getDiscipleBadges(personId){
   var map=lget("disciple_badges",{});
   return Array.isArray(map[personId])?map[personId]:[];
@@ -1667,12 +1741,40 @@ function delWorshipInv(id){
   S.worship_inv=S.worship_inv.filter(function(x){return x.id!==id});
   lset("worship_inv",S.worship_inv);toast("Ítem eliminado");draw();
 }
+function worshipFundBalance(){
+  var inc=0,exp=0;
+  (S.worship_funds||[]).forEach(function(f){
+    if(f.kind==="income")inc+=(Number(f.amount)||0);
+    else exp+=(Number(f.amount)||0);
+  });
+  return{inc:inc,exp:exp,bal:inc-exp};
+}
+function saveWorshipFund(){
+  var kind=$("wf_kind").value;
+  var amt=parseFloat($("wf_amt").value)||0;
+  var concept=$("wf_con").value.trim();
+  var dt=$("wf_dt").value||today();
+  if(!(amt>0)){toast("Escribe un monto mayor a cero");return}
+  if(!concept){toast("Describe el concepto (ej. actividad pro-fondos, compra cuerdas/cables)");return}
+  S.worship_funds.unshift({id:Date.now(),kind:kind,amount:amt,concept:concept,date:dt,by:ME.name||U.email});
+  lset("worship_funds",S.worship_funds);
+  toast(kind==="income"?"Ingreso al fondo de alabanza guardado":"Egreso de instrumentos/accesorios guardado");
+  draw();
+}
+function delWorshipFund(id){
+  if(!confirm("¿Eliminar este movimiento del fondo de alabanza?"))return;
+  S.worship_funds=S.worship_funds.filter(function(x){return x.id!==id});
+  lset("worship_funds",S.worship_funds);
+  toast("Movimiento eliminado");
+  draw();
+}
 function renderAlabanzaModule(){
   var canSeeInv=isWorshipAsis();
   var sub=S.worship_sub;
-  if(!canSeeInv&&(sub==="nuevo"||sub==="inv"))sub=null;
+  if(!canSeeInv&&(sub==="nuevo"||sub==="inv"||sub==="fondos"))sub=null;
 
   var totalFiles=S.worship_prog.reduce(function(acc,x){return acc+(Array.isArray(x.files)?x.files.length:0)},0);
+  var wf=worshipFundBalance();
   var h='<button class="btn alt no-print" style="margin:8px 0" onclick="switchTab(\'ini\')">← Volver a Inicio</button>';
   h+='<div class="card t-azul" style="text-align:center;padding:18px 16px"><span class="pill" style="background:#1565C0;font-size:13px">Ministerio Musical</span><h3 style="margin-top:6px">🎸 Alabanza</h3><p class="note" style="margin:4px 0 0">Selecciona una opción para gestionar o consultar</p></div>';
 
@@ -1686,6 +1788,9 @@ function renderAlabanzaModule(){
     :{id:"chat_w",ico:"💬",bg:"#00897B",title:"Chat Alabanza",sub:"Equipo musical",cnt:null,fn:"S.tab='com';S.cm='ch';S.chat_ch='privado';S.chat_priv_target='Alabanza';draw()"};
 
   var tiles=[tile1,tile2,tile3,tile4];
+  if(canSeeInv){
+    tiles.push({id:"fondos",ico:"💰",bg:"#00897B",title:"Fondo Instrumentos",sub:"Ingresos y egresos",cnt:FM(wf.bal),fn:"S.worship_sub=(S.worship_sub==='fondos'?null:'fondos');draw()"});
+  }
   h+='<div class="ala-grid">'
     +tiles.map(function(t){
       var sel=sub===t.id;
@@ -1755,6 +1860,23 @@ function renderAlabanzaModule(){
   }else if(sub==="inv"&&canSeeInv){
     h+='<div class="card"><h3>🥁 Registrar instrumento o equipo</h3><label>Instrumento / Equipo</label><input id="wi_it" placeholder="Ej. Guitarra eléctrica, consola, micrófono inalámbrico"><label>Cantidad</label><input id="wi_qt" type="number" min="1" value="1"><label>Estado</label><select id="wi_cn"><option>Óptimo</option><option>Requiere revisión</option><option>En mantenimiento</option></select><label>Ubicación o nota</label><input id="wi_nt" placeholder="Ej. Tarima principal / Estuche azul"><button class="btn" onclick="saveWorshipInv()">💾 Agregar al inventario</button></div>';
     h+=S.worship_inv.length?S.worship_inv.map(function(x){var cCol=x.cond==="Óptimo"?"#2F9E5B":x.cond==="Requiere revisión"?"#E07B12":"#D6336C";return'<div class="card row"><span class="av" style="background:'+cCol+'">🎸</span><span class="grow"><b>'+esc(x.item)+' (x'+x.qty+')</b><small>Estado: '+esc(x.cond)+(x.notes?" · "+esc(x.notes):"")+'</small></span><button class="chip" onclick="delWorshipInv('+x.id+')">🗑️</button></div>'}).join(""):'<div class="card"><p class="note">Aún no hay instrumentos registrados en el inventario.</p></div>';
+  }else if(sub==="fondos"&&canSeeInv){
+    var bInfo=worshipFundBalance();
+    h+='<div class="stats">'
+      +'<div class="stat" style="background:#2F9E5B"><b>'+FM(bInfo.inc)+'</b>Ingresos fondo</div>'
+      +'<div class="stat" style="background:#E07B12"><b>'+FM(bInfo.exp)+'</b>Egresos equipo</div>'
+      +'<div class="stat" style="background:'+(bInfo.bal>=0?"#1565C0":"#D6336C")+';grid-column:span 2"><b>'+FM(bInfo.bal)+'</b>Saldo disponible para instrumentos y accesorios</div>'
+      +'</div>';
+    h+='<div class="card"><h3>💰 Fondo de Compra de Instrumentos y Accesorios</h3><p class="note">Registra ingresos (ofrendas, actividades, aportes) y egresos (cuerdas, cables, micrófonos, reparación o compra de instrumentos).</p>'
+      +'<label>Tipo de movimiento</label><select id="wf_kind"><option value="income">➕ Ingreso al fondo de alabanza</option><option value="expense">➖ Egreso (compra de instrumentos / accesorios)</option></select>'
+      +'<label>Monto ($)</label><input id="wf_amt" type="number" min="0" step="1000" inputmode="numeric" placeholder="0">'
+      +'<label>Concepto / Detalle</label><input id="wf_con" placeholder="Ej. Actividad pro-instrumentos / Compra juego de cuerdas y cables">'
+      +'<label>Fecha</label><input id="wf_dt" type="date" value="'+today()+'">'
+      +'<button class="btn" onclick="saveWorshipFund()">💾 Registrar movimiento</button></div>';
+    h+=S.worship_funds.length?S.worship_funds.map(function(f){
+      var isInc=f.kind==="income";
+      return'<div class="card row"><span class="av" style="background:'+(isInc?"#2F9E5B":"#E07B12")+'">'+(isInc?"➕":"➖")+'</span><span class="grow"><b>'+esc(f.concept)+'</b><small>'+fd(f.date)+(f.by?' · '+esc(f.by):'')+'</small></span><b style="color:'+(isInc?"#2F9E5B":"#E07B12")+'">'+(isInc?"+":"-")+FM(f.amount)+'</b><button class="chip" onclick="delWorshipFund('+f.id+')">🗑️</button></div>';
+    }).join(""):'<div class="card"><p class="note">Aún no hay movimientos registrados en el fondo de alabanza.</p></div>';
   }
   return h;
 }
@@ -1786,14 +1908,23 @@ function renderDiscipleCardInBoard(p,tc,st,cid,sStyle,codeMap){
     card+='<p class="note" style="margin:3px 0 0;font-size:14px">Aún sin insignias asignadas.</p>';
   }
   if(movable){
-    card+='<details style="margin:6px 0 0"><summary style="font-size:14px;color:var(--acc)">➕ Asignar / quitar insignias</summary>';
-    card+='<div style="display:flex;flex-wrap:wrap;gap:5px;margin-top:6px">';
-    INSIGNIAS_CATALOGO.forEach(function(bg){
+    var lvBadges=getBadgesForLevel(tc.lv);
+    var otherBadges=INSIGNIAS_CATALOGO.filter(function(bg){return lvBadges.indexOf(bg)<0});
+    card+='<details style="margin:6px 0 0"><summary style="font-size:14px;color:var(--acc)">➕ Asignar / quitar insignias de identidad (Nivel '+tc.lv+')</summary>';
+    card+='<small class="note" style="display:block;margin-top:4px;font-size:13px"><b>Identidades del Nivel '+tc.lv+' (puedes otorgar varias):</b></small>';
+    card+='<div style="display:flex;flex-wrap:wrap;gap:5px;margin-top:5px">';
+    lvBadges.forEach(function(bg){
       var has=badges.indexOf(bg)>-1;
       card+='<button type="button" class="chip" style="font-size:13px;padding:5px 9px;'+(has?'background:#D4AF37;border-color:#B2891E;color:#1F2430':'')+'" onclick="toggleDiscipleBadge('+p.id+',\''+esc(bg)+'\')">'+(has?'✓ ':'+ ')+esc(bg)+'</button>';
     });
     card+='</div>';
-    card+='<div style="display:flex;gap:5px;margin-top:6px"><input id="custom_badge_'+p.id+'" placeholder="Insignia personalizada..." style="font-size:14px;padding:7px 9px"><button type="button" class="chip" style="font-size:13px;padding:6px 10px" onclick="addCustomDiscipleBadge('+p.id+')">Agregar</button></div>';
+    card+='<details style="margin-top:6px"><summary style="font-size:13px;color:var(--mute)">Ver insignias de otros niveles ('+otherBadges.length+')</summary><div style="display:flex;flex-wrap:wrap;gap:5px;margin-top:5px">';
+    otherBadges.forEach(function(bg){
+      var has=badges.indexOf(bg)>-1;
+      card+='<button type="button" class="chip" style="font-size:12px;padding:4px 8px;'+(has?'background:#D4AF37;border-color:#B2891E;color:#1F2430':'')+'" onclick="toggleDiscipleBadge('+p.id+',\''+esc(bg)+'\')">'+(has?'✓ ':'+ ')+esc(bg)+'</button>';
+    });
+    card+='</div></details>';
+    card+='<div style="display:flex;gap:5px;margin-top:6px"><input id="custom_badge_'+p.id+'" placeholder="Nueva insignia de identidad..." style="font-size:14px;padding:7px 9px"><button type="button" class="chip" style="font-size:13px;padding:6px 10px" onclick="addCustomDiscipleBadge('+p.id+')">Agregar</button></div>';
     card+='</details>';
   }
   card+='</div>';
@@ -1936,17 +2067,25 @@ var discSelectorHtml='<label>🎓 Discipuladores asignados (puedes marcar varios
   }).join(""):'<p class="note" style="margin:0">No hay discipuladores registrados en Equipo.</p>')
   +'</div>';
 
-var badgesSelectorHtml='<label>🏅 Insignias del discípulo (toca para asignar o quitar)</label><div style="background:var(--bg);border:1.5px solid var(--line);border-radius:12px;padding:10px 12px">'
+var curLvBadges=getBadgesForLevel(p.level||1);
+var badgesSelectorHtml='<label>🏅 Insignias de identidad del discípulo (puedes otorgar varias en el mismo nivel)</label><div style="background:var(--bg);border:1.5px solid var(--line);border-radius:12px;padding:10px 12px">'
+  +'<small class="note" style="display:block;margin:0 0 6px;font-size:14px"><b>Sugeridas para Nivel '+(p.level||1)+':</b></small>'
   +'<div style="display:flex;flex-wrap:wrap;gap:6px">'
-  +INSIGNIAS_CATALOGO.map(function(bg){
+  +curLvBadges.map(function(bg){
     var has=curBadges.indexOf(bg)>-1;
     return'<button type="button" class="chip" style="font-size:14px;padding:6px 11px;'+(has?'background:#D4AF37;border-color:#B2891E;color:#1F2430':'')+'" onclick="toggleDiscipleBadge('+p.id+',\''+esc(bg)+'\')">'+(has?'✓ ':'+ ')+esc(bg)+'</button>';
   }).join("")
   +'</div>'
+  +'<details style="margin-top:8px"><summary style="font-size:14px;color:var(--acc)">Ver catálogo completo de todos los niveles</summary><div style="display:flex;flex-wrap:wrap;gap:6px;margin-top:6px">'
+  +INSIGNIAS_CATALOGO.filter(function(bg){return curLvBadges.indexOf(bg)<0}).map(function(bg){
+    var has=curBadges.indexOf(bg)>-1;
+    return'<button type="button" class="chip" style="font-size:13px;padding:5px 10px;'+(has?'background:#D4AF37;border-color:#B2891E;color:#1F2430':'')+'" onclick="toggleDiscipleBadge('+p.id+',\''+esc(bg)+'\')">'+(has?'✓ ':'+ ')+esc(bg)+'</button>';
+  }).join("")
+  +'</div></details>'
   +curBadges.filter(function(b){return INSIGNIAS_CATALOGO.indexOf(b)<0}).map(function(b){
     return'<button type="button" class="chip" style="font-size:14px;padding:6px 11px;margin-top:6px;background:#D4AF37;border-color:#B2891E;color:#1F2430" onclick="toggleDiscipleBadge('+p.id+',\''+esc(b)+'\')">✓ '+esc(b)+'</button>';
   }).join("")
-  +'<div style="display:flex;gap:6px;margin-top:8px"><input id="custom_badge_'+p.id+'" placeholder="Nueva insignia personalizada..." style="font-size:15px;padding:8px 10px"><button type="button" class="chip" onclick="addCustomDiscipleBadge('+p.id+')">➕ Agregar</button></div>'
+  +'<div style="display:flex;gap:6px;margin-top:8px"><input id="custom_badge_'+p.id+'" placeholder="Nueva insignia de identidad..." style="font-size:15px;padding:8px 10px"><button type="button" class="chip" onclick="addCustomDiscipleBadge('+p.id+')">➕ Agregar</button></div>'
   +'</div>';
 
 return'<div class="card"><h3>'+(cid?'<span class="disc-id" style="background:#1565C0;margin-right:6px">'+esc(cid)+'</span>':'')+esc(p.name)+'</h3><p class="note">'+LV[p.level-1]+'</p><label>Nivel</label><select id="tlv" onchange="var m=(+this.value===1?8:12);var s=$(\'tp\');s.innerHTML=\'\';for(var k=1;k<=m;k++)s.innerHTML+=\'<option>\'+k+\'</option>\'">'+[1,2,3,4,5].map(function(lv){return'<option value="'+lv+'"'+(p.level===lv?" selected":"")+'>'+LV[lv-1]+'</option>'}).join("")+'</select><label>Estado</label><select id="ts">'+SO.map(function(k){return'<option value="'+k+'"'+(cleanStatus===k?" selected":"")+'>'+SC[k][1]+'</option>'}).join("")+'</select><label>Lección / Paso actual</label><select id="tp">'+st.map(function(i){return'<option'+(i===p.step?" selected":"")+'>'+i+'</option>'}).join("")+'</select>'+badgesSelectorHtml+discSelectorHtml+'<label>Compañero de crecimiento</label><input id="tc" value="'+esc(p.companion)+'"><label>Fecha de inicio</label><input id="td" type="date" value="'+esc(p.started)+'">'+(p.tel?wab(p,cleanStatus):'')+'<button class="btn" onclick="tsave(0)">💾 Guardar</button>'+(p.level<5?'<button class="btn alt" onclick="tsave(1)">⬆️ Pasar al siguiente nivel</button>':'')+(ED()?'<button class="btn alt" onclick="tsave(2)">Quitar del tablero</button>':'')+'<button class="btn alt" onclick="S.tb=null;draw()">← Volver</button></div>'}
@@ -1983,12 +2122,21 @@ AT.forEach(function(a){
     byDate[a.event_date]=(byDate[a.event_date]||0)+1;
   }
 });
+var cellGenList=AG.filter(function(g){return g.event==="Célula: "+c.name});
 var dates=Object.keys(byDate).sort().reverse().slice(0,5);
 var histHtml=dates.length?dates.map(function(dt){
   var cnt=byDate[dt],pc=m.length?Math.round(cnt/m.length*100):0;
-  return'<div style="display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:1px solid var(--line)"><span><b>'+fd(dt)+'</b></span><span class="pill" style="background:#2F9E5B">'+cnt+' de '+m.length+' ('+pc+'%)</span></div>';
-}).join(""):'<p class="note">Aún no hay asistencia de célula registrada. Se toma en Asistencia eligiendo "Célula".</p>';
-h+=foldBtn("cel_hist_"+c.name,"📅","Historial de reuniones",dates.length,"#2F9E5B",histHtml,false);
+  return'<div style="display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:1px solid var(--line)"><span><b>'+fd(dt)+' (lista)</b></span><span class="pill" style="background:#2F9E5B">'+cnt+' de '+m.length+' ('+pc+'%)</span></div>';
+}).join(""):'<p class="note">Aún no hay asistencia por lista de célula registrada.</p>';
+if(cellGenList.length){
+  histHtml+='<div style="margin-top:8px"><b>🔢 Conteos generales de esta célula:</b>'+cellGenList.slice(0,5).map(function(g){
+    return'<div style="padding:6px 0;border-bottom:1px solid var(--line);font-size:15px"><b>'+fd(g.event_date)+'</b> · Total <b>'+gtt(g)+'</b> (D:'+(g.damas||0)+' C:'+(g.caballeros||0)+' J:'+(g.jovenes||0)+' N:'+(g.ninos||0)+' A:'+(g.ancianos||0)+' V:'+(g.visitantes||0)+')</div>';
+  }).join("")+'</div>';
+}
+h+=foldBtn("cel_hist_"+c.name,"📅","Historial de reuniones",dates.length+cellGenList.length,"#2F9E5B",histHtml,false);
+if(isPastor()||(isCellLeaderOrAsst()&&ME.cell===c.name)){
+  h+=foldBtn("cel_gen_"+c.name,"🔢","Conteo general de "+esc(c.name),cellGenList.length,"#8E4FC7",agen("Célula: "+c.name,c.name),false);
+}
 
 var partHtml=m.length?m.map(function(p){return row(p,"S.sel="+p.id+";S.tab=\'reg\';draw()")}).join(""):'<p class="note">Aún no hay participantes.</p>';
 h+=foldBtn("cel_part_"+c.name,"👥","Participantes de la célula",m.length,"#1565C0",partHtml,true);
@@ -2541,6 +2689,17 @@ return foldBtn("rv_it_"+x.id,ROL_EMO[x.role]||"📝",esc(x.author_name||"")+(x.c
 
 // ===== FINANZAS =====
 var FM=function(n){return"$"+Math.round(n).toLocaleString("es-CO")};
+var DEFAULT_INCOME_CATS=[
+  {name:"Diezmos",color:"#2F9E5B"},
+  {name:"Ofrendas generales",color:"#1565C0"},
+  {name:"Actividades Pro-Templo",color:"#8E4FC7"},
+  {name:"Ofrendas Pro-Templo",color:"#6A1B9A"},
+  {name:"Primicias y pactos",color:"#00897B"},
+  {name:"Ofrendas de misiones",color:"#D6336C"},
+  {name:"Actividades y ventas pro-fondos",color:"#E07B12"},
+  {name:"Donaciones especiales",color:"#0288D1"},
+  {name:"Otros ingresos",color:"#546E7A"}
+];
 var DEFAULT_EXPENSE_CATS=[
   {name:"Gastos de pastores",color:"#1565C0"},
   {name:"Arriendo y servicios públicos",color:"#E07B12"},
@@ -2552,6 +2711,14 @@ var DEFAULT_EXPENSE_CATS=[
   {name:"Eventos y refrigerios",color:"#F4511E"},
   {name:"Otros gastos",color:"#546E7A"}
 ];
+function getIncomeCategories(){
+  var list=IC.slice();
+  DEFAULT_INCOME_CATS.forEach(function(dc,idx){
+    var exists=list.some(function(x){return(x.name||"").trim().toLowerCase()===dc.name.toLowerCase()});
+    if(!exists)list.push({id:-(idx+101),name:dc.name,color:dc.color,is_virtual:true});
+  });
+  return list;
+}
 function getExpenseCategories(){
   var list=EC.slice();
   DEFAULT_EXPENSE_CATS.forEach(function(dc,idx){
@@ -2561,16 +2728,16 @@ function getExpenseCategories(){
   return list;
 }
 function fcat(e){
-  var inc=e.type==="income",l=inc?IC:getExpenseCategories(),id=inc?e.income_category_id:e.expense_category_id;
+  var inc=e.type==="income",l=inc?getIncomeCategories():getExpenseCategories(),id=inc?e.income_category_id:e.expense_category_id;
   var found=l.filter(function(x){return x.id===id})[0];
   if(found)return found;
-  if(!inc&&e.description&&e.description.indexOf("[")===0){
+  if(e.description&&e.description.indexOf("[")===0){
     var end=e.description.indexOf("]");
     if(end>1){
       var tag=e.description.slice(1,end);
       var byTag=l.filter(function(x){return x.name.toLowerCase()===tag.toLowerCase()})[0];
       if(byTag)return byTag;
-      return{name:tag,color:"#546E7A"};
+      return{name:tag,color:inc?"#2F9E5B":"#546E7A"};
     }
   }
   return{name:"Sin categoría",color:"#999"};
@@ -2616,21 +2783,27 @@ h+='<div class="grid2 no-print" style="margin-bottom:10px"><button class="btn" s
 var movHtml=l.length?l.map(function(e){var c=fcat(e),inc=e.type==="income";return'<div class="card row"><span style="width:4px;height:40px;border-radius:2px;background:'+esc(c.color||"#999")+';flex:none"></span><span class="grow"><b>'+esc(c.name)+'</b><small>'+esc(fdescClean(e))+' · '+e.entry_date+'</small></span><b style="color:'+(inc?"#2F9E5B":"#E07B12")+'">'+(inc?"+":"-")+FM(+e.amount)+'</b><button class="chip no-print" onclick="fdel('+e.id+')">🗑️</button></div>'}).join(""):'<p class="note">No hay movimientos en este periodo.</p>';
 h+=foldBtn("fin_mov","🧾","Movimientos del periodo",l.length,"#2F9E5B",movHtml,false);
 return h+'<div class="grid2 no-print" style="margin-top:10px"><button class="btn alt" style="margin:0" onclick="fcsv()">📥 Exportar CSV</button><button class="btn alt" style="margin:0" onclick="window.print()">🖨️ Imprimir / PDF</button></div>'}
-function fform(){var inc=S.ft==="income",cs=inc?IC:getExpenseCategories();
-var extraEgreso=!inc?'<label>Beneficiario / Subconcepto (opcional)</label><input id="fn_sub" placeholder="Ej. Pastor, recibo de luz, transporte, etc.">':'';
-return'<div class="card"><h3>'+(inc?"➕ Registrar ingreso":"➖ Registrar egreso")+'</h3><label>Categoría</label><select id="fn_c">'+cs.map(function(c){return'<option value="'+c.id+'">'+esc(c.name)+'</option>'}).join("")+'</select>'+extraEgreso+'<label>Monto</label><input id="fn_a" type="number" min="0" step="any" inputmode="decimal" placeholder="0"><label>Detalle / Descripción (opcional)</label><input id="fn_d" placeholder="'+(inc?"Ej. Ofrenda del domingo":"Ej. Pago mensual o soporte")+'">'+'<label>Fecha</label><input id="fn_f" type="date" value="'+today()+'"><button class="btn" onclick="fsave()">💾 Guardar</button><button class="btn alt" onclick="S.ft=null;draw()">Cancelar</button></div>'}
+function fform(){var inc=S.ft==="income",cs=inc?getIncomeCategories():getExpenseCategories();
+var extraSub=inc
+  ?'<label>Actividad / Origen específico (opcional)</label><input id="fn_sub" placeholder="Ej. Venta de empanadas pro-templo, culto domingo, bazar...">'
+  :'<label>Beneficiario / Subconcepto (opcional)</label><input id="fn_sub" placeholder="Ej. Pastor, recibo de luz, transporte, etc.">';
+return'<div class="card"><h3>'+(inc?"➕ Registrar ingreso":"➖ Registrar egreso")+'</h3><label>Categoría</label><select id="fn_c">'+cs.map(function(c){return'<option value="'+c.id+'">'+esc(c.name)+'</option>'}).join("")+'</select>'+extraSub+'<label>Monto</label><input id="fn_a" type="number" min="0" step="any" inputmode="decimal" placeholder="0"><label>Detalle / Descripción (opcional)</label><input id="fn_d" placeholder="'+(inc?"Ej. Actividad pro-templo del sábado":"Ej. Pago mensual o soporte")+'">'+'<label>Fecha</label><input id="fn_f" type="date" value="'+today()+'"><button class="btn" onclick="fsave()">💾 Guardar</button><button class="btn alt" onclick="S.ft=null;draw()">Cancelar</button></div>'}
 async function fsave(){var a=parseFloat($("fn_a").value),f=$("fn_f").value,c=parseInt($("fn_c").value);if(!(a>0)){toast("Escribe un monto mayor a cero");return}if(!f){toast("Elige la fecha");return}if(!c){toast("Selecciona una categoría");return}
 var desc=$("fn_d").value.trim(),sub=$("fn_sub")?$("fn_sub").value.trim():"";
 if(sub)desc=sub+(desc?" · "+desc:"");
 var catIdToUse=c;
-if(S.ft==="expense"&&c<0){
-  var vCat=getExpenseCategories().filter(function(x){return x.id===c})[0];
+if(c<0){
+  var isInc=S.ft==="income";
+  var pool=isInc?getIncomeCategories():getExpenseCategories();
+  var tbl=isInc?"income_categories":"expense_categories";
+  var baseArr=isInc?IC:EC;
+  var vCat=pool.filter(function(x){return x.id===c})[0];
   if(vCat){
-    var insCat=await SB.from("expense_categories").insert({name:vCat.name,color:vCat.color}).select().single();
+    var insCat=await SB.from(tbl).insert({name:vCat.name,color:vCat.color}).select().single();
     if(!insCat.error&&insCat.data&&insCat.data.id){
       catIdToUse=insCat.data.id;
     }else{
-      var fallbackId=(EC[0]&&EC[0].id)||null;
+      var fallbackId=(baseArr[0]&&baseArr[0].id)||null;
       catIdToUse=fallbackId;
       desc="["+vCat.name+"]"+(desc?" "+desc:"");
     }
