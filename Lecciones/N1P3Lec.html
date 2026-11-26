@@ -1,0 +1,457 @@
+<!DOCTYPE html>
+<html lang="es" data-theme="original">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>N1_Paso3_Leccion_El_Espiritu_Santo</title>
+  <style>
+    :root {
+      --accent: #2E7D32;
+      --accent-dark: #66BB6A;
+      --bg: #F4F6F9;
+      --surface: #FFFFFF;
+      --text: #1A202C;
+      --muted: #4A5568;
+      --border: #E2E8F0;
+      --card-blue: #EDF6FF;
+      --card-blue-b: #90CDF4;
+      --card-amber: #FFFBEB;
+      --card-amber-b: #FBD38D;
+      --card-green: #F0FFF4;
+      --card-green-b: #9AE6B4;
+      --card-lavender: #FAF5FF;
+      --card-lavender-b: #D6BCFA;
+      --card-coral: #FFF5F5;
+      --card-coral-b: #FEB2B2;
+      --shadow: 0 4px 14px rgba(0,0,0,0.06);
+    }
+    [data-theme="pastel"] {
+      --bg: #DDF4E4;
+      --surface: #F5FDF7;
+      --text: #1E293B;
+      --muted: #475569;
+      --border: #96D6AA;
+      --card-blue: #DCEBFA;
+      --card-blue-b: #7FB3EB;
+      --card-amber: #FEF0C7;
+      --card-amber-b: #F5B841;
+      --card-green: #D8F5E5;
+      --card-green-b: #68C995;
+      --card-lavender: #EDE2FF;
+      --card-lavender-b: #B794F4;
+      --card-coral: #FFE2E2;
+      --card-coral-b: #F68787;
+    }
+    [data-theme="dark"] {
+      --bg: #0F172A;
+      --surface: #1E293B;
+      --text: #F8FAFC;
+      --muted: #CBD5E1;
+      --border: #334155;
+      --card-blue: #172A45;
+      --card-blue-b: #3B82F6;
+      --card-amber: #2E2312;
+      --card-amber-b: #D97706;
+      --card-green: #132A22;
+      --card-green-b: #10B981;
+      --card-lavender: #251B38;
+      --card-lavender-b: #8B5CF6;
+      --card-coral: #31181E;
+      --card-coral-b: #F43F5E;
+      --shadow: 0 4px 16px rgba(0,0,0,0.4);
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      font-size: 20px;
+      line-height: 1.65;
+      padding: env(safe-area-inset-top, 12px) env(safe-area-inset-right, 14px) env(safe-area-inset-bottom, 32px) env(safe-area-inset-left, 14px);
+      transition: background 0.25s ease, color 0.25s ease;
+    }
+    .container {
+      max-width: 680px;
+      margin: 0 auto;
+    }
+    .topbar {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: var(--surface);
+      border-bottom: 2px solid var(--border);
+      padding: 10px 14px;
+      border-radius: 0 0 16px 16px;
+      box-shadow: var(--shadow);
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      margin-bottom: 18px;
+    }
+    .badge-step {
+      background: var(--accent);
+      color: #FFF;
+      font-weight: 700;
+      font-size: 15px;
+      padding: 4px 12px;
+      border-radius: 999px;
+      letter-spacing: 0.3px;
+    }
+    .controls {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      flex-wrap: wrap;
+    }
+    .theme-btn,
+    .theme-btn.active {
+      background: var(--accent);
+      color: #FFF;
+      border-color: var(--accent);
+    }
+    header.hero-box {
+      background: var(--surface);
+      border: 2px solid var(--accent);
+      border-radius: 20px;
+      padding: 22px 18px;
+      margin-bottom: 20px;
+      box-shadow: var(--shadow);
+      text-align: center;
+    }
+    .emoji-hero {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 64px;
+      height: 64px;
+      font-size: 36px;
+      background: var(--card-blue);
+      border: 2px solid var(--accent);
+      border-radius: 18px;
+      margin-bottom: 10px;
+    }
+    h1 {
+      font-family: Georgia, "Times New Roman", serif;
+      font-size: 29px;
+      line-height: 1.25;
+      color: var(--accent);
+      margin-bottom: 8px;
+    }
+    [data-theme="dark"] h1 {
+      color: #93C5FD;
+    }
+    .subtitle {
+      font-size: 19px;
+      color: var(--muted);
+      font-weight: 500;
+    }
+    h2 {
+      font-family: Georgia, "Times New Roman", serif;
+      font-size: 22.5px;
+      line-height: 1.3;
+      margin-bottom: 12px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    h3 {
+      font-size: 20.5px;
+      margin-bottom: 8px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .e-badge {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-width: 36px;
+      height: 36px;
+      font-size: 21px;
+      background: var(--surface);
+      border: 1.5px solid var(--border);
+      border-radius: 10px;
+      padding: 0 6px;
+      flex-shrink: 0;
+    }
+    .card {
+      border-radius: 18px;
+      padding: 20px 18px;
+      margin-bottom: 18px;
+      border: 2px solid var(--border);
+      background: var(--surface);
+      box-shadow: var(--shadow);
+    }
+    .c-blue { background: var(--card-blue); border-color: var(--card-blue-b); }
+    .c-amber { background: var(--card-amber); border-color: var(--card-amber-b); }
+    .c-green { background: var(--card-green); border-color: var(--card-green-b); }
+    .c-lavender { background: var(--card-lavender); border-color: var(--card-lavender-b); }
+    .c-coral { background: var(--card-coral); border-color: var(--card-coral-b); }
+    .verse-box {
+      background: var(--surface);
+      border-left: 5px solid var(--accent);
+      padding: 14px 16px;
+      border-radius: 12px;
+      margin: 12px 0;
+      font-style: italic;
+    }
+    .verse-ref {
+      display: block;
+      font-style: normal;
+      font-weight: 700;
+      font-size: 17px;
+      color: var(--accent);
+      margin-top: 6px;
+    }
+    [data-theme="dark"] .verse-ref { color: #93C5FD; }
+    details {
+      background: var(--surface);
+      border: 1.5px solid var(--border);
+      border-radius: 14px;
+      padding: 12px 15px;
+      margin-top: 12px;
+    }
+    summary {
+      font-weight: 700;
+      cursor: pointer;
+      list-style: none;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      font-size: 19px;
+    }
+    summary::-webkit-details-marker { display: none; }
+    summary::after {
+      content: "➕";
+      font-size: 16px;
+      transition: transform 0.2s;
+    }
+    details[open] summary::after {
+      content: "➖";
+    }
+    .details-body {
+      margin-top: 12px;
+      padding-top: 12px;
+      border-top: 1px dashed var(--border);
+      font-size: 19px;
+    }
+    .svg-wrap {
+      background: var(--surface);
+      border: 2px solid var(--border);
+      border-radius: 18px;
+      padding: 14px;
+      margin-bottom: 18px;
+      text-align: center;
+      box-shadow: var(--shadow);
+    }
+    .svg-wrap svg {
+      width: 100%;
+      height: auto;
+      max-height: 330px;
+      display: block;
+      margin: 0 auto;
+    }
+    .chips {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin: 12px 0;
+    }
+    .chip {
+      background: var(--surface);
+      border: 2px solid var(--accent);
+      color: var(--text);
+      padding: 8px 14px;
+      border-radius: 999px;
+      font-size: 18px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .chip.active {
+      background: var(--accent);
+      color: #FFF;
+    }
+    .panel-illu {
+      background: var(--surface);
+      border: 1.5px solid var(--border);
+      border-radius: 14px;
+      padding: 15px;
+      margin-top: 10px;
+    }
+    ul.clean-list {
+      padding-left: 22px;
+      margin-top: 8px;
+    }
+    ul.clean-list li {
+      margin-bottom: 8px;
+    }
+    .reto-card {
+      border: 2.5px dashed var(--accent);
+      background: var(--card-green);
+      border-radius: 18px;
+      padding: 20px;
+      margin-top: 20px;
+    }
+    footer {
+      text-align: center;
+      font-size: 16px;
+      color: var(--muted);
+      margin-top: 28px;
+      padding-top: 14px;
+      border-top: 1px solid var(--border);
+    }
+    </style>
+</head>
+<body class="v3">
+  <div class="container">
+    
+    <div class="topbar">
+      <span class="badge-step">Nivel 1 • Paso 3</span>
+      <div class="controls">
+        <button class="theme-btn" data-theme-btn="original" onclick="setTheme('original')">☀️ Original</button>
+        <button class="theme-btn" data-theme-btn="pastel" onclick="setTheme('pastel')">🎨 Pastel</button>
+        <button class="theme-btn" data-theme-btn="dark" onclick="setTheme('dark')">🌙 Oscuro</button>
+      </div>
+    </div>
+    
+    <header class="hero-box">
+      <div class="emoji-hero">🕊️</div>
+      <h1>Paso 3: El Espíritu Santo</h1>
+      <p class="subtitle">Caminar a diario guiados por Dios y orar sin cesar</p>
+    </header>
+
+    <div class="svg-wrap">
+      
+        <svg viewBox="0 0 600 310" xmlns="http://www.w3.org/2000/svg">
+          <rect x="10" y="10" width="580" height="290" rx="20" fill="#F0FFF4" stroke="#2E7D32" stroke-width="2.5"/>
+          <circle cx="300" cy="155" r="56" fill="#2E7D32"/>
+          <text x="300" y="148" text-anchor="middle" fill="#FFF" font-size="16" font-weight="bold">ESPÍRITU</text>
+          <text x="300" y="170" text-anchor="middle" fill="#FFF" font-size="16" font-weight="bold">SANTO</text>
+          <line x1="244" y1="155" x2="175" y2="95" stroke="#2E7D32" stroke-width="3"/>
+          <line x1="356" y1="155" x2="425" y2="95" stroke="#2E7D32" stroke-width="3"/>
+          <line x1="244" y1="155" x2="175" y2="215" stroke="#2E7D32" stroke-width="3"/>
+          <line x1="356" y1="155" x2="425" y2="215" stroke="#2E7D32" stroke-width="3"/>
+          <rect x="35" y="45" width="175" height="65" rx="14" fill="#FFFFFF" stroke="#2E7D32" stroke-width="2"/>
+          <text x="122" y="74" text-anchor="middle" fill="#1B5E20" font-size="15" font-weight="bold">🏠 MORA EN TI</text>
+          <text x="122" y="96" text-anchor="middle" fill="#334155" font-size="13">Sello de pertenencia</text>
+          <rect x="390" y="45" width="175" height="65" rx="14" fill="#FFFFFF" stroke="#2E7D32" stroke-width="2"/>
+          <text x="477" y="74" text-anchor="middle" fill="#1B5E20" font-size="15" font-weight="bold">🧭 GUÍA Y ENSEÑA</text>
+          <text x="477" y="96" text-anchor="middle" fill="#334155" font-size="13">Recuerda la Palabra</text>
+          <rect x="35" y="200" width="175" height="65" rx="14" fill="#FFFFFF" stroke="#2E7D32" stroke-width="2"/>
+          <text x="122" y="229" text-anchor="middle" fill="#1B5E20" font-size="15" font-weight="bold">🍇 PRODUCE FRUTO</text>
+          <text x="122" y="251" text-anchor="middle" fill="#334155" font-size="13">Carácter de Cristo</text>
+          <rect x="390" y="200" width="175" height="65" rx="14" fill="#FFFFFF" stroke="#2E7D32" stroke-width="2"/>
+          <text x="477" y="229" text-anchor="middle" fill="#1B5E20" font-size="15" font-weight="bold">🙏 ORAR SIN CESAR</text>
+          <text x="477" y="251" text-anchor="middle" fill="#334155" font-size="13">Comunión continua</text>
+        </svg>
+        
+    </div>
+
+    <section class="card c-blue">
+      <h2><span class="e-badge">🧭</span> 1. ¿Qué es?</h2>
+      <p>El Espíritu Santo es Dios mismo habitando dentro de cada persona que ha nacido de nuevo en Cristo. No es una fuerza impersonal, sino el Consolador enviado para acompañarnos siempre.</p>
+      <div class="verse-box">
+        “Y yo rogaré al Padre, y os dará otro Consolador, para que esté con vosotros para siempre: el Espíritu de verdad.”
+        <span class="verse-ref">📖 Juan 14:16-17</span>
+      </div>
+      <details>
+        <summary>🔍 Profundizar y ver respaldo bíblico</summary>
+        <div class="details-body">
+          <p>Desde el momento en que crees en Jesús, el Espíritu Santo viene a vivir en tu corazón (<strong>Efesios 1:13</strong>). Así como el Hijo nos dio su Palabra (Paso 1) y nos acercó al Padre en oración (Paso 2), el Espíritu Santo hace real esa comunión cada minuto.</p>
+        </div>
+      </details>
+    </section>
+
+    <section class="card c-amber">
+      <h2><span class="e-badge">🎯</span> 2. ¿Por qué y para qué es?</h2>
+      <p>Sin el Espíritu Santo intentaríamos agradar a Dios con nuestras propias fuerzas y nos cansaríamos rápido. Él nos da poder para vencer el pecado, entender la Biblia y reflejar el carácter de Jesús.</p>
+      <details>
+        <summary>💡 Propósito y verdad bíblica</summary>
+        <div class="details-body">
+          <p><strong>Juan 14:26</strong> enseña que Él nos enseña todas las cosas y nos recuerda lo que Jesús dijo. Además, transforma nuestro carácter produciendo su fruto: amor, gozo, paz, paciencia, benignidad, bondad, fe, mansedumbre y templanza (<strong>Gálatas 5:22-23</strong>).</p>
+        </div>
+      </details>
+    </section>
+
+    <section class="card c-green">
+      <h2><span class="e-badge">👣</span> 3. ¿Cómo se vive en lo cotidiano?</h2>
+      <p>Caminar en el Espíritu significa mantener el corazón abierto a su voz durante todo el día, obedeciendo lo que Él muestra y orando sin cesar.</p>
+      <div class="chips">
+        <button class="chip active" data-chip-group="g1" onclick="selectChip('g1', 0)">👂 Escuchar su voz</button>
+<button class="chip " data-chip-group="g1" onclick="selectChip('g1', 1)">🔄 Orar sin cesar</button>
+<button class="chip " data-chip-group="g1" onclick="selectChip('g1', 2)">🛡️ No contristarlo</button>
+
+      </div>
+      <div class="panel-illu" data-panel-group="g1" style="display:block;"><h3><span class="e-badge">👂</span> Atentos a su dirección</h3><p>Cuando lees la Biblia o tomas una decisión, pídele claridad. Él nunca contradice la Palabra escrita de Dios.</p></div>
+<div class="panel-illu" data-panel-group="g1" style="display:none;"><h3><span class="e-badge">🔄</span> Conversación continua</h3><p>1 Tesalonicenses 5:17 nos invita a mantener un diálogo breve y sincero con Dios en el trabajo, el transporte o la casa.</p></div>
+<div class="panel-illu" data-panel-group="g1" style="display:none;"><h3><span class="e-badge">🛡️</span> Confesar rápido el pecado</h3><p>Si fallamos, no nos escondemos; pedimos perdón al instante (1 Juan 1:9) para restaurar la paz interior.</p></div>
+
+      <details>
+        <summary>📌 Pasos prácticos y citas de apoyo</summary>
+        <div class="details-body">
+          <p><strong>Gálatas 5:16</strong>: <em>“Andad en el Espíritu, y no satisfagáis los deseos de la carne.”</em> Rendirle el control cada mañana es el secreto para caminar en libertad.</p>
+        </div>
+      </details>
+    </section>
+
+    <section class="card c-lavender">
+      <h2><span class="e-badge">🔗</span> Eje Transversal: Cristo y su Cuerpo</h2>
+      <p>Como nuevas criaturas en Cristo (2 Corintios 5:17), ya no somos esclavos de los viejos hábitos: el Espíritu Santo nos capacita para amar en familia y servir en la iglesia.</p>
+      <details>
+        <summary>🕊️ Conexión con nuestra nueva identidad</summary>
+        <div class="details-body">
+          <p>En <strong>Romanos 8:14</strong> leemos que todos los que son guiados por el Espíritu de Dios, estos son hijos de Dios. Él une nuestros corazones en paz dentro del hogar y la congregación.</p>
+        </div>
+      </details>
+    </section>
+
+    <section class="card c-coral">
+      <h2><span class="e-badge">⚠️</span> Para recordar con claridad</h2>
+      <p>El Espíritu Santo no se mide solo por emociones pasajeras, sino por obediencia diaria a la Palabra y el crecimiento visible del fruto de Cristo en nuestra vida.</p>
+      <details>
+        <summary>🛡️ Evitar confusiones comunes</summary>
+        <div class="details-body">
+          <p><strong>Efesios 4:30</strong> nos exhorta: <em>“Y no contristéis al Espíritu Santo de Dios, con el cual fuisteis sellados para el día de la redención.”</em> Evita el rencor, las palabras dañinas y la desobediencia voluntaria.</p>
+        </div>
+      </details>
+    </section>
+
+    <section class="reto-card">
+      <h2><span class="e-badge">🚀</span> Reto Práctico de la Semana</h2>
+      <p>Durante esta semana, antes de responder a una situación difícil o tomar una decisión cotidiana, haz una pausa de 5 segundos y di en tu corazón: <strong>“Espíritu Santo, guíame hoy”</strong>.</p>
+    </section>
+
+    <footer>
+      Discipulado Cristiano • Nivel 1 • Material Dominical para el Discípulo
+    </footer>
+  </div>
+  
+<script>
+  const savedTheme = localStorage.getItem('discipulado_theme') || 'original';
+  document.documentElement.setAttribute('data-theme', savedTheme);
+  function setTheme(t) {
+    document.documentElement.setAttribute('data-theme', t);
+    localStorage.setItem('discipulado_theme', t);
+    document.querySelectorAll('.theme-btn').forEach(b => {
+      b.classList.toggle('active', b.dataset.themeBtn === t);
+    });
+  }
+  window.addEventListener('DOMContentLoaded', () => {
+    setTheme(savedTheme);
+  });
+  function selectChip(group, idx) {
+    document.querySelectorAll('[data-chip-group="' + group + '"]').forEach((c, i) => {
+      c.classList.toggle('active', i === idx);
+    });
+    document.querySelectorAll('[data-panel-group="' + group + '"]').forEach((p, i) => {
+      p.style.display = (i === idx) ? 'block' : 'none';
+    });
+  }
+</script>
+
+</body>
+</html>

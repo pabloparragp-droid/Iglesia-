@@ -1,0 +1,446 @@
+<!DOCTYPE html>
+<html lang="es" data-theme="original">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>N1_Paso8_Leccion_La_Alabanza</title>
+  <style>
+    :root {
+      --accent: #B26A00;
+      --accent-dark: #FFB74D;
+      --bg: #F4F6F9;
+      --surface: #FFFFFF;
+      --text: #1A202C;
+      --muted: #4A5568;
+      --border: #E2E8F0;
+      --card-blue: #EDF6FF;
+      --card-blue-b: #90CDF4;
+      --card-amber: #FFFBEB;
+      --card-amber-b: #FBD38D;
+      --card-green: #F0FFF4;
+      --card-green-b: #9AE6B4;
+      --card-lavender: #FAF5FF;
+      --card-lavender-b: #D6BCFA;
+      --card-coral: #FFF5F5;
+      --card-coral-b: #FEB2B2;
+      --shadow: 0 4px 14px rgba(0,0,0,0.06);
+    }
+    [data-theme="pastel"] {
+      --bg: #FDF0D8;
+      --surface: #FFFDF7;
+      --text: #1E293B;
+      --muted: #475569;
+      --border: #F0C97D;
+      --card-blue: #DCEBFA;
+      --card-blue-b: #7FB3EB;
+      --card-amber: #FEF0C7;
+      --card-amber-b: #F5B841;
+      --card-green: #D8F5E5;
+      --card-green-b: #68C995;
+      --card-lavender: #EDE2FF;
+      --card-lavender-b: #B794F4;
+      --card-coral: #FFE2E2;
+      --card-coral-b: #F68787;
+    }
+    [data-theme="dark"] {
+      --bg: #0F172A;
+      --surface: #1E293B;
+      --text: #F8FAFC;
+      --muted: #CBD5E1;
+      --border: #334155;
+      --card-blue: #172A45;
+      --card-blue-b: #3B82F6;
+      --card-amber: #2E2312;
+      --card-amber-b: #D97706;
+      --card-green: #132A22;
+      --card-green-b: #10B981;
+      --card-lavender: #251B38;
+      --card-lavender-b: #8B5CF6;
+      --card-coral: #31181E;
+      --card-coral-b: #F43F5E;
+      --shadow: 0 4px 16px rgba(0,0,0,0.4);
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      font-size: 20px;
+      line-height: 1.65;
+      padding: env(safe-area-inset-top, 12px) env(safe-area-inset-right, 14px) env(safe-area-inset-bottom, 32px) env(safe-area-inset-left, 14px);
+      transition: background 0.25s ease, color 0.25s ease;
+    }
+    .container {
+      max-width: 680px;
+      margin: 0 auto;
+    }
+    .topbar {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: var(--surface);
+      border-bottom: 2px solid var(--border);
+      padding: 10px 14px;
+      border-radius: 0 0 16px 16px;
+      box-shadow: var(--shadow);
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      margin-bottom: 18px;
+    }
+    .badge-step {
+      background: var(--accent);
+      color: #FFF;
+      font-weight: 700;
+      font-size: 15px;
+      padding: 4px 12px;
+      border-radius: 999px;
+      letter-spacing: 0.3px;
+    }
+    .controls {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      flex-wrap: wrap;
+    }
+    .theme-btn,
+    .theme-btn.active {
+      background: var(--accent);
+      color: #FFF;
+      border-color: var(--accent);
+    }
+    header.hero-box {
+      background: var(--surface);
+      border: 2px solid var(--accent);
+      border-radius: 20px;
+      padding: 22px 18px;
+      margin-bottom: 20px;
+      box-shadow: var(--shadow);
+      text-align: center;
+    }
+    .emoji-hero {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 64px;
+      height: 64px;
+      font-size: 36px;
+      background: var(--card-blue);
+      border: 2px solid var(--accent);
+      border-radius: 18px;
+      margin-bottom: 10px;
+    }
+    h1 {
+      font-family: Georgia, "Times New Roman", serif;
+      font-size: 29px;
+      line-height: 1.25;
+      color: var(--accent);
+      margin-bottom: 8px;
+    }
+    [data-theme="dark"] h1 {
+      color: #93C5FD;
+    }
+    .subtitle {
+      font-size: 19px;
+      color: var(--muted);
+      font-weight: 500;
+    }
+    h2 {
+      font-family: Georgia, "Times New Roman", serif;
+      font-size: 22.5px;
+      line-height: 1.3;
+      margin-bottom: 12px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    h3 {
+      font-size: 20.5px;
+      margin-bottom: 8px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .e-badge {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-width: 36px;
+      height: 36px;
+      font-size: 21px;
+      background: var(--surface);
+      border: 1.5px solid var(--border);
+      border-radius: 10px;
+      padding: 0 6px;
+      flex-shrink: 0;
+    }
+    .card {
+      border-radius: 18px;
+      padding: 20px 18px;
+      margin-bottom: 18px;
+      border: 2px solid var(--border);
+      background: var(--surface);
+      box-shadow: var(--shadow);
+    }
+    .c-blue { background: var(--card-blue); border-color: var(--card-blue-b); }
+    .c-amber { background: var(--card-amber); border-color: var(--card-amber-b); }
+    .c-green { background: var(--card-green); border-color: var(--card-green-b); }
+    .c-lavender { background: var(--card-lavender); border-color: var(--card-lavender-b); }
+    .c-coral { background: var(--card-coral); border-color: var(--card-coral-b); }
+    .verse-box {
+      background: var(--surface);
+      border-left: 5px solid var(--accent);
+      padding: 14px 16px;
+      border-radius: 12px;
+      margin: 12px 0;
+      font-style: italic;
+    }
+    .verse-ref {
+      display: block;
+      font-style: normal;
+      font-weight: 700;
+      font-size: 17px;
+      color: var(--accent);
+      margin-top: 6px;
+    }
+    [data-theme="dark"] .verse-ref { color: #93C5FD; }
+    details {
+      background: var(--surface);
+      border: 1.5px solid var(--border);
+      border-radius: 14px;
+      padding: 12px 15px;
+      margin-top: 12px;
+    }
+    summary {
+      font-weight: 700;
+      cursor: pointer;
+      list-style: none;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      font-size: 19px;
+    }
+    summary::-webkit-details-marker { display: none; }
+    summary::after {
+      content: "➕";
+      font-size: 16px;
+      transition: transform 0.2s;
+    }
+    details[open] summary::after {
+      content: "➖";
+    }
+    .details-body {
+      margin-top: 12px;
+      padding-top: 12px;
+      border-top: 1px dashed var(--border);
+      font-size: 19px;
+    }
+    .svg-wrap {
+      background: var(--surface);
+      border: 2px solid var(--border);
+      border-radius: 18px;
+      padding: 14px;
+      margin-bottom: 18px;
+      text-align: center;
+      box-shadow: var(--shadow);
+    }
+    .svg-wrap svg {
+      width: 100%;
+      height: auto;
+      max-height: 330px;
+      display: block;
+      margin: 0 auto;
+    }
+    .chips {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin: 12px 0;
+    }
+    .chip {
+      background: var(--surface);
+      border: 2px solid var(--accent);
+      color: var(--text);
+      padding: 8px 14px;
+      border-radius: 999px;
+      font-size: 18px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .chip.active {
+      background: var(--accent);
+      color: #FFF;
+    }
+    .panel-illu {
+      background: var(--surface);
+      border: 1.5px solid var(--border);
+      border-radius: 14px;
+      padding: 15px;
+      margin-top: 10px;
+    }
+    ul.clean-list {
+      padding-left: 22px;
+      margin-top: 8px;
+    }
+    ul.clean-list li {
+      margin-bottom: 8px;
+    }
+    .reto-card {
+      border: 2.5px dashed var(--accent);
+      background: var(--card-green);
+      border-radius: 18px;
+      padding: 20px;
+      margin-top: 20px;
+    }
+    footer {
+      text-align: center;
+      font-size: 16px;
+      color: var(--muted);
+      margin-top: 28px;
+      padding-top: 14px;
+      border-top: 1px solid var(--border);
+    }
+    </style>
+</head>
+<body class="v8">
+  <div class="container">
+    
+    <div class="topbar">
+      <span class="badge-step">Nivel 1 • Paso 8</span>
+      <div class="controls">
+        <button class="theme-btn" data-theme-btn="original" onclick="setTheme('original')">☀️ Original</button>
+        <button class="theme-btn" data-theme-btn="pastel" onclick="setTheme('pastel')">🎨 Pastel</button>
+        <button class="theme-btn" data-theme-btn="dark" onclick="setTheme('dark')">🌙 Oscuro</button>
+      </div>
+    </div>
+    
+    <header class="hero-box">
+      <div class="emoji-hero">🙌</div>
+      <h1>Paso 8: La Alabanza</h1>
+      <p class="subtitle">Adorar a Dios en espíritu y en verdad con los labios y con toda la vida</p>
+    </header>
+
+    <div class="svg-wrap">
+      
+        <svg viewBox="0 0 600 310" xmlns="http://www.w3.org/2000/svg">
+          <rect x="10" y="10" width="580" height="290" rx="20" fill="#FFFBEB" stroke="#B26A00" stroke-width="2.5"/>
+          <polygon points="300,24 520,90 80,90" fill="#B26A00"/>
+          <text x="300" y="72" text-anchor="middle" fill="#FFF" font-size="16" font-weight="bold">👑 GLORIA A DIOS (JUAN 4:23-24)</text>
+          <rect x="65" y="108" width="470" height="52" rx="12" fill="#FFFFFF" stroke="#B26A00" stroke-width="2"/>
+          <text x="300" y="140" text-anchor="middle" fill="#78350F" font-size="15" font-weight="bold">🎵 3. EXPRESIÓN EN EL CULTO: Cantar y dar gracias juntos</text>
+          <rect x="45" y="172" width="510" height="52" rx="12" fill="#FFFFFF" stroke="#B26A00" stroke-width="2"/>
+          <text x="300" y="204" text-anchor="middle" fill="#78350F" font-size="15" font-weight="bold">👣 2. OBEDIENCIA DIARIA: Honrar a Dios en casa y trabajo</text>
+          <rect x="25" y="236" width="550" height="52" rx="12" fill="#FEF3C7" stroke="#B26A00" stroke-width="2.2"/>
+          <text x="300" y="268" text-anchor="middle" fill="#78350F" font-size="15" font-weight="bold">❤️ 1. BASE DEL CORAZÓN: Fe sincera en espíritu y verdad</text>
+        </svg>
+        
+    </div>
+
+    <section class="card c-blue">
+      <h2><span class="e-badge">🧭</span> 1. ¿Qué es?</h2>
+      <p>La alabanza es reconocer y celebrar con gratitud quién es Dios y lo que Él ha hecho por nosotros, tanto cuando cantamos juntos en el culto como en nuestra obediencia diaria.</p>
+      <div class="verse-box">
+        “Mas la hora viene, y ahora es, cuando los verdaderos adoradores adorarán al Padre en espíritu y en verdad.”
+        <span class="verse-ref">📖 Juan 4:23</span>
+      </div>
+      <details>
+        <summary>🔍 Profundizar y ver respaldo bíblico</summary>
+        <div class="details-body">
+          <p>Adorar <strong>en espíritu</strong> significa hacerlo desde lo profundo de nuestro corazón regenerado por el Espíritu Santo, no de forma mecánica. Adorar <strong>en verdad</strong> significa hacerlo conforme a lo que la Biblia revela sobre Dios.</p>
+        </div>
+      </details>
+    </section>
+
+    <section class="card c-amber">
+      <h2><span class="e-badge">🎯</span> 2. ¿Por qué y para qué es?</h2>
+      <p>Fuimos creados y salvados para la alabanza de la gloria de Dios. Cuando alabamos, quitamos los ojos de nuestros problemas y los fijamos en la grandeza del Señor.</p>
+      <details>
+        <summary>💡 Propósito y verdad bíblica</summary>
+        <div class="details-body">
+          <p><strong>Salmo 100:4</strong> nos invita: <em>“Entrad por sus puertas con acción de gracias, por sus atrios con alabanza; alabadle, bendecid su nombre.”</em> La alabanza fortalece la fe y edifica a toda la congregación (<strong>Colosenses 3:16</strong>).</p>
+        </div>
+      </details>
+    </section>
+
+    <section class="card c-green">
+      <h2><span class="e-badge">👣</span> 3. ¿Cómo se vive en lo cotidiano?</h2>
+      <p>Alabamos a Dios participando con gozo en los cantos de la iglesia y viviendo una vida íntegra que lo honra de lunes a domingo.</p>
+      <div class="chips">
+        <button class="chip active" data-chip-group="g1" onclick="selectChip('g1', 0)">🎤 1. Con los labios</button>
+<button class="chip " data-chip-group="g1" onclick="selectChip('g1', 1)">🏡 2. Con la vida</button>
+<button class="chip " data-chip-group="g1" onclick="selectChip('g1', 2)">🙏 3. En todo tiempo</button>
+
+      </div>
+      <div class="panel-illu" data-panel-group="g1" style="display:block;"><h3><span class="e-badge">🎤</span> Cantar con entendimiento</h3><p>Presta atención a la letra de cada canto para que sea una oración sincera de tu corazón hacia Dios.</p></div>
+<div class="panel-illu" data-panel-group="g1" style="display:none;"><h3><span class="e-badge">🏡</span> Culto racional cada día</h3><p>Romanos 12:1 enseña que presentar nuestro cuerpo y decisiones en obediencia es nuestro verdadero culto.</p></div>
+<div class="panel-illu" data-panel-group="g1" style="display:none;"><h3><span class="e-badge">🙏</span> Gratitud aún en pruebas</h3><p>Hebreos 13:15 nos anima a ofrecer siempre a Dios sacrificio de alabanza, fruto de labios que confiesan su nombre.</p></div>
+
+      <details>
+        <summary>📌 Pasos prácticos y citas de apoyo</summary>
+        <div class="details-body">
+          <p><strong>Colosenses 3:16</strong>: <em>“La palabra de Cristo more en abundancia en vosotros, enseñándoos y exhortándoos unos a otros en toda sabiduría, cantando con gracia en vuestros corazones al Señor.”</em></p>
+        </div>
+      </details>
+    </section>
+
+    <section class="card c-lavender">
+      <h2><span class="e-badge">🔗</span> Eje Transversal: Cristo y su Cuerpo</h2>
+      <p>¡Felicidades por llegar al Paso 8! La alabanza integra todo el Nivel 1: la Palabra, la oración, el Espíritu, la iglesia, el bautismo, la Cena y la generosidad culminan en adorar a Dios.</p>
+      <details>
+        <summary>🕊️ Conexión con nuestra nueva identidad</summary>
+        <div class="details-body">
+          <p>Prepárate junto a tu discipulador para el <strong>Resumen General y Examen Final del Nivel 1</strong>, celebrando todo lo que Dios ha construido en tu vida.</p>
+        </div>
+      </details>
+    </section>
+
+    <section class="card c-coral">
+      <h2><span class="e-badge">⚠️</span> Para recordar con claridad</h2>
+      <p>La alabanza no depende de tener una voz profesional ni de si nos gusta un ritmo musical; Dios mira la sinceridad y humildad del corazón que lo adora.</p>
+      <details>
+        <summary>🛡️ Evitar confusiones comunes</summary>
+        <div class="details-body">
+          <p>Evita ser un simple espectador durante el tiempo de alabanza en el culto: participa activamente con fe, gratitud y reverencia.</p>
+        </div>
+      </details>
+    </section>
+
+    <section class="reto-card">
+      <h2><span class="e-badge">🚀</span> Reto Práctico de la Semana</h2>
+      <p>Durante el tiempo de alabanza de este domingo, cierra por un momento las distracciones, lee con atención cada letra que cantas y exprésale a Dios tu gratitud personal por haber completado los 8 pasos del Nivel 1.</p>
+    </section>
+
+    <footer>
+      Discipulado Cristiano • Nivel 1 • Material Dominical para el Discípulo
+    </footer>
+  </div>
+  
+<script>
+  const savedTheme = localStorage.getItem('discipulado_theme') || 'original';
+  document.documentElement.setAttribute('data-theme', savedTheme);
+  function setTheme(t) {
+    document.documentElement.setAttribute('data-theme', t);
+    localStorage.setItem('discipulado_theme', t);
+    document.querySelectorAll('.theme-btn').forEach(b => {
+      b.classList.toggle('active', b.dataset.themeBtn === t);
+    });
+  }
+  window.addEventListener('DOMContentLoaded', () => {
+    setTheme(savedTheme);
+  });
+  function selectChip(group, idx) {
+    document.querySelectorAll('[data-chip-group="' + group + '"]').forEach((c, i) => {
+      c.classList.toggle('active', i === idx);
+    });
+    document.querySelectorAll('[data-panel-group="' + group + '"]').forEach((p, i) => {
+      p.style.display = (i === idx) ? 'block' : 'none';
+    });
+  }
+</script>
+
+</body>
+</html>

@@ -1,0 +1,608 @@
+<!DOCTYPE html>
+<html lang="es" data-theme="original">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>El Pecado y sus Consecuencias</title>
+<style>
+:root {
+  --bg: #F6F8FB;
+  --card: #FFFFFF;
+  --text: #1B2430;
+  --muted: #526071;
+  --border: #DCE3EC;
+  --primary: #1565C0;
+  --primary-soft: #E8F1FC;
+  --accent: #0D47A1;
+  --success: #2E7D32;
+  --success-soft: #E8F5E9;
+  --danger: #C62828;
+  --danger-soft: #FFEBEE;
+  --shadow: 0 6px 20px rgba(16, 24, 40, 0.06);
+
+  /* Contrast tints per thematic card (Original) */
+  --tint-blue-bg: #EEF6FF;
+  --tint-blue-bd: #93C5FD;
+  --tint-amber-bg: #FFFBEB;
+  --tint-amber-bd: #FCD34D;
+  --tint-green-bg: #ECFDF5;
+  --tint-green-bd: #6EE7B7;
+  --tint-purple-bg: #F5F3FF;
+  --tint-purple-bd: #C4B5FD;
+  --tint-coral-bg: #FFF1F2;
+  --tint-coral-bd: #FDA4AF;
+}
+[data-theme="pastel"] {
+  --bg: #DCEBFA;
+  --card: #F5F9FF;
+  --text: #1A2636;
+  --muted: #465A70;
+  --border: #A8C8F0;
+  --primary-soft: #E3F0FF;
+
+  /* Contrast tints (Pastel intensified) */
+  --tint-blue-bg: #E0EEFF;
+  --tint-blue-bd: #7CB3F5;
+  --tint-amber-bg: #FEF3C7;
+  --tint-amber-bd: #F59E0B;
+  --tint-green-bg: #D1FAE5;
+  --tint-green-bd: #34D399;
+  --tint-purple-bg: #EDE9FE;
+  --tint-purple-bd: #A78BFA;
+  --tint-coral-bg: #FFE4E6;
+  --tint-coral-bd: #FB7185;
+}
+[data-theme="oscuro"] {
+  --bg: #0F172A;
+  --card: #1E293B;
+  --text: #F1F5F9;
+  --muted: #94A3B8;
+  --border: #334155;
+  --primary-soft: #1E3A5F;
+  --success-soft: #143622;
+  --danger-soft: #3F181D;
+  --shadow: 0 6px 24px rgba(0,0,0,0.35);
+
+  /* Contrast tints (Oscuro) */
+  --tint-blue-bg: #172A46;
+  --tint-blue-bd: #3B82F6;
+  --tint-amber-bg: #2E2416;
+  --tint-amber-bd: #D97706;
+  --tint-green-bg: #142E24;
+  --tint-green-bd: #10B981;
+  --tint-purple-bg: #251E3E;
+  --tint-purple-bd: #8B5CF6;
+  --tint-coral-bg: #331B24;
+  --tint-coral-bd: #F43F5E;
+}
+.v0 { --primary: #5D4037; --accent: #3E2723; --primary-soft: #EFEBE9; }
+.v0b { --primary: #2E7D32; --accent: #1B5E20; --primary-soft: #E8F5E9; }
+.v1 { --primary: #1565C0; --accent: #0D47A1; --primary-soft: #E3F2FD; }
+.v2 { --primary: #BF5B00; --accent: #8D3E00; --primary-soft: #FFF3E0; }
+
+[data-theme="pastel"].v0 { --bg: #EFE6E1; --card: #FAF6F4; --border: #D7C2B8; --primary-soft: #EAE0DA; }
+[data-theme="pastel"].v0b { --bg: #DCF2E1; --card: #F3FBF5; --border: #A7DFB4; --primary-soft: #E0F5E5; }
+[data-theme="pastel"].v1 { --bg: #DCEBFA; --card: #F5F9FF; --border: #A8C8F0; --primary-soft: #E2EEFC; }
+[data-theme="pastel"].v2 { --bg: #FDE9D7; --card: #FFF8F1; --border: #F3C399; --primary-soft: #FCECD9; }
+
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  font-size: 20px;
+  line-height: 1.65;
+  padding: env(safe-area-inset-top) env(safe-area-inset-right) calc(40px + env(safe-area-inset-bottom)) env(safe-area-inset-left);
+  transition: background 0.25s, color 0.25s;
+}
+.topbar {
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  background: var(--card);
+  border-bottom: 1px solid var(--border);
+  padding: 10px 14px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+.topbar-brand {
+  font-weight: 700;
+  font-size: 16px;
+  color: var(--primary);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.controls {
+  display: flex;
+  gap: 6px;
+  align-items: center;
+  flex-wrap: wrap;
+}
+.btn-theme,
+.btn-theme.active {
+  background: var(--primary);
+  color: #fff;
+  border-color: var(--primary);
+}
+.progress-sticky {
+  position: sticky;
+  top: 52px;
+  z-index: 45;
+  background: var(--card);
+  border-bottom: 1px solid var(--border);
+  padding: 10px 16px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.04);
+}
+.progress-inner {
+  max-width: 680px;
+  margin: 0 auto;
+}
+.progress-label {
+  display: flex;
+  justify-content: space-between;
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--primary);
+  margin-bottom: 6px;
+}
+.progress-track {
+  width: 100%;
+  height: 12px;
+  background: var(--bg);
+  border-radius: 999px;
+  overflow: hidden;
+  border: 1px solid var(--border);
+}
+.progress-fill {
+  height: 100%;
+  width: 0%;
+  background: linear-gradient(90deg, var(--primary), var(--success));
+  transition: width 0.35s ease;
+}
+.container {
+  max-width: 680px;
+  margin: 0 auto;
+  padding: 18px 16px;
+}
+.hero-banner {
+  background: linear-gradient(135deg, var(--primary), var(--accent));
+  color: #fff;
+  border-radius: 20px;
+  padding: 24px 20px;
+  margin-bottom: 20px;
+  box-shadow: var(--shadow);
+}
+.badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: rgba(255,255,255,0.18);
+  padding: 4px 12px;
+  border-radius: 999px;
+  font-size: 15px;
+  font-weight: 600;
+  margin-bottom: 10px;
+}
+h1 {
+  font-family: Georgia, serif;
+  font-size: 29px;
+  line-height: 1.25;
+  margin: 0 0 8px 0;
+}
+h2 {
+  font-family: Georgia, serif;
+  font-size: 22.5px;
+  line-height: 1.3;
+  margin: 18px 0 12px 0;
+  color: var(--primary);
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 18px;
+  padding: 20px;
+  margin-bottom: 18px;
+  box-shadow: var(--shadow);
+}
+.tint-blue { background: var(--tint-blue-bg); border: 1.5px solid var(--tint-blue-bd); }
+.tint-amber { background: var(--tint-amber-bg); border: 1.5px solid var(--tint-amber-bd); }
+.tint-green { background: var(--tint-green-bg); border: 1.5px solid var(--tint-green-bd); }
+.tint-purple { background: var(--tint-purple-bg); border: 1.5px solid var(--tint-purple-bd); }
+.tint-coral { background: var(--tint-coral-bg); border: 1.5px solid var(--tint-coral-bd); }
+
+.verse-box {
+  background: var(--primary-soft);
+  border-left: 5px solid var(--primary);
+  border-radius: 14px;
+  padding: 18px;
+  margin-bottom: 18px;
+}
+.verse-ref {
+  font-weight: 700;
+  color: var(--primary);
+  font-size: 17px;
+  margin-top: 8px;
+}
+.svg-wrap {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 18px;
+  padding: 14px;
+  margin-bottom: 18px;
+  box-shadow: var(--shadow);
+  text-align: center;
+}
+.svg-wrap svg {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+.card-info {
+  border-radius: 18px;
+  margin-bottom: 16px;
+  box-shadow: var(--shadow);
+  overflow: hidden;
+}
+.card-info summary {
+  list-style: none;
+  cursor: pointer;
+  padding: 18px;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+.card-info summary::-webkit-details-marker { display: none; }
+.emoji-badge {
+  width: 54px;
+  height: 54px;
+  min-width: 54px;
+  border-radius: 14px;
+  background: var(--card);
+  border: 1px solid var(--border);
+  font-size: 28px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+}
+.kicker {
+  display: block;
+  font-size: 14px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--primary);
+}
+.card-title {
+  font-family: Georgia, serif;
+  font-size: 21px;
+  font-weight: 700;
+  color: var(--text);
+}
+.details-body {
+  padding: 16px 18px 20px 18px;
+  border-top: 1px dashed var(--border);
+}
+details.bible-ref {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 12px 15px;
+  margin-top: 12px;
+}
+details.bible-ref summary {
+  font-weight: 700;
+  color: var(--primary);
+  cursor: pointer;
+  font-size: 18px;
+}
+.chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 14px;
+}
+.chip {
+  border: 1px solid var(--border);
+  background: var(--card);
+  color: var(--text);
+  padding: 10px 14px;
+  border-radius: 999px;
+  font-size: 17px;
+  font-weight: 600;
+  cursor: pointer;
+}
+.chip.active {
+  background: var(--primary);
+  color: #fff;
+  border-color: var(--primary);
+}
+.panel-illu {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 18px;
+}
+.challenge-box {
+  background: var(--tint-green-bg);
+  border: 2px solid var(--tint-green-bd);
+  border-radius: 18px;
+  padding: 20px;
+  margin-top: 20px;
+}
+.quiz-q {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 18px;
+  padding: 20px;
+  margin-bottom: 18px;
+  box-shadow: var(--shadow);
+}
+.opt-btn {
+  display: block;
+  width: 100%;
+  text-align: left;
+  background: var(--bg);
+  color: var(--text);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 14px 16px;
+  font-size: 19px;
+  line-height: 1.5;
+  margin-top: 10px;
+  cursor: pointer;
+}
+.opt-btn.correct {
+  background: var(--success-soft);
+  border-color: var(--success);
+  color: var(--text);
+  font-weight: 600;
+}
+.opt-btn.wrong {
+  background: var(--danger-soft);
+  border-color: var(--danger);
+  color: var(--text);
+}
+.fb-box {
+  margin-top: 14px;
+  padding: 16px;
+  border-radius: 14px;
+  background: var(--primary-soft);
+  border-left: 5px solid var(--primary);
+  display: none;
+}
+.cert-card {
+  display: none;
+  background: linear-gradient(145deg, var(--card), var(--primary-soft));
+  border: 3px solid var(--primary);
+  border-radius: 22px;
+  padding: 24px 20px;
+  margin-top: 22px;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.12);
+}
+.cert-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 2px dashed var(--primary);
+  padding-bottom: 12px;
+  margin-bottom: 16px;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+.cert-seal {
+  background: var(--success);
+  color: #fff;
+  font-weight: 800;
+  font-size: 15px;
+  padding: 6px 14px;
+  border-radius: 999px;
+}
+.cert-input {
+  width: 100%;
+  font-size: 20px;
+  font-weight: 700;
+  font-family: Georgia, serif;
+  padding: 12px 14px;
+  border-radius: 12px;
+  border: 2px solid var(--primary);
+  background: var(--card);
+  color: var(--text);
+  margin: 8px 0 14px 0;
+}
+.cert-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 14px;
+}
+.time-pill {
+  display: inline-block;
+  background: var(--primary);
+  color: #fff;
+  font-size: 15px;
+  font-weight: 700;
+  padding: 3px 10px;
+  border-radius: 999px;
+  margin-bottom: 6px;
+}
+</style>
+</head>
+<body class="v0">
+<header class="topbar">
+  <div class="topbar-brand">✝️ Discipulado Cristiano</div>
+  <div class="controls">
+    <button class="btn-theme active" data-t="original" onclick="setTheme('original')">Original</button>
+    <button class="btn-theme" data-t="pastel" onclick="setTheme('pastel')">Pastel</button>
+    <button class="btn-theme" data-t="oscuro" onclick="setTheme('oscuro')">Oscuro</button>
+  </div>
+</header>
+
+<main class="container">
+
+    <section class="hero-banner">
+      <div class="badge">🌱 Base Previa · Parte 1</div>
+      <h1>🧱 El Pecado y sus Consecuencias</h1>
+      <p style="margin:0;opacity:0.95;">Diagnóstico bíblico de la ruptura con Dios antes del nuevo nacimiento.</p>
+    </section>
+
+    <section class="verse-box">
+      <div>📜 “Por cuanto todos pecaron, y están destituidos de la gloria de Dios.”</div>
+      <div class="verse-ref">— Romanos 3:23</div>
+    </section>
+
+    <section class="svg-wrap">
+      <h2 style="justify-content:center;margin-top:0;margin-bottom:10px;">🧭 Mapa Radial: Anatomía del Pecado</h2>
+      <svg viewBox="0 0 600 280" xmlns="http://www.w3.org/2000/svg">
+      <line x1="300" y1="140" x2="120" y2="60" stroke="#5D4037" stroke-width="3" stroke-dasharray="6,4"/>
+      <line x1="300" y1="140" x2="480" y2="60" stroke="#5D4037" stroke-width="3" stroke-dasharray="6,4"/>
+      <line x1="300" y1="140" x2="120" y2="220" stroke="#5D4037" stroke-width="3" stroke-dasharray="6,4"/>
+      <line x1="300" y1="140" x2="480" y2="220" stroke="#5D4037" stroke-width="3" stroke-dasharray="6,4"/>
+      <rect x="20" y="25" width="180" height="65" rx="14" fill="#EFEBE9" stroke="#5D4037" stroke-width="2"/>
+      <text x="110" y="53" text-anchor="middle" font-weight="bold" fill="#3E2723" font-size="15">1. ORIGEN</text>
+      <text x="110" y="75" text-anchor="middle" fill="#5D4037" font-size="13">Desobediencia en Adán</text>
+      <rect x="400" y="25" width="180" height="65" rx="14" fill="#EFEBE9" stroke="#5D4037" stroke-width="2"/>
+      <text x="490" y="53" text-anchor="middle" font-weight="bold" fill="#3E2723" font-size="15">2. NATURALEZA</text>
+      <text x="490" y="75" text-anchor="middle" fill="#5D4037" font-size="13">Errar al blanco (Hamartía)</text>
+      <rect x="20" y="185" width="180" height="65" rx="14" fill="#EFEBE9" stroke="#5D4037" stroke-width="2"/>
+      <text x="110" y="213" text-anchor="middle" font-weight="bold" fill="#3E2723" font-size="15">3. SEPARACIÓN</text>
+      <text x="110" y="235" text-anchor="middle" fill="#5D4037" font-size="13">Muerte espiritual (Is 59:2)</text>
+      <rect x="400" y="185" width="180" height="65" rx="14" fill="#EFEBE9" stroke="#5D4037" stroke-width="2"/>
+      <text x="490" y="213" text-anchor="middle" font-weight="bold" fill="#3E2723" font-size="15">4. IMPOTENCIA</text>
+      <text x="490" y="235" text-anchor="middle" fill="#5D4037" font-size="13">Incapaz de salvarse solo</text>
+      <circle cx="300" cy="140" r="64" fill="#5D4037"/>
+      <text x="300" y="135" text-anchor="middle" font-weight="bold" fill="#FFF" font-size="16">EL PECADO</text>
+      <text x="300" y="157" text-anchor="middle" fill="#EFEBE9" font-size="13">Ruptura con Dios</text>
+    </svg>
+    </section>
+
+    <h2>🧭 Las 3 Preguntas Esenciales</h2>
+    
+        <details class="card-info tint-blue">
+          <summary>
+            <div class="emoji-badge">🎯</div>
+            <div>
+              <span class="kicker">Pregunta 1 · ¿Qué es?</span>
+              <div class="card-title">Errar al blanco de la santidad de Dios</div>
+            </div>
+          </summary>
+          <div class="details-body">
+            <p style="margin-top:0;">En el griego bíblico (hamartía), pecar significa fallar el blanco. No es solo hacer cosas malas, sino vivir independientes de Dios, siendo cada uno su propio dios.</p>
+            <details class="bible-ref">
+              <summary>📖 Respaldo bíblico y reflexión (Romanos 5:12 / Isaías 53:6)</summary>
+              <p>Desde Adán, toda la humanidad heredó una naturaleza inclinada a apartarse del Creador. Cada ser humano se apartó por su propio camino.</p>
+              <p style="margin-bottom:0;"><strong>💭 Pregunta de reflexión:</strong> ¿En qué áreas de tu vida solías decidir sin consultar a Dios?</p>
+            </details>
+          </div>
+        </details>
+        <details class="card-info tint-amber">
+          <summary>
+            <div class="emoji-badge">⛓️</div>
+            <div>
+              <span class="kicker">Pregunta 2 · ¿Por qué y para qué entenderlo?</span>
+              <div class="card-title">Sin diagnóstico real no buscamos al Médico</div>
+            </div>
+          </summary>
+          <div class="details-body">
+            <p style="margin-top:0;">Comprender la gravedad del pecado derrumba el orgullo religioso. El pecado produce esclavitud interna, culpa y separación eterna de la fuente de la vida.</p>
+            <details class="bible-ref">
+              <summary>📖 Respaldo bíblico y reflexión (Romanos 6:23 / Juan 8:34)</summary>
+              <p>La paga del pecado es muerte (separación física, espiritual y eterna), mientras que la dádiva de Dios es vida eterna en Cristo Jesús.</p>
+              <p style="margin-bottom:0;"><strong>💭 Pregunta de reflexión:</strong> ¿Por qué las buenas obras humanas no alcanzan para borrar la deuda del pecado?</p>
+            </details>
+          </div>
+        </details>
+        <details class="card-info tint-green">
+          <summary>
+            <div class="emoji-badge">🚪</div>
+            <div>
+              <span class="kicker">Pregunta 3 · ¿Cómo se enfrenta?</span>
+              <div class="card-title">Reconocer nuestra impotencia ante la Cruz</div>
+            </div>
+          </summary>
+          <div class="details-body">
+            <p style="margin-top:0;">El ser humano no puede limpiarse a sí mismo con religión ni fuerza de voluntad. El primer paso hacia Dios es dejar de excusarnos y confesar nuestra necesidad de un Salvador.</p>
+            <details class="bible-ref">
+              <summary>📖 Respaldo bíblico y reflexión (1 Juan 1:8-9 / Efesios 2:1-5)</summary>
+              <p>Estábamos muertos en delitos y pecados; solo Dios puede dar vida a un muerto espiritual.</p>
+              <p style="margin-bottom:0;"><strong>💭 Pregunta de reflexión:</strong> ¿Qué diferencia hay entre sentir remordimiento por las consecuencias y reconocer nuestro pecado delante de Dios?</p>
+            </details>
+          </div>
+        </details>
+
+    <section class="card tint-purple">
+      <h2 style="margin-top:0;">🔍 Explorador Interactivo de Conceptos</h2>
+      <p style="color:var(--muted);margin-top:0;">Toca cada ficha para explorar su fundamento y aplicación:</p>
+      <div class="chips"><button class="chip active" onclick="showF(0, this)">🌱 Origen</button><button class="chip " onclick="showF(1, this)">💔 Naturaleza</button><button class="chip " onclick="showF(2, this)">🧱 Separación</button><button class="chip " onclick="showF(3, this)">🆘 Impotencia</button></div>
+      <div class="panel-illu" id="panel-illu"></div>
+    </section>
+
+    <section class="card tint-coral">
+      <h2 style="margin-top:0;">🛡️ Aplicación en la Vida Cristiana</h2>
+      <details class="bible-ref">
+        <summary>🆔 Identidad en Cristo y vida en el Espíritu</summary>
+        <p style="margin-bottom:0;">Antes de Cristo éramos esclavos del pecado y seguíamos la corriente de este mundo (Efesios 2:2-3). Entender nuestra condición pasada nos prepara para valorar la nueva identidad en Cristo.</p>
+      </details>
+      <details class="bible-ref">
+        <summary>🤝 Comunión verdadera: compartir la vida de Cristo</summary>
+        <p style="margin-bottom:0;">El pecado rompe la comunión vertical con Dios y horizontal con el prójimo, encerrando al ser humano en el egoísmo de vivir para sí mismo.</p>
+      </details>
+      <details class="bible-ref">
+        <summary>⛪ Servicio y unidad en el cuerpo</summary>
+        <p style="margin-bottom:0;">En el reino de las tinieblas cada uno busca su propio interés; solo al ser rescatados podemos servir en amor y unidad.</p>
+      </details>
+    </section>
+
+    <section class="challenge-box">
+      <h2 style="margin-top:0;margin-bottom:8px;">🎯 Síntesis y Reto Práctico Semanal</h2>
+      <p style="margin-top:0;">💡 <strong>Idea clave:</strong> Todos pecamos y quedamos separados de Dios, incapaces de salvarnos por mérito propio.</p>
+      <p style="margin-bottom:0;">🚀 <strong>Tu reto esta semana:</strong> Lee Romanos 3:10-24 en voz alta y escribe en una libreta tres razones por las que necesitabas un Salvador y no solo un buen consejo.</p>
+    </section>
+    
+</main>
+<script>
+function setTheme(t) {
+  document.documentElement.setAttribute('data-theme', t);
+  localStorage.setItem('discipulado_theme', t);
+  document.querySelectorAll('.btn-theme').forEach(b => {
+    b.classList.toggle('active', b.dataset.t === t);
+  });
+}
+(function(){
+  const saved = localStorage.getItem('discipulado_theme') || 'original';
+  setTheme(saved);
+})();
+
+
+    const FICHAS = [{"emoji": "🌱", "kicker": "Nodo 1", "label": "Origen", "title": "La caída en Adán", "desc": "El pecado entró al mundo por la desobediencia de un hombre y pasó a todos los hombres.", "ref": "Génesis 3:1-7 / Romanos 5:12"}, {"emoji": "💔", "kicker": "Nodo 2", "label": "Naturaleza", "title": "Autosuficiencia y rebeldía", "desc": "La esencia del pecado es destronar a Dios para sentar al 'yo' en el centro de nuestras decisiones.", "ref": "Isaías 53:6"}, {"emoji": "🧱", "kicker": "Nodo 3", "label": "Separación", "title": "Muro entre Dios y el hombre", "desc": "Nuestras iniquidades hacen división entre nosotros y nuestro Dios santo.", "ref": "Isaías 59:2"}, {"emoji": "🆘", "kicker": "Nodo 4", "label": "Impotencia", "title": "Incapacidad de autorescate", "desc": "Nuestras obras de justicia sin Cristo son insuficientes para pagar una deuda infinita.", "ref": "Isaías 64:6 / Tito 3:5"}];
+    function showF(idx, btn) {
+      document.querySelectorAll('.chip').forEach(c => c.classList.remove('active'));
+      if(btn) btn.classList.add('active');
+      const f = FICHAS[idx];
+      document.getElementById('panel-illu').innerHTML = `
+        <div style="display:flex;align-items:center;gap:14px;margin-bottom:10px;">
+          <div class="emoji-badge">${f.emoji}</div>
+          <div>
+            <span class="kicker">${f.kicker}</span>
+            <strong style="font-family:Georgia,serif;font-size:21px;">${f.title}</strong>
+          </div>
+        </div>
+        <p style="margin:8px 0;">${f.desc}</p>
+        <div style="font-weight:700;color:var(--primary);font-size:17px;">📖 Cita guía: ${f.ref}</div>
+      `;
+    }
+    showF(0, document.querySelector('.chip'));
+    </script>
+</body>
+</html>

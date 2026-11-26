@@ -1,0 +1,602 @@
+<!DOCTYPE html>
+<html lang="es" data-theme="original">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>Arrepentimiento, Salvación y Puente al Nivel 1</title>
+<style>
+:root {
+  --bg: #F6F8FB;
+  --card: #FFFFFF;
+  --text: #1B2430;
+  --muted: #526071;
+  --border: #DCE3EC;
+  --primary: #1565C0;
+  --primary-soft: #E8F1FC;
+  --accent: #0D47A1;
+  --success: #2E7D32;
+  --success-soft: #E8F5E9;
+  --danger: #C62828;
+  --danger-soft: #FFEBEE;
+  --shadow: 0 6px 20px rgba(16, 24, 40, 0.06);
+
+  /* Contrast tints per thematic card (Original) */
+  --tint-blue-bg: #EEF6FF;
+  --tint-blue-bd: #93C5FD;
+  --tint-amber-bg: #FFFBEB;
+  --tint-amber-bd: #FCD34D;
+  --tint-green-bg: #ECFDF5;
+  --tint-green-bd: #6EE7B7;
+  --tint-purple-bg: #F5F3FF;
+  --tint-purple-bd: #C4B5FD;
+  --tint-coral-bg: #FFF1F2;
+  --tint-coral-bd: #FDA4AF;
+}
+[data-theme="pastel"] {
+  --bg: #DCEBFA;
+  --card: #F5F9FF;
+  --text: #1A2636;
+  --muted: #465A70;
+  --border: #A8C8F0;
+  --primary-soft: #E3F0FF;
+
+  /* Contrast tints (Pastel intensified) */
+  --tint-blue-bg: #E0EEFF;
+  --tint-blue-bd: #7CB3F5;
+  --tint-amber-bg: #FEF3C7;
+  --tint-amber-bd: #F59E0B;
+  --tint-green-bg: #D1FAE5;
+  --tint-green-bd: #34D399;
+  --tint-purple-bg: #EDE9FE;
+  --tint-purple-bd: #A78BFA;
+  --tint-coral-bg: #FFE4E6;
+  --tint-coral-bd: #FB7185;
+}
+[data-theme="oscuro"] {
+  --bg: #0F172A;
+  --card: #1E293B;
+  --text: #F1F5F9;
+  --muted: #94A3B8;
+  --border: #334155;
+  --primary-soft: #1E3A5F;
+  --success-soft: #143622;
+  --danger-soft: #3F181D;
+  --shadow: 0 6px 24px rgba(0,0,0,0.35);
+
+  /* Contrast tints (Oscuro) */
+  --tint-blue-bg: #172A46;
+  --tint-blue-bd: #3B82F6;
+  --tint-amber-bg: #2E2416;
+  --tint-amber-bd: #D97706;
+  --tint-green-bg: #142E24;
+  --tint-green-bd: #10B981;
+  --tint-purple-bg: #251E3E;
+  --tint-purple-bd: #8B5CF6;
+  --tint-coral-bg: #331B24;
+  --tint-coral-bd: #F43F5E;
+}
+.v0 { --primary: #5D4037; --accent: #3E2723; --primary-soft: #EFEBE9; }
+.v0b { --primary: #2E7D32; --accent: #1B5E20; --primary-soft: #E8F5E9; }
+.v1 { --primary: #1565C0; --accent: #0D47A1; --primary-soft: #E3F2FD; }
+.v2 { --primary: #BF5B00; --accent: #8D3E00; --primary-soft: #FFF3E0; }
+
+[data-theme="pastel"].v0 { --bg: #EFE6E1; --card: #FAF6F4; --border: #D7C2B8; --primary-soft: #EAE0DA; }
+[data-theme="pastel"].v0b { --bg: #DCF2E1; --card: #F3FBF5; --border: #A7DFB4; --primary-soft: #E0F5E5; }
+[data-theme="pastel"].v1 { --bg: #DCEBFA; --card: #F5F9FF; --border: #A8C8F0; --primary-soft: #E2EEFC; }
+[data-theme="pastel"].v2 { --bg: #FDE9D7; --card: #FFF8F1; --border: #F3C399; --primary-soft: #FCECD9; }
+
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  font-size: 20px;
+  line-height: 1.65;
+  padding: env(safe-area-inset-top) env(safe-area-inset-right) calc(40px + env(safe-area-inset-bottom)) env(safe-area-inset-left);
+  transition: background 0.25s, color 0.25s;
+}
+.topbar {
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  background: var(--card);
+  border-bottom: 1px solid var(--border);
+  padding: 10px 14px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+.topbar-brand {
+  font-weight: 700;
+  font-size: 16px;
+  color: var(--primary);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.controls {
+  display: flex;
+  gap: 6px;
+  align-items: center;
+  flex-wrap: wrap;
+}
+.btn-theme,
+.btn-theme.active {
+  background: var(--primary);
+  color: #fff;
+  border-color: var(--primary);
+}
+.progress-sticky {
+  position: sticky;
+  top: 52px;
+  z-index: 45;
+  background: var(--card);
+  border-bottom: 1px solid var(--border);
+  padding: 10px 16px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.04);
+}
+.progress-inner {
+  max-width: 680px;
+  margin: 0 auto;
+}
+.progress-label {
+  display: flex;
+  justify-content: space-between;
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--primary);
+  margin-bottom: 6px;
+}
+.progress-track {
+  width: 100%;
+  height: 12px;
+  background: var(--bg);
+  border-radius: 999px;
+  overflow: hidden;
+  border: 1px solid var(--border);
+}
+.progress-fill {
+  height: 100%;
+  width: 0%;
+  background: linear-gradient(90deg, var(--primary), var(--success));
+  transition: width 0.35s ease;
+}
+.container {
+  max-width: 680px;
+  margin: 0 auto;
+  padding: 18px 16px;
+}
+.hero-banner {
+  background: linear-gradient(135deg, var(--primary), var(--accent));
+  color: #fff;
+  border-radius: 20px;
+  padding: 24px 20px;
+  margin-bottom: 20px;
+  box-shadow: var(--shadow);
+}
+.badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: rgba(255,255,255,0.18);
+  padding: 4px 12px;
+  border-radius: 999px;
+  font-size: 15px;
+  font-weight: 600;
+  margin-bottom: 10px;
+}
+h1 {
+  font-family: Georgia, serif;
+  font-size: 29px;
+  line-height: 1.25;
+  margin: 0 0 8px 0;
+}
+h2 {
+  font-family: Georgia, serif;
+  font-size: 22.5px;
+  line-height: 1.3;
+  margin: 18px 0 12px 0;
+  color: var(--primary);
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 18px;
+  padding: 20px;
+  margin-bottom: 18px;
+  box-shadow: var(--shadow);
+}
+.tint-blue { background: var(--tint-blue-bg); border: 1.5px solid var(--tint-blue-bd); }
+.tint-amber { background: var(--tint-amber-bg); border: 1.5px solid var(--tint-amber-bd); }
+.tint-green { background: var(--tint-green-bg); border: 1.5px solid var(--tint-green-bd); }
+.tint-purple { background: var(--tint-purple-bg); border: 1.5px solid var(--tint-purple-bd); }
+.tint-coral { background: var(--tint-coral-bg); border: 1.5px solid var(--tint-coral-bd); }
+
+.verse-box {
+  background: var(--primary-soft);
+  border-left: 5px solid var(--primary);
+  border-radius: 14px;
+  padding: 18px;
+  margin-bottom: 18px;
+}
+.verse-ref {
+  font-weight: 700;
+  color: var(--primary);
+  font-size: 17px;
+  margin-top: 8px;
+}
+.svg-wrap {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 18px;
+  padding: 14px;
+  margin-bottom: 18px;
+  box-shadow: var(--shadow);
+  text-align: center;
+}
+.svg-wrap svg {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+.card-info {
+  border-radius: 18px;
+  margin-bottom: 16px;
+  box-shadow: var(--shadow);
+  overflow: hidden;
+}
+.card-info summary {
+  list-style: none;
+  cursor: pointer;
+  padding: 18px;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+.card-info summary::-webkit-details-marker { display: none; }
+.emoji-badge {
+  width: 54px;
+  height: 54px;
+  min-width: 54px;
+  border-radius: 14px;
+  background: var(--card);
+  border: 1px solid var(--border);
+  font-size: 28px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+}
+.kicker {
+  display: block;
+  font-size: 14px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--primary);
+}
+.card-title {
+  font-family: Georgia, serif;
+  font-size: 21px;
+  font-weight: 700;
+  color: var(--text);
+}
+.details-body {
+  padding: 16px 18px 20px 18px;
+  border-top: 1px dashed var(--border);
+}
+details.bible-ref {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 12px 15px;
+  margin-top: 12px;
+}
+details.bible-ref summary {
+  font-weight: 700;
+  color: var(--primary);
+  cursor: pointer;
+  font-size: 18px;
+}
+.chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 14px;
+}
+.chip {
+  border: 1px solid var(--border);
+  background: var(--card);
+  color: var(--text);
+  padding: 10px 14px;
+  border-radius: 999px;
+  font-size: 17px;
+  font-weight: 600;
+  cursor: pointer;
+}
+.chip.active {
+  background: var(--primary);
+  color: #fff;
+  border-color: var(--primary);
+}
+.panel-illu {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 18px;
+}
+.challenge-box {
+  background: var(--tint-green-bg);
+  border: 2px solid var(--tint-green-bd);
+  border-radius: 18px;
+  padding: 20px;
+  margin-top: 20px;
+}
+.quiz-q {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 18px;
+  padding: 20px;
+  margin-bottom: 18px;
+  box-shadow: var(--shadow);
+}
+.opt-btn {
+  display: block;
+  width: 100%;
+  text-align: left;
+  background: var(--bg);
+  color: var(--text);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 14px 16px;
+  font-size: 19px;
+  line-height: 1.5;
+  margin-top: 10px;
+  cursor: pointer;
+}
+.opt-btn.correct {
+  background: var(--success-soft);
+  border-color: var(--success);
+  color: var(--text);
+  font-weight: 600;
+}
+.opt-btn.wrong {
+  background: var(--danger-soft);
+  border-color: var(--danger);
+  color: var(--text);
+}
+.fb-box {
+  margin-top: 14px;
+  padding: 16px;
+  border-radius: 14px;
+  background: var(--primary-soft);
+  border-left: 5px solid var(--primary);
+  display: none;
+}
+.cert-card {
+  display: none;
+  background: linear-gradient(145deg, var(--card), var(--primary-soft));
+  border: 3px solid var(--primary);
+  border-radius: 22px;
+  padding: 24px 20px;
+  margin-top: 22px;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.12);
+}
+.cert-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 2px dashed var(--primary);
+  padding-bottom: 12px;
+  margin-bottom: 16px;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+.cert-seal {
+  background: var(--success);
+  color: #fff;
+  font-weight: 800;
+  font-size: 15px;
+  padding: 6px 14px;
+  border-radius: 999px;
+}
+.cert-input {
+  width: 100%;
+  font-size: 20px;
+  font-weight: 700;
+  font-family: Georgia, serif;
+  padding: 12px 14px;
+  border-radius: 12px;
+  border: 2px solid var(--primary);
+  background: var(--card);
+  color: var(--text);
+  margin: 8px 0 14px 0;
+}
+.cert-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 14px;
+}
+.time-pill {
+  display: inline-block;
+  background: var(--primary);
+  color: #fff;
+  font-size: 15px;
+  font-weight: 700;
+  padding: 3px 10px;
+  border-radius: 999px;
+  margin-bottom: 6px;
+}
+</style>
+</head>
+<body class="v0b">
+<header class="topbar">
+  <div class="topbar-brand">✝️ Discipulado Cristiano</div>
+  <div class="controls">
+    <button class="btn-theme active" data-t="original" onclick="setTheme('original')">Original</button>
+    <button class="btn-theme" data-t="pastel" onclick="setTheme('pastel')">Pastel</button>
+    <button class="btn-theme" data-t="oscuro" onclick="setTheme('oscuro')">Oscuro</button>
+  </div>
+</header>
+
+<main class="container">
+
+    <section class="hero-banner">
+      <div class="badge">🌱 Base Previa · Parte 2 y Puente</div>
+      <h1>🌉 Arrepentimiento, Salvación y Puente al Nivel 1</h1>
+      <p style="margin:0;opacity:0.95;">Del nuevo nacimiento en Cristo hacia los primeros pasos en la comunión con Dios.</p>
+    </section>
+
+    <section class="verse-box">
+      <div>📜 “De modo que si alguno está en Cristo, nueva criatura es; las cosas viejas pasaron; he aquí todas son hechas nuevas.”</div>
+      <div class="verse-ref">— 2 Corintios 5:17</div>
+    </section>
+
+    <section class="svg-wrap">
+      <h2 style="justify-content:center;margin-top:0;margin-bottom:10px;">🌉 Puente Panorámico: De la Muerte a la Nueva Vida</h2>
+      <svg viewBox="0 0 600 260" xmlns="http://www.w3.org/2000/svg">
+      <rect x="10" y="130" width="150" height="110" rx="12" fill="#EFEBE9" stroke="#5D4037" stroke-width="2"/>
+      <text x="85" y="162" text-anchor="middle" font-weight="bold" fill="#3E2723" font-size="14">ORILLA 1: ADÁN</text>
+      <text x="85" y="185" text-anchor="middle" fill="#5D4037" font-size="12">Vieja vida · Pecado</text>
+      <text x="85" y="205" text-anchor="middle" fill="#5D4037" font-size="12">Separación de Dios</text>
+      <path d="M 160 150 Q 300 45 440 150" fill="none" stroke="#2E7D32" stroke-width="10" stroke-linecap="round"/>
+      <rect x="215" y="32" width="170" height="58" rx="14" fill="#2E7D32"/>
+      <text x="300" y="57" text-anchor="middle" font-weight="bold" fill="#FFF" font-size="14">✝ LA CRUZ DE CRISTO</text>
+      <text x="300" y="77" text-anchor="middle" fill="#E8F5E9" font-size="12">Arrepentimiento y Fe</text>
+      <text x="300" y="220" text-anchor="middle" fill="#C62828" font-weight="bold" font-size="13">ABISMO DE MUERTE ESPIRITUAL</text>
+      <rect x="440" y="130" width="150" height="110" rx="12" fill="#E8F5E9" stroke="#2E7D32" stroke-width="2"/>
+      <text x="515" y="162" text-anchor="middle" font-weight="bold" fill="#1B5E20" font-size="14">ORILLA 2: CRISTO</text>
+      <text x="515" y="185" text-anchor="middle" fill="#2E7D32" font-size="12">Nueva Creación</text>
+      <text x="515" y="205" text-anchor="middle" font-weight="bold" fill="#1565C0" font-size="12">→ Puerta al Nivel 1</text>
+    </svg>
+    </section>
+
+    <h2>🧭 Las 3 Preguntas Esenciales</h2>
+    
+        <details class="card-info tint-blue">
+          <summary>
+            <div class="emoji-badge">🔄</div>
+            <div>
+              <span class="kicker">Pregunta 1 · ¿Qué es?</span>
+              <div class="card-title">Metanoia: cambio radical de mente y dirección</div>
+            </div>
+          </summary>
+          <div class="details-body">
+            <p style="margin-top:0;">Arrepentirse no es solo llorar por un error; en griego (metanoia) significa cambiar de mentalidad, dar media vuelta dejando el gobierno del 'yo' para rendirse al señorío de Cristo.</p>
+            <details class="bible-ref">
+              <summary>📖 Respaldo bíblico y reflexión (Hechos 3:19 / Marcos 1:15)</summary>
+              <p>El arrepentimiento genuino va unido a la fe en el sacrificio sustitutorio de Jesús en la cruz: Él pagó nuestra deuda y resucitó para darnos vida nueva.</p>
+              <p style="margin-bottom:0;"><strong>💭 Pregunta de reflexión:</strong> ¿Qué áreas de tu manera de pensar comenzaron a cambiar cuando conociste a Cristo?</p>
+            </details>
+          </div>
+        </details>
+        <details class="card-info tint-amber">
+          <summary>
+            <div class="emoji-badge">🌱</div>
+            <div>
+              <span class="kicker">Pregunta 2 · ¿Por qué y para qué es?</span>
+              <div class="card-title">El nuevo nacimiento es el punto de partida obligatorio</div>
+            </div>
+          </summary>
+          <div class="details-body">
+            <p style="margin-top:0;">No entramos al discipulado para 'ganarnos' la salvación con buenas notas, sino porque ya nacimos de nuevo en Cristo y necesitamos crecer en nuestra nueva familia espiritual.</p>
+            <details class="bible-ref">
+              <summary>📖 Respaldo bíblico y reflexión (Juan 3:3-6 / Efesios 2:8-10)</summary>
+              <p>Somos salvos por gracia mediante la fe, creados en Cristo Jesús para buenas obras que Dios preparó de antemano.</p>
+              <p style="margin-bottom:0;"><strong>💭 Pregunta de reflexión:</strong> ¿Por qué es peligroso intentar vivir como cristiano sin haber nacido de nuevo?</p>
+            </details>
+          </div>
+        </details>
+        <details class="card-info tint-green">
+          <summary>
+            <div class="emoji-badge">🚪</div>
+            <div>
+              <span class="kicker">Pregunta 3 · ¿Cómo cruzamos y avanzamos?</span>
+              <div class="card-title">Fe en Cristo y entrada al Nivel 1</div>
+            </div>
+          </summary>
+          <div class="details-body">
+            <p style="margin-top:0;">Cruzamos el abismo poniendo toda nuestra confianza en Jesucristo como Salvador y Señor. Esa nueva vida abre inmediatamente la puerta al Nivel 1: comunión diaria con Dios (Palabra, Oración, Espíritu) e integración a su Iglesia.</p>
+            <details class="bible-ref">
+              <summary>📖 Respaldo bíblico y reflexión (Romanos 10:9-10 / 1 Pedro 2:2)</summary>
+              <p>Como niños recién nacidos en Cristo, ahora deseamos la leche espiritual no adulterada para crecer para salvación.</p>
+              <p style="margin-bottom:0;"><strong>💭 Pregunta de reflexión:</strong> ¿Cómo se conecta tu salvación en Cristo con el compromiso de iniciar el Nivel 1?</p>
+            </details>
+          </div>
+        </details>
+
+    <section class="card tint-purple">
+      <h2 style="margin-top:0;">🔍 Explorador Interactivo de Conceptos</h2>
+      <p style="color:var(--muted);margin-top:0;">Toca cada ficha para explorar su fundamento y aplicación:</p>
+      <div class="chips"><button class="chip active" onclick="showF(0, this)">🧭 Arrepentimiento</button><button class="chip " onclick="showF(1, this)">✝️ Fe en la Cruz</button><button class="chip " onclick="showF(2, this)">✨ Nuevo Nacimiento</button><button class="chip " onclick="showF(3, this)">🚪 Puerta al Nivel 1</button></div>
+      <div class="panel-illu" id="panel-illu"></div>
+    </section>
+
+    <section class="card tint-coral">
+      <h2 style="margin-top:0;">🛡️ Aplicación en la Vida Cristiana</h2>
+      <details class="bible-ref">
+        <summary>🆔 Identidad en Cristo y vida en el Espíritu</summary>
+        <p style="margin-bottom:0;">Al cruzar el puente de la Cruz dejamos de ser esclavos del pecado para convertirnos en nueva creación, hijos engendrados de Dios y habitación del Espíritu Santo.</p>
+      </details>
+      <details class="bible-ref">
+        <summary>🤝 Comunión verdadera: compartir la vida de Cristo</summary>
+        <p style="margin-bottom:0;">Como nueva creación (2 Corintios 5:14-17), dejamos de vivir para nosotros mismos para vivir para Cristo y compartir su amor y verdad en familia y en la iglesia.</p>
+      </details>
+      <details class="bible-ref">
+        <summary>⛪ Servicio y unidad en el cuerpo</summary>
+        <p style="margin-bottom:0;">Quien es rescatado por gracia entra a formar parte de un cuerpo donde el Espíritu nos une para servir y edificarnos mutuamente.</p>
+      </details>
+    </section>
+
+    <section class="challenge-box">
+      <h2 style="margin-top:0;margin-bottom:8px;">🎯 Síntesis y Reto Práctico Semanal</h2>
+      <p style="margin-top:0;">💡 <strong>Idea clave:</strong> La cruz de Cristo es el único puente sobre el abismo del pecado; al cruzarlo por arrepentimiento y fe nacemos de nuevo y entramos al Nivel 1.</p>
+      <p style="margin-bottom:0;">🚀 <strong>Tu reto esta semana:</strong> Escribe en 5 líneas tu testimonio breve (cómo era tu vida antes, cómo entendiste la cruz de Cristo y qué cambió al nacer de nuevo) y compártelo con tu discipulador.</p>
+    </section>
+    
+</main>
+<script>
+function setTheme(t) {
+  document.documentElement.setAttribute('data-theme', t);
+  localStorage.setItem('discipulado_theme', t);
+  document.querySelectorAll('.btn-theme').forEach(b => {
+    b.classList.toggle('active', b.dataset.t === t);
+  });
+}
+(function(){
+  const saved = localStorage.getItem('discipulado_theme') || 'original';
+  setTheme(saved);
+})();
+
+
+    const FICHAS = [{"emoji": "🧭", "kicker": "Paso del Puente 1", "label": "Arrepentimiento", "title": "Cambio de dirección (Metanoia)", "desc": "Abandonar la independencia del pecado para volvernos a Dios con todo el corazón.", "ref": "Hechos 3:19"}, {"emoji": "✝️", "kicker": "Paso del Puente 2", "label": "Fe en la Cruz", "title": "Confianza plena en la obra de Cristo", "desc": "Creer que Jesús murió en nuestro lugar y resucitó para justificarnos.", "ref": "Romanos 5:1 / 10:9"}, {"emoji": "✨", "kicker": "Paso del Puente 3", "label": "Nuevo Nacimiento", "title": "Engendrados de Dios", "desc": "El Espíritu Santo implanta la vida eterna de Cristo en nuestro espíritu.", "ref": "Juan 1:12-13 / 2 Corintios 5:17"}, {"emoji": "🚪", "kicker": "Paso del Puente 4", "label": "Puerta al Nivel 1", "title": "Caminar en comunión y en el Cuerpo", "desc": "La salvación inaugura una relación viva con el Padre, el Hijo, el Espíritu y la Iglesia.", "ref": "Colosenses 2:6-7"}];
+    function showF(idx, btn) {
+      document.querySelectorAll('.chip').forEach(c => c.classList.remove('active'));
+      if(btn) btn.classList.add('active');
+      const f = FICHAS[idx];
+      document.getElementById('panel-illu').innerHTML = `
+        <div style="display:flex;align-items:center;gap:14px;margin-bottom:10px;">
+          <div class="emoji-badge">${f.emoji}</div>
+          <div>
+            <span class="kicker">${f.kicker}</span>
+            <strong style="font-family:Georgia,serif;font-size:21px;">${f.title}</strong>
+          </div>
+        </div>
+        <p style="margin:8px 0;">${f.desc}</p>
+        <div style="font-weight:700;color:var(--primary);font-size:17px;">📖 Cita guía: ${f.ref}</div>
+      `;
+    }
+    showF(0, document.querySelector('.chip'));
+    </script>
+</body>
+</html>

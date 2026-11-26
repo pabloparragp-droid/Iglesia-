@@ -1,0 +1,609 @@
+<!DOCTYPE html>
+<html lang="es" data-theme="original">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>La Palabra de Dios</title>
+<style>
+:root {
+  --bg: #F6F8FB;
+  --card: #FFFFFF;
+  --text: #1B2430;
+  --muted: #526071;
+  --border: #DCE3EC;
+  --primary: #1565C0;
+  --primary-soft: #E8F1FC;
+  --accent: #0D47A1;
+  --success: #2E7D32;
+  --success-soft: #E8F5E9;
+  --danger: #C62828;
+  --danger-soft: #FFEBEE;
+  --shadow: 0 6px 20px rgba(16, 24, 40, 0.06);
+
+  /* Contrast tints per thematic card (Original) */
+  --tint-blue-bg: #EEF6FF;
+  --tint-blue-bd: #93C5FD;
+  --tint-amber-bg: #FFFBEB;
+  --tint-amber-bd: #FCD34D;
+  --tint-green-bg: #ECFDF5;
+  --tint-green-bd: #6EE7B7;
+  --tint-purple-bg: #F5F3FF;
+  --tint-purple-bd: #C4B5FD;
+  --tint-coral-bg: #FFF1F2;
+  --tint-coral-bd: #FDA4AF;
+}
+[data-theme="pastel"] {
+  --bg: #DCEBFA;
+  --card: #F5F9FF;
+  --text: #1A2636;
+  --muted: #465A70;
+  --border: #A8C8F0;
+  --primary-soft: #E3F0FF;
+
+  /* Contrast tints (Pastel intensified) */
+  --tint-blue-bg: #E0EEFF;
+  --tint-blue-bd: #7CB3F5;
+  --tint-amber-bg: #FEF3C7;
+  --tint-amber-bd: #F59E0B;
+  --tint-green-bg: #D1FAE5;
+  --tint-green-bd: #34D399;
+  --tint-purple-bg: #EDE9FE;
+  --tint-purple-bd: #A78BFA;
+  --tint-coral-bg: #FFE4E6;
+  --tint-coral-bd: #FB7185;
+}
+[data-theme="oscuro"] {
+  --bg: #0F172A;
+  --card: #1E293B;
+  --text: #F1F5F9;
+  --muted: #94A3B8;
+  --border: #334155;
+  --primary-soft: #1E3A5F;
+  --success-soft: #143622;
+  --danger-soft: #3F181D;
+  --shadow: 0 6px 24px rgba(0,0,0,0.35);
+
+  /* Contrast tints (Oscuro) */
+  --tint-blue-bg: #172A46;
+  --tint-blue-bd: #3B82F6;
+  --tint-amber-bg: #2E2416;
+  --tint-amber-bd: #D97706;
+  --tint-green-bg: #142E24;
+  --tint-green-bd: #10B981;
+  --tint-purple-bg: #251E3E;
+  --tint-purple-bd: #8B5CF6;
+  --tint-coral-bg: #331B24;
+  --tint-coral-bd: #F43F5E;
+}
+.v0 { --primary: #5D4037; --accent: #3E2723; --primary-soft: #EFEBE9; }
+.v0b { --primary: #2E7D32; --accent: #1B5E20; --primary-soft: #E8F5E9; }
+.v1 { --primary: #1565C0; --accent: #0D47A1; --primary-soft: #E3F2FD; }
+.v2 { --primary: #BF5B00; --accent: #8D3E00; --primary-soft: #FFF3E0; }
+
+[data-theme="pastel"].v0 { --bg: #EFE6E1; --card: #FAF6F4; --border: #D7C2B8; --primary-soft: #EAE0DA; }
+[data-theme="pastel"].v0b { --bg: #DCF2E1; --card: #F3FBF5; --border: #A7DFB4; --primary-soft: #E0F5E5; }
+[data-theme="pastel"].v1 { --bg: #DCEBFA; --card: #F5F9FF; --border: #A8C8F0; --primary-soft: #E2EEFC; }
+[data-theme="pastel"].v2 { --bg: #FDE9D7; --card: #FFF8F1; --border: #F3C399; --primary-soft: #FCECD9; }
+
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  font-size: 20px;
+  line-height: 1.65;
+  padding: env(safe-area-inset-top) env(safe-area-inset-right) calc(40px + env(safe-area-inset-bottom)) env(safe-area-inset-left);
+  transition: background 0.25s, color 0.25s;
+}
+.topbar {
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  background: var(--card);
+  border-bottom: 1px solid var(--border);
+  padding: 10px 14px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+.topbar-brand {
+  font-weight: 700;
+  font-size: 16px;
+  color: var(--primary);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.controls {
+  display: flex;
+  gap: 6px;
+  align-items: center;
+  flex-wrap: wrap;
+}
+.btn-theme,
+.btn-theme.active {
+  background: var(--primary);
+  color: #fff;
+  border-color: var(--primary);
+}
+.progress-sticky {
+  position: sticky;
+  top: 52px;
+  z-index: 45;
+  background: var(--card);
+  border-bottom: 1px solid var(--border);
+  padding: 10px 16px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.04);
+}
+.progress-inner {
+  max-width: 680px;
+  margin: 0 auto;
+}
+.progress-label {
+  display: flex;
+  justify-content: space-between;
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--primary);
+  margin-bottom: 6px;
+}
+.progress-track {
+  width: 100%;
+  height: 12px;
+  background: var(--bg);
+  border-radius: 999px;
+  overflow: hidden;
+  border: 1px solid var(--border);
+}
+.progress-fill {
+  height: 100%;
+  width: 0%;
+  background: linear-gradient(90deg, var(--primary), var(--success));
+  transition: width 0.35s ease;
+}
+.container {
+  max-width: 680px;
+  margin: 0 auto;
+  padding: 18px 16px;
+}
+.hero-banner {
+  background: linear-gradient(135deg, var(--primary), var(--accent));
+  color: #fff;
+  border-radius: 20px;
+  padding: 24px 20px;
+  margin-bottom: 20px;
+  box-shadow: var(--shadow);
+}
+.badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: rgba(255,255,255,0.18);
+  padding: 4px 12px;
+  border-radius: 999px;
+  font-size: 15px;
+  font-weight: 600;
+  margin-bottom: 10px;
+}
+h1 {
+  font-family: Georgia, serif;
+  font-size: 29px;
+  line-height: 1.25;
+  margin: 0 0 8px 0;
+}
+h2 {
+  font-family: Georgia, serif;
+  font-size: 22.5px;
+  line-height: 1.3;
+  margin: 18px 0 12px 0;
+  color: var(--primary);
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 18px;
+  padding: 20px;
+  margin-bottom: 18px;
+  box-shadow: var(--shadow);
+}
+.tint-blue { background: var(--tint-blue-bg); border: 1.5px solid var(--tint-blue-bd); }
+.tint-amber { background: var(--tint-amber-bg); border: 1.5px solid var(--tint-amber-bd); }
+.tint-green { background: var(--tint-green-bg); border: 1.5px solid var(--tint-green-bd); }
+.tint-purple { background: var(--tint-purple-bg); border: 1.5px solid var(--tint-purple-bd); }
+.tint-coral { background: var(--tint-coral-bg); border: 1.5px solid var(--tint-coral-bd); }
+
+.verse-box {
+  background: var(--primary-soft);
+  border-left: 5px solid var(--primary);
+  border-radius: 14px;
+  padding: 18px;
+  margin-bottom: 18px;
+}
+.verse-ref {
+  font-weight: 700;
+  color: var(--primary);
+  font-size: 17px;
+  margin-top: 8px;
+}
+.svg-wrap {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 18px;
+  padding: 14px;
+  margin-bottom: 18px;
+  box-shadow: var(--shadow);
+  text-align: center;
+}
+.svg-wrap svg {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+.card-info {
+  border-radius: 18px;
+  margin-bottom: 16px;
+  box-shadow: var(--shadow);
+  overflow: hidden;
+}
+.card-info summary {
+  list-style: none;
+  cursor: pointer;
+  padding: 18px;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+.card-info summary::-webkit-details-marker { display: none; }
+.emoji-badge {
+  width: 54px;
+  height: 54px;
+  min-width: 54px;
+  border-radius: 14px;
+  background: var(--card);
+  border: 1px solid var(--border);
+  font-size: 28px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+}
+.kicker {
+  display: block;
+  font-size: 14px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--primary);
+}
+.card-title {
+  font-family: Georgia, serif;
+  font-size: 21px;
+  font-weight: 700;
+  color: var(--text);
+}
+.details-body {
+  padding: 16px 18px 20px 18px;
+  border-top: 1px dashed var(--border);
+}
+details.bible-ref {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 12px 15px;
+  margin-top: 12px;
+}
+details.bible-ref summary {
+  font-weight: 700;
+  color: var(--primary);
+  cursor: pointer;
+  font-size: 18px;
+}
+.chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 14px;
+}
+.chip {
+  border: 1px solid var(--border);
+  background: var(--card);
+  color: var(--text);
+  padding: 10px 14px;
+  border-radius: 999px;
+  font-size: 17px;
+  font-weight: 600;
+  cursor: pointer;
+}
+.chip.active {
+  background: var(--primary);
+  color: #fff;
+  border-color: var(--primary);
+}
+.panel-illu {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 18px;
+}
+.challenge-box {
+  background: var(--tint-green-bg);
+  border: 2px solid var(--tint-green-bd);
+  border-radius: 18px;
+  padding: 20px;
+  margin-top: 20px;
+}
+.quiz-q {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 18px;
+  padding: 20px;
+  margin-bottom: 18px;
+  box-shadow: var(--shadow);
+}
+.opt-btn {
+  display: block;
+  width: 100%;
+  text-align: left;
+  background: var(--bg);
+  color: var(--text);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 14px 16px;
+  font-size: 19px;
+  line-height: 1.5;
+  margin-top: 10px;
+  cursor: pointer;
+}
+.opt-btn.correct {
+  background: var(--success-soft);
+  border-color: var(--success);
+  color: var(--text);
+  font-weight: 600;
+}
+.opt-btn.wrong {
+  background: var(--danger-soft);
+  border-color: var(--danger);
+  color: var(--text);
+}
+.fb-box {
+  margin-top: 14px;
+  padding: 16px;
+  border-radius: 14px;
+  background: var(--primary-soft);
+  border-left: 5px solid var(--primary);
+  display: none;
+}
+.cert-card {
+  display: none;
+  background: linear-gradient(145deg, var(--card), var(--primary-soft));
+  border: 3px solid var(--primary);
+  border-radius: 22px;
+  padding: 24px 20px;
+  margin-top: 22px;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.12);
+}
+.cert-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 2px dashed var(--primary);
+  padding-bottom: 12px;
+  margin-bottom: 16px;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+.cert-seal {
+  background: var(--success);
+  color: #fff;
+  font-weight: 800;
+  font-size: 15px;
+  padding: 6px 14px;
+  border-radius: 999px;
+}
+.cert-input {
+  width: 100%;
+  font-size: 20px;
+  font-weight: 700;
+  font-family: Georgia, serif;
+  padding: 12px 14px;
+  border-radius: 12px;
+  border: 2px solid var(--primary);
+  background: var(--card);
+  color: var(--text);
+  margin: 8px 0 14px 0;
+}
+.cert-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 14px;
+}
+.time-pill {
+  display: inline-block;
+  background: var(--primary);
+  color: #fff;
+  font-size: 15px;
+  font-weight: 700;
+  padding: 3px 10px;
+  border-radius: 999px;
+  margin-bottom: 6px;
+}
+</style>
+</head>
+<body class="v1">
+<header class="topbar">
+  <div class="topbar-brand">✝️ Discipulado Cristiano</div>
+  <div class="controls">
+    <button class="btn-theme active" data-t="original" onclick="setTheme('original')">Original</button>
+    <button class="btn-theme" data-t="pastel" onclick="setTheme('pastel')">Pastel</button>
+    <button class="btn-theme" data-t="oscuro" onclick="setTheme('oscuro')">Oscuro</button>
+  </div>
+</header>
+
+<main class="container">
+
+    <section class="hero-banner">
+      <div class="badge">📘 Nivel 1 · Paso 1</div>
+      <h1>📖 La Palabra de Dios</h1>
+      <p style="margin:0;opacity:0.95;">La voz viva del Hijo que alimenta, corrige y edifica nuestra nueva vida.</p>
+    </section>
+
+    <section class="verse-box">
+      <div>📜 “Toda la Escritura es inspirada por Dios, y útil para enseñar, para redargüir, para corregir, para instruir en justicia.”</div>
+      <div class="verse-ref">— 2 Timoteo 3:16</div>
+    </section>
+
+    <section class="svg-wrap">
+      <h2 style="justify-content:center;margin-top:0;margin-bottom:10px;">🏛️ Frontón y 4 Columnas de la Escritura (2 Ti 3:16)</h2>
+      <svg viewBox="0 0 600 270" xmlns="http://www.w3.org/2000/svg">
+      <polygon points="300,20 40,85 560,85" fill="#1565C0"/>
+      <text x="300" y="65" text-anchor="middle" font-weight="bold" fill="#FFF" font-size="16">LA PALABRA DE DIOS (THEÓPNEUSTOS)</text>
+      <rect x="65" y="95" width="105" height="120" rx="10" fill="#E3F2FD" stroke="#1565C0" stroke-width="2"/>
+      <text x="117" y="135" text-anchor="middle" font-weight="bold" fill="#0D47A1" font-size="14">1. ENSEÑA</text>
+      <text x="117" y="160" text-anchor="middle" fill="#1565C0" font-size="12">Muestra la ruta</text>
+      <text x="117" y="180" text-anchor="middle" fill="#1565C0" font-size="12">verdadera</text>
+      <rect x="190" y="95" width="105" height="120" rx="10" fill="#E3F2FD" stroke="#1565C0" stroke-width="2"/>
+      <text x="242" y="135" text-anchor="middle" font-weight="bold" fill="#0D47A1" font-size="14">2. REDARGUYE</text>
+      <text x="242" y="160" text-anchor="middle" fill="#1565C0" font-size="12">Señala dónde</text>
+      <text x="242" y="180" text-anchor="middle" fill="#1565C0" font-size="12">nos desviamos</text>
+      <rect x="315" y="95" width="105" height="120" rx="10" fill="#E3F2FD" stroke="#1565C0" stroke-width="2"/>
+      <text x="367" y="135" text-anchor="middle" font-weight="bold" fill="#0D47A1" font-size="14">3. CORRIGE</text>
+      <text x="367" y="160" text-anchor="middle" fill="#1565C0" font-size="12">Nos vuelve a</text>
+      <text x="367" y="180" text-anchor="middle" fill="#1565C0" font-size="12">poner en pie</text>
+      <rect x="440" y="95" width="105" height="120" rx="10" fill="#E3F2FD" stroke="#1565C0" stroke-width="2"/>
+      <text x="492" y="135" text-anchor="middle" font-weight="bold" fill="#0D47A1" font-size="14">4. INSTRUYE</text>
+      <text x="492" y="160" text-anchor="middle" fill="#1565C0" font-size="12">Entrena en</text>
+      <text x="492" y="180" text-anchor="middle" fill="#1565C0" font-size="12">justicia diaria</text>
+      <rect x="40" y="222" width="520" height="32" rx="8" fill="#0D47A1"/>
+      <text x="300" y="243" text-anchor="middle" font-weight="bold" fill="#FFF" font-size="14">CIMIENTO: CRISTO EL VERBO ENCARNADO (JUAN 1:1, 14)</text>
+    </svg>
+    </section>
+
+    <h2>🧭 Las 3 Preguntas Esenciales</h2>
+    
+        <details class="card-info tint-blue">
+          <summary>
+            <div class="emoji-badge">📜</div>
+            <div>
+              <span class="kicker">Pregunta 1 · ¿Qué es?</span>
+              <div class="card-title">Escritura exhalada por Dios (Theópneustos)</div>
+            </div>
+          </summary>
+          <div class="details-body">
+            <p style="margin-top:0;">La Biblia no es un libro humano con buenas ideas sobre Dios; es la revelación escrita exhalada por el aliento mismo de Dios (2 Timoteo 3:16) cuyo centro vivo es Jesucristo, el Verbo.</p>
+            <details class="bible-ref">
+              <summary>📖 Respaldo bíblico y reflexión (2 Timoteo 3:16 / Hebreos 4:12)</summary>
+              <p>La palabra griega theópneustos significa literalmente 'soplada por Dios'. Tiene autoridad suprema, es viva, eficaz y discierne las intenciones del corazón.</p>
+              <p style="margin-bottom:0;"><strong>💭 Pregunta de reflexión:</strong> ¿Tratas la Biblia como una opinión más o como la autoridad final sobre tus decisiones?</p>
+            </details>
+          </div>
+        </details>
+        <details class="card-info tint-amber">
+          <summary>
+            <div class="emoji-badge">🍞</div>
+            <div>
+              <span class="kicker">Pregunta 2 · ¿Por qué y para qué es?</span>
+              <div class="card-title">Alimento espiritual y espada contra el engaño</div>
+            </div>
+          </summary>
+          <div class="details-body">
+            <p style="margin-top:0;">Así como el cuerpo muere sin alimento, el nuevo hombre se debilita sin la Palabra. Ella renueva nuestra mente frente a las mentiras del mundo, la carne y el diablo.</p>
+            <details class="bible-ref">
+              <summary>📖 Respaldo bíblico y reflexión (Mateo 4:4 / Salmo 119:105)</summary>
+              <p>Jesús venció cada tentación en el desierto respondiendo 'Escrito está'. La Escritura es lámpara a nuestros pies y alimento diario.</p>
+              <p style="margin-bottom:0;"><strong>💭 Pregunta de reflexión:</strong> ¿Qué mentiras del entorno cultural necesitas reemplazar hoy con la verdad de la Escritura?</p>
+            </details>
+          </div>
+        </details>
+        <details class="card-info tint-green">
+          <summary>
+            <div class="emoji-badge">🛠️</div>
+            <div>
+              <span class="kicker">Pregunta 3 · ¿Cómo se hace?</span>
+              <div class="card-title">Leer, meditar y obedecer cada día</div>
+            </div>
+          </summary>
+          <div class="details-body">
+            <p style="margin-top:0;">No basta con acumular versículos en la cabeza; se logra separando un tiempo diario fijo, pidiendo luz al Espíritu Santo, meditando el pasaje y practicando una obediencia concreta.</p>
+            <details class="bible-ref">
+              <summary>📖 Respaldo bíblico y reflexión (Santiago 1:22 / Josué 1:8)</summary>
+              <p>Ser hacedores de la Palabra y no tan solamente oidores es lo que edifica nuestra vida sobre la roca firme.</p>
+              <p style="margin-bottom:0;"><strong>💭 Pregunta de reflexión:</strong> ¿Qué hora y lugar fijo separarás esta semana para leer la Biblia sin distracciones?</p>
+            </details>
+          </div>
+        </details>
+
+    <section class="card tint-purple">
+      <h2 style="margin-top:0;">🔍 Explorador Interactivo de Conceptos</h2>
+      <p style="color:var(--muted);margin-top:0;">Toca cada ficha para explorar su fundamento y aplicación:</p>
+      <div class="chips"><button class="chip active" onclick="showF(0, this)">🧭 Enseña</button><button class="chip " onclick="showF(1, this)">🪞 Redarguye</button><button class="chip " onclick="showF(2, this)">🩹 Corrige</button><button class="chip " onclick="showF(3, this)">🏋️ Instruye</button></div>
+      <div class="panel-illu" id="panel-illu"></div>
+    </section>
+
+    <section class="card tint-coral">
+      <h2 style="margin-top:0;">🛡️ Aplicación en la Vida Cristiana</h2>
+      <details class="bible-ref">
+        <summary>🆔 Identidad en Cristo y vida en el Espíritu</summary>
+        <p style="margin-bottom:0;">La Palabra nos recuerda quiénes somos en Cristo frente a los ataques del enemigo y renueva nuestra mente contra el sistema del mundo.</p>
+      </details>
+      <details class="bible-ref">
+        <summary>🤝 Comunión verdadera: compartir la vida de Cristo</summary>
+        <p style="margin-bottom:0;">Al dejar que la Palabra de Cristo more en abundancia en nosotros (Colosenses 3:16), nuestras conversaciones en familia y en la iglesia se llenan de verdad y gracia.</p>
+      </details>
+      <details class="bible-ref">
+        <summary>⛪ Servicio y unidad en el cuerpo</summary>
+        <p style="margin-bottom:0;">La Escritura equipa a cada miembro del cuerpo para exhortarse, enseñarse y edificarse mutuamente en amor bajo la dirección del Espíritu.</p>
+      </details>
+    </section>
+
+    <section class="challenge-box">
+      <h2 style="margin-top:0;margin-bottom:8px;">🎯 Síntesis y Reto Práctico Semanal</h2>
+      <p style="margin-top:0;">💡 <strong>Idea clave:</strong> La Biblia es la Palabra viva exhalada por Dios que nos enseña, redarguye, corrige e instruye para vivir como Cristo.</p>
+      <p style="margin-bottom:0;">🚀 <strong>Tu reto esta semana:</strong> Lee un capítulo diario del Evangelio de Juan durante estos 7 días y anota en una frase: ¿Qué me enseña de Cristo y qué debo obedecer hoy?</p>
+    </section>
+    
+</main>
+<script>
+function setTheme(t) {
+  document.documentElement.setAttribute('data-theme', t);
+  localStorage.setItem('discipulado_theme', t);
+  document.querySelectorAll('.btn-theme').forEach(b => {
+    b.classList.toggle('active', b.dataset.t === t);
+  });
+}
+(function(){
+  const saved = localStorage.getItem('discipulado_theme') || 'original';
+  setTheme(saved);
+})();
+
+
+    const FICHAS = [{"emoji": "🧭", "kicker": "Columna 1", "label": "Enseña", "title": "Muestra el camino recto", "desc": "Revela quién es Dios, quiénes somos en Cristo y cuál es su voluntad.", "ref": "2 Timoteo 3:16a"}, {"emoji": "🪞", "kicker": "Columna 2", "label": "Redarguye", "title": "Convence donde nos salimos de ruta", "desc": "Funciona como un espejo fiel que expone el pecado y el autoengaño.", "ref": "Santiago 1:23-25"}, {"emoji": "🩹", "kicker": "Columna 3", "label": "Corrige", "title": "Endereza lo que estaba caído", "desc": "El término griego epanórthosis significa volver a poner de pie lo que tropezó.", "ref": "2 Timoteo 3:16b"}, {"emoji": "🏋️", "kicker": "Columna 4", "label": "Instruye", "title": "Entrena para vivir en justicia", "desc": "Disciplina y capacita al creyente para toda buena obra en lo cotidiano.", "ref": "2 Timoteo 3:17"}];
+    function showF(idx, btn) {
+      document.querySelectorAll('.chip').forEach(c => c.classList.remove('active'));
+      if(btn) btn.classList.add('active');
+      const f = FICHAS[idx];
+      document.getElementById('panel-illu').innerHTML = `
+        <div style="display:flex;align-items:center;gap:14px;margin-bottom:10px;">
+          <div class="emoji-badge">${f.emoji}</div>
+          <div>
+            <span class="kicker">${f.kicker}</span>
+            <strong style="font-family:Georgia,serif;font-size:21px;">${f.title}</strong>
+          </div>
+        </div>
+        <p style="margin:8px 0;">${f.desc}</p>
+        <div style="font-weight:700;color:var(--primary);font-size:17px;">📖 Cita guía: ${f.ref}</div>
+      `;
+    }
+    showF(0, document.querySelector('.chip'));
+    </script>
+</body>
+</html>
