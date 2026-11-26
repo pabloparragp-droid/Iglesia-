@@ -1,4 +1,4 @@
-<!DOCTYPE html><html lang="es"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"><title>Mi iglesia</title><link rel="manifest" href="manifest.webmanifest"><meta name="theme-color" content="#1565C0"><link rel="icon" href="icon-192.png"><link rel="apple-touch-icon" href="icon-192.png"><style>
+<!DOCTYPE html><html lang="es"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"><title>ICCVGD</title><link rel="manifest" href="manifest.webmanifest"><meta name="theme-color" content="#1565C0"><link rel="icon" href="icon-192.png"><link rel="apple-touch-icon" href="icon-192.png"><style>
 :root{--bg:#EEF4FC;--card:#fff;--ink:#1F2430;--mute:#59606E;--b:#1565C0;--g:#2F9E5B;--o:#E07B12;--line:#D6DDE8;--soft:#E3EDFA;--acc:#1565C0;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
 @media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#14171C;--card:#1D222A;--ink:#EAEFF7;--mute:#A3ADBD;--line:#2E3642;--soft:#252C36;--acc:#7DB2F0;--sh:0 4px 16px rgba(0,0,0,.35)}}
 :root[data-theme="dark"]{--bg:#14171C;--card:#1D222A;--ink:#EAEFF7;--mute:#A3ADBD;--line:#2E3642;--soft:#252C36;--acc:#7DB2F0;--sh:0 4px 16px rgba(0,0,0,.35)}
@@ -449,7 +449,7 @@ function exportBirthdaysICS(){
   var list=P.filter(function(p){var b=String(p.birthday||p.birth_date||"");return b.length>=10});
   if(!list.length){toast("No hay personas con fecha de cumpleaños registrada");return}
   var yr=today().slice(0,4),nowStamp=new Date().toISOString().replace(/[-:]/g,"").slice(0,15)+"Z";
-  var lines=["BEGIN:VCALENDAR","VERSION:2.0","PRODID:-//Iglesia ICCVGD//Mi Iglesia//ES","CALSCALE:GREGORIAN","METHOD:PUBLISH","X-WR-CALNAME:Cumpleaños Iglesia ICCVGD"];
+  var lines=["BEGIN:VCALENDAR","VERSION:2.0","PRODID:-//Iglesia ICCVGD//ICCVGD//ES","CALSCALE:GREGORIAN","METHOD:PUBLISH","X-WR-CALNAME:Cumpleaños Iglesia ICCVGD"];
   list.forEach(function(p){
     var b=String(p.birthday||p.birth_date);
     var md=b.slice(5,7)+b.slice(8,10);
@@ -621,7 +621,7 @@ function renderHeader(){
   var fechaHoy=new Date().toLocaleDateString("es-CO",{weekday:"long",day:"numeric",month:"long"});
   fechaHoy=fechaHoy.charAt(0).toUpperCase()+fechaHoy.slice(1);
   var saludo=ME&&ME.name?"Hola, "+esc(ME.name.split(" ")[0]):"Iglesia ICCVGD";
-  var h='<div class="hdr-top"><div class="hdr-brand"><img class="hdr-logo" src="icon-192.png" alt="Logo" onerror="this.style.display=\'none\'"><div><h1>Mi iglesia</h1><p>'+saludo+' · '+fechaHoy+'</p></div></div><button class="theme-btn" onclick="toggleTheme()" aria-label="Cambiar tema">'+tIcon+'</button></div>';
+  var h='<div class="hdr-top"><div class="hdr-brand"><div><h1>ICCVGD</h1><p>'+saludo+' · '+fechaHoy+'</p></div></div><button class="theme-btn" onclick="toggleTheme()" aria-label="Cambiar tema">'+tIcon+'</button></div>';
   if(ME){
     var rolesLbl=myRoles().map(function(r){
       var base=(ROLE_META[r]&&ROLE_META[r].lbl)||r;
@@ -633,7 +633,7 @@ function renderHeader(){
   $("hdr").innerHTML=h;
 }
 
-function authv(){return'<div class="card"><img class="hero-transp-logo" src="icon-192.png" alt="Logo Mi iglesia" onerror="this.style.display=\'none\'"><h3>🔐 Entrar</h3><label>Correo</label><input id="em" type="email" autocomplete="username"><label>Contraseña (mínimo 6 caracteres)</label><input id="pw" type="password" autocomplete="current-password"><label>Tu nombre (solo al crear cuenta)</label><input id="nm"><button class="btn" onclick="auth(0)">Entrar</button><button class="btn alt" onclick="auth(1)">Crear cuenta</button><button class="btn alt" onclick="forgot()">Olvidé mi contraseña</button><p class="note">La primera cuenta creada es la del pastor. Las demás reciben su rol y célula desde Equipo.</p></div>'}
+function authv(){return'<div class="card"><h3>🔐 Entrar</h3><label>Correo</label><input id="em" type="email" autocomplete="username"><label>Contraseña (mínimo 6 caracteres)</label><input id="pw" type="password" autocomplete="current-password"><label>Tu nombre (solo al crear cuenta)</label><input id="nm"><button class="btn" onclick="auth(0)">Entrar</button><button class="btn alt" onclick="auth(1)">Crear cuenta</button><button class="btn alt" onclick="forgot()">Olvidé mi contraseña</button><p class="note">La primera cuenta creada es la del pastor. Las demás reciben su rol y célula desde Equipo.</p></div>'}
 async function auth(n){
   if(!SB){showFatalError("Autenticación","Supabase no está inicializado.");return}
   var e=$("em").value.trim(),p=$("pw").value,r;
