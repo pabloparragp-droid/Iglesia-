@@ -2850,8 +2850,11 @@ function saveLocalLessonDone(id){
   if(arr.indexOf(id)<0){arr.push(id);lset(k,arr);}
 }
 function canOpenLesson(idx,list){
-  // Nadie (ningún rol) puede ver las siguientes lecciones hasta aprobar el autoexamen empezando por Base Previa 1
   if(idx===0)return true;
+  var unlocked = getUnlockedLessonsStore();
+  var curLesson = list[idx];
+  if(curLesson && (unlocked["step_" + curLesson.step] || unlocked[normalizeExamLessonKey(curLesson.title)])) return true;
+  if(unlocked["N1P1"] && curLesson && curLesson.step <= 1) return true;
   return isLessonDone(list[idx-1].id);
 }
 function renderLessonReader(l,list){
@@ -3392,6 +3395,192 @@ function draw(){
   var q=$("q");if(q)q.oninput=function(){S.q=q.value;var p=q.selectionStart;draw();var n=$("q");if(n){n.focus();n.setSelectionRange(p,p)}}
   var aq=$("aq");if(aq)aq.oninput=function(){S.aq=aq.value;var p=aq.selectionStart;draw();var n=$("aq");if(n){n.focus();n.setSelectionRange(p,p)}}
 }
+
+// ===== RECEPTOR postMessage + RESPALDO localStorage PARA AUTOEXÁMENES (Ex/N1P1_Autoexamen.html) =====
+var EXAM_NEXT_MAP = {
+  "N1P1": { nextStep: 1, nextTitle: "Lección 1", badgeFallback: "🏅 Insignia de Identidad · N1P1" },
+  "N1P1_Autoexamen": { nextStep: 1, nextTitle: "Lección 1", badgeFallback: "🏅 Insignia de Identidad · N1P1" },
+  "Ex/N1P1_Autoexamen.html": { nextStep: 1, nextTitle: "Lección 1", badgeFallback: "🏅 Insignia de Identidad · N1P1" }
+};
+
+function normalizeExamLessonKey(rawId) {
+  var s = String(rawId || "").trim();
+  if (!s) return "";
+  var clean = s.split("?")[0].split("#")[0];
+  var base = clean.split("/").pop().replace(/\.html?$/i, "").replace(/_Autoexamen$/i, "");
+  return base.toUpperCase();
+}
+
+function resolveNextLessonForExam(rawId) {
+  var s = String(rawId || "").trim();
+  if (EXAM_NEXT_MAP[s]) return EXAM_NEXT_MAP[s];
+  var norm = normalizeExamLessonKey(s);
+  if (EXAM_NEXT_MAP[norm]) return EXAM_NEXT_MAP[norm];
+  var m = norm.match(/^N(\d+)P(\d+)$/i);
+  if (m) {
+    var lv = parseInt(m[1], 10);
+    var st = parseInt(m[2], 10);
+    return {
+      nextStep: st + 1,
+      nextTitle: "Nivel " + lv + " · Paso " + (st + 1),
+      badgeFallback: "🏅 Insignia de Identidad · " + norm
+    };
+  }
+  return { nextStep: 1, nextTitle: "Siguiente lección", badgeFallback: "🏅 Insignia de Identidad" };
+}
+
+function getExamGradesStore() {
+  return lget("exam_grades", {});
+}
+
+function getExamBadgesStore() {
+  return lget("exam_badges", {});
+}
+
+function getUnlockedLessonsStore() {
+  return lget("unlocked_lessons", {});
+}
+
+function persistExamApproval(payload) {
+  if (!payload || typeof payload !== "object") return false;
+  var rawLessonId = payload.lessonId || payload.lesson_id || "N1P1";
+  var normKey = normalizeExamLessonKey(rawLessonId) || String(rawLessonId);
+  var nota = Number(payload.nota != null ? payload.nota : (payload.score != null ? payload.score : 0));
+  var aprobado = payload.aprobado === true || (payload.aprobado === undefined && nota >= 70);
+  if (!aprobado) return false;
+
+  var cfg = resolveNextLessonForExam(rawLessonId);
+  var userScope = (U && U.id) ? U.id : "local";
+
+  // 1. Guardar nota en localStorage (y respaldo por usuario)
+  var gradeEntry = {
+    lessonId: rawLessonId,
+    normKey: normKey,
+    nota: nota,
+    aprobado: true,
+    medalla: payload.medalla || (nota >= 95 ? "Diamante" : (nota >= 85 ? "Oro" : (nota >= 75 ? "Plata" : "Bronce"))),
+    intentos: payload.intentos || 1,
+    stats: payload.stats || null,
+    updatedAt: new Date().toISOString()
+  };
+  var grades = getExamGradesStore();
+  grades[rawLessonId] = gradeEntry;
+  grades[normKey] = gradeEntry;
+  lset("exam_grades", grades);
+  lset("exam_grades_" + userScope + "_" + normKey, gradeEntry);
+
+  // 2. Registrar insignia de identidad (con nivel y estrella si aplica)
+  var badgeBase = payload.insigniaIdentidad || payload.badge || cfg.badgeFallback;
+  var badgeLevel = payload.nivelIdentidad || payload.badgeLevel || 1;
+  var hasStar = !!(payload.insigniaEstrella || payload.hasStar);
+  var badgeRecord = {
+    lessonId: rawLessonId,
+    normKey: normKey,
+    insignia: badgeBase,
+    nivel: badgeLevel,
+    estrella: hasStar,
+    nota: nota,
+    updatedAt: new Date().toISOString()
+  };
+  var badges = getExamBadgesStore();
+  badges[normKey] = badgeRecord;
+  badges[rawLessonId] = badgeRecord;
+  lset("exam_badges", badges);
+
+  // También reflejar la insignia en la ficha/perfil local del discípulo si coincide
+  try {
+    var badgeFormatted = (hasStar ? "⭐ " : "🏅 ") + badgeBase + " (Nv." + badgeLevel + ")";
+    var myRec = P.filter(function(p) {
+      return ME && ME.name && p.name && p.name.trim().toLowerCase() === ME.name.trim().toLowerCase();
+    })[0];
+    if (myRec) {
+      var dBadgesMap = lget("disciple_badges", {});
+      var curList = Array.isArray(dBadgesMap[myRec.id]) ? dBadgesMap[myRec.id].slice() : [];
+      if (curList.indexOf(badgeFormatted) < 0) {
+        curList.push(badgeFormatted);
+        dBadgesMap[myRec.id] = curList;
+        lset("disciple_badges", dBadgesMap);
+      }
+    }
+  } catch (e) {}
+
+  // 3. Desbloquear automáticamente la siguiente lección y marcar N1P1 / Base Previa 1 como aprobada
+  var unlocked = getUnlockedLessonsStore();
+  unlocked[normKey] = {
+    unlockedNext: true,
+    nextStep: cfg.nextStep,
+    nextTitle: cfg.nextTitle,
+    sourceLessonId: rawLessonId,
+    unlockedAt: new Date().toISOString()
+  };
+  unlocked["step_" + cfg.nextStep] = true;
+  lset("unlocked_lessons", unlocked);
+
+  // Marcar como completada en la ruta local de discipulado (Base Previa 1 / step 0 y lección coincidente)
+  try {
+    var matchedLessons = DL.filter(function(l) {
+      return l.level === 1 && (l.step === 0 || l.step === cfg.nextStep || (l.title && l.title.toUpperCase().indexOf(normKey) > -1));
+    });
+    matchedLessons.forEach(function(l) { saveLocalLessonDone(l.id); });
+    if (normKey === "N1P1") {
+      saveLocalLessonDone(-101);
+      var step1Lesson = DL.filter(function(l) { return l.level === 1 && l.step === 1 && !l.is_final; })[0];
+      if (step1Lesson) {
+        saveLocalLessonDone(step1Lesson.id);
+        S.dl_open = step1Lesson.id;
+      }
+    }
+  } catch (e) {}
+
+  // Sincronizar con Supabase si hay sesión activa y tablas disponibles
+  if (SB && U) {
+    try {
+      var targetLesson = DL.filter(function(l) {
+        return l.level === 1 && (l.step === 0 || (l.title && l.title.toUpperCase().indexOf(normKey) > -1));
+      })[0];
+      if (targetLesson && targetLesson.id > 0) {
+        SB.from("disciple_progress").upsert({
+          user_id: U.id,
+          lesson_id: targetLesson.id,
+          level: targetLesson.level,
+          step: targetLesson.step,
+          is_final: !!targetLesson.is_final,
+          score: nota,
+          badge: badgeBase
+        }, { onConflict: "user_id,lesson_id" }).then(function() {});
+      }
+      if (typeof SB.rpc === "function") {
+        SB.rpc("sync_disciple_level_progress", {
+          p_level: 1,
+          p_next_step: cfg.nextStep,
+          p_graduated: false
+        }).then(function() {}, function() {});
+      }
+    } catch (e) {}
+  }
+
+  return true;
+}
+
+window.addEventListener("message", function(event) {
+  if (!event || !event.data || typeof event.data !== "object") return;
+  var data = event.data;
+  var isExamMsg = data.type === "EXAM_COMPLETED" || data.type === "AUTOEXAMEN_APROBADO" || data.type === "EXAM_PASSED";
+  if (!isExamMsg) return;
+
+  var nota = Number(data.nota != null ? data.nota : (data.score != null ? data.score : 0));
+  var aprobado = data.aprobado === true || (data.aprobado === undefined && nota >= 70);
+  if (!aprobado) return;
+
+  var rawId = data.lessonId || data.lesson_id || "Ex/N1P1_Autoexamen.html";
+  var cfg = resolveNextLessonForExam(rawId);
+  var ok = persistExamApproval(data);
+  if (ok) {
+    toast("🎉 ¡Aprobado (" + nota + "%)! Nota e insignia guardadas · " + cfg.nextTitle + " desbloqueada");
+    if (typeof draw === "function") draw();
+  }
+});
+
 if(location.hash.indexOf("type=recovery")>-1)S.rec=true;
 if(SB&&SB.auth&&SB.auth.onAuthStateChange){SB.auth.onAuthStateChange(function(ev){if(ev==="PASSWORD_RECOVERY"){S.rec=true;draw()}});}
 if("serviceWorker" in navigator)navigator.serviceWorker.register("sw.js").catch(function(){});
