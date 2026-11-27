@@ -1,4 +1,4 @@
-<!DOCTYPE html><html lang="es"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"><title>ICCVGD</title><link rel="manifest" href="manifest.webmanifest"><meta name="theme-color" content="#1565C0"><link rel="icon" href="icon-192.png"><link rel="apple-touch-icon" href="icon-192.png"><style>
+<!DOCTYPE html><html lang="es"><head><meta charset="utf-8"><meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate"><meta http-equiv="Pragma" content="no-cache"><meta http-equiv="Expires" content="0"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"><title>ICCVGD</title><link rel="manifest" href="manifest.webmanifest"><meta name="theme-color" content="#1565C0"><link rel="icon" href="icon-192.png"><link rel="apple-touch-icon" href="icon-192.png"><style>
 :root{--bg:#EEF4FC;--card:#fff;--ink:#1F2430;--mute:#59606E;--b:#1565C0;--g:#2F9E5B;--o:#E07B12;--line:#D6DDE8;--soft:#E3EDFA;--acc:#1565C0;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
 @media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#14171C;--card:#1D222A;--ink:#EAEFF7;--mute:#A3ADBD;--line:#2E3642;--soft:#252C36;--acc:#7DB2F0;--sh:0 4px 16px rgba(0,0,0,.35)}}
 :root[data-theme="dark"]{--bg:#14171C;--card:#1D222A;--ink:#EAEFF7;--mute:#A3ADBD;--line:#2E3642;--soft:#252C36;--acc:#7DB2F0;--sh:0 4px 16px rgba(0,0,0,.35)}
@@ -13,7 +13,7 @@ header{padding:14px 0 8px}
 .hdr-brand{display:flex;align-items:center;gap:12px;min-width:0}
 .hdr-brand h1{font-size:26px;color:var(--acc);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .hdr-brand p{margin:2px 0 0;color:var(--mute);font-size:17px}
-.theme-btn{border:1.5px solid var(--line);background:var(--soft);color:var(--ink);border-radius:999px;padding:9px 15px;font:700 16px system-ui,sans-serif;cursor:pointer;flex:none;transition:transform .15s}
+.hdr-actions{display:flex;align-items:center;gap:6px;flex:none}.theme-btn{border:1.5px solid var(--line);background:var(--soft);color:var(--ink);border-radius:999px;padding:8px 12px;font:700 15px system-ui,sans-serif;cursor:pointer;flex:none;transition:transform .15s}.upd-btn{border:1.5px solid var(--b);background:var(--b);color:#fff;border-radius:999px;padding:8px 12px;font:700 15px system-ui,sans-serif;cursor:pointer;flex:none;transition:transform .15s}.upd-btn:active{transform:scale(.95)}
 .theme-btn:active{transform:scale(.95)}
 select,input,textarea{font:20px/1.45 system-ui,sans-serif;color:var(--ink);background:var(--card);border:1.5px solid var(--line);border-radius:12px;padding:12px 14px;width:100%}
 .nav{position:fixed;left:0;right:0;bottom:0;background:var(--card);border-top:2px solid var(--line);display:flex;justify-content:space-around;gap:4px;padding:7px 6px calc(8px + env(safe-area-inset-bottom,0px));z-index:10;box-shadow:0 -6px 20px rgba(0,0,0,.1)}
@@ -621,7 +621,7 @@ function renderHeader(){
   var fechaHoy=new Date().toLocaleDateString("es-CO",{weekday:"long",day:"numeric",month:"long"});
   fechaHoy=fechaHoy.charAt(0).toUpperCase()+fechaHoy.slice(1);
   var saludo=ME&&ME.name?"Hola, "+esc(ME.name.split(" ")[0]):"Iglesia ICCVGD";
-  var h='<div class="hdr-top"><div class="hdr-brand"><div><h1>ICCVGD</h1><p>'+saludo+' · '+fechaHoy+'</p></div></div><button class="theme-btn" onclick="toggleTheme()" aria-label="Cambiar tema">'+tIcon+'</button></div>';
+  var h='<div class="hdr-top"><div class="hdr-brand"><div><h1>ICCVGD</h1><p>'+saludo+' · '+fechaHoy+'</p></div></div><div class="hdr-actions"><button id="btn_upd_app" class="upd-btn" onclick="forceAppUpdate()" aria-label="Actualizar aplicación">🔄 Actualizar</button><button class="theme-btn" onclick="toggleTheme()" aria-label="Cambiar tema">'+tIcon+'</button></div></div>';
   if(ME){
     var rolesLbl=myRoles().map(function(r){
       var base=(ROLE_META[r]&&ROLE_META[r].lbl)||r;
@@ -3586,6 +3586,111 @@ window.addEventListener("message", function(event) {
 
 if(location.hash.indexOf("type=recovery")>-1)S.rec=true;
 if(SB&&SB.auth&&SB.auth.onAuthStateChange){SB.auth.onAuthStateChange(function(ev){if(ev==="PASSWORD_RECOVERY"){S.rec=true;draw()}});}
-if("serviceWorker" in navigator)navigator.serviceWorker.register("sw.js").catch(function(){});
+var APP_VERSION = "2026.11.27.1";
+var _swReloading = false;
+
+(function cleanUpdQuery(){
+  try{
+    if(location.search && location.search.indexOf("upd=")>-1){
+      history.replaceState(null,"",location.pathname+location.hash);
+    }
+  }catch(e){}
+})();
+
+async function clearAppCaches(){
+  try{
+    if("caches" in window){
+      var keys = await caches.keys();
+      await Promise.all(keys.map(function(k){ return caches.delete(k); }));
+    }
+  }catch(e){}
+}
+
+async function forceAppUpdate(){
+  var btn = $("btn_upd_app");
+  if(btn){ btn.disabled = true; btn.textContent = "⏳ Actualizando..."; }
+  toast("🔄 Buscando la versión más reciente...");
+  try{
+    await clearAppCaches();
+    if("serviceWorker" in navigator){
+      var regs = await navigator.serviceWorker.getRegistrations();
+      for(var i=0;i<regs.length;i++){
+        try{
+          await regs[i].update();
+          if(regs[i].waiting) regs[i].waiting.postMessage({type:"SKIP_WAITING"});
+          await regs[i].unregister();
+        }catch(e){}
+      }
+    }
+  }catch(e){}
+  setTimeout(function(){
+    window.location.replace(location.pathname + "?upd=" + Date.now() + location.hash);
+  }, 450);
+}
+
+async function checkRemoteVersion(silent){
+  try{
+    var res = await fetch(location.pathname + "?nocache=" + Date.now(), {
+      cache: "no-store",
+      headers: { "Cache-Control": "no-cache" }
+    });
+    if(!res || !res.ok) return;
+    var txt = await res.text();
+    var m = txt.match(/var\s+APP_VERSION\s*=\s*"([^"]+)"/);
+    if(m && m[1] && m[1] !== APP_VERSION){
+      var appliedKey = "iccvgd_applied_v_" + m[1];
+      if(sessionStorage.getItem(appliedKey)) return;
+      sessionStorage.setItem(appliedKey, "1");
+      toast("✨ Nueva versión disponible (" + m[1] + "). Actualizando...");
+      await clearAppCaches();
+      setTimeout(function(){
+        window.location.replace(location.pathname + "?upd=" + Date.now() + location.hash);
+      }, 900);
+    }
+  }catch(e){}
+}
+
+function setupAutoUpdate(){
+  if("serviceWorker" in navigator){
+    navigator.serviceWorker.addEventListener("controllerchange", function(){
+      if(_swReloading) return;
+      _swReloading = true;
+      toast("✨ Aplicación actualizada");
+      setTimeout(function(){ window.location.reload(); }, 350);
+    });
+
+    navigator.serviceWorker.register("sw.js?v=" + APP_VERSION, { updateViaCache: "none" })
+      .then(function(reg){
+        if(reg.waiting){
+          reg.waiting.postMessage({ type: "SKIP_WAITING" });
+        }
+        reg.addEventListener("updatefound", function(){
+          var nw = reg.installing;
+          if(!nw) return;
+          nw.addEventListener("statechange", function(){
+            if(nw.state === "installed" && navigator.serviceWorker.controller){
+              nw.postMessage({ type: "SKIP_WAITING" });
+            }
+          });
+        });
+        setInterval(function(){ reg.update().catch(function(){}); }, 60000);
+        document.addEventListener("visibilitychange", function(){
+          if(document.visibilityState === "visible"){
+            reg.update().catch(function(){});
+            checkRemoteVersion(true);
+          }
+        });
+      })
+      .catch(function(){});
+  }else{
+    document.addEventListener("visibilitychange", function(){
+      if(document.visibilityState === "visible") checkRemoteVersion(true);
+    });
+  }
+  setTimeout(function(){ checkRemoteVersion(true); }, 3500);
+  setInterval(function(){ checkRemoteVersion(true); }, 90000);
+}
+
+setupAutoUpdate();
 boot();
 </script></body></html>
