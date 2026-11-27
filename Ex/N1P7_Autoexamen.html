@@ -1,0 +1,1086 @@
+<!DOCTYPE html>
+<html lang="es" data-theme="original">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>Evaluación Estadística ICCVGD — Ofrenda y Diezmo</title>
+<style>
+:root {
+  --bg: #F4F6F9;
+  --card: #FFFFFF;
+  --text: #1A202C;
+  --muted: #4A5568;
+  --border: #DCE3EC;
+  --primary: #C2185B;
+  --accent: #880E4F;
+  --primary-soft: #FFF5F7;
+  --success: #2E7D32;
+  --success-soft: #E8F5E9;
+  --danger: #C62828;
+  --danger-soft: #FFEBEE;
+  --warn: #B45309;
+  --warn-soft: #FEF3C7;
+  --shadow: 0 6px 20px rgba(16, 24, 40, 0.07);
+}
+[data-theme="pastel"] {
+  --bg: #EBF3FA;
+  --card: #F9FCFF;
+  --text: #1E293B;
+  --muted: #475569;
+  --border: #B6D0EB;
+}
+[data-theme="oscuro"], [data-theme="dark"] {
+  --bg: #0F172A;
+  --card: #1E293B;
+  --text: #F1F5F9;
+  --muted: #94A3B8;
+  --border: #334155;
+  --primary-soft: #1E3A5F;
+  --success-soft: #143622;
+  --danger-soft: #3F181D;
+  --warn-soft: #3B2810;
+  --shadow: 0 6px 24px rgba(0,0,0,0.38);
+}
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  font-size: 19px;
+  line-height: 1.6;
+  padding: env(safe-area-inset-top) env(safe-area-inset-right) calc(44px + env(safe-area-inset-bottom)) env(safe-area-inset-left);
+  transition: background 0.25s, color 0.25s;
+}
+.topbar {
+  position: sticky;
+  top: 0;
+  z-index: 60;
+  background: var(--card);
+  border-bottom: 2px solid var(--border);
+  padding: 10px 14px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+.brand-group {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+.inst-tag {
+  background: var(--primary);
+  color: #FFFFFF;
+  font-weight: 800;
+  font-size: 14px;
+  padding: 4px 11px;
+  border-radius: 999px;
+  letter-spacing: 0.3px;
+}
+.step-tag {
+  font-weight: 700;
+  font-size: 15px;
+  color: var(--primary);
+}
+[data-theme="oscuro"] .step-tag, [data-theme="dark"] .step-tag {
+  color: #93C5FD;
+}
+.theme-controls {
+  display: flex;
+  gap: 5px;
+}
+.btn-theme {
+  border: 1.5px solid var(--border);
+  background: var(--bg);
+  color: var(--text);
+  border-radius: 999px;
+  padding: 5px 11px;
+  font-size: 14px;
+  font-weight: 700;
+  cursor: pointer;
+}
+.btn-theme.active {
+  background: var(--primary);
+  color: #FFFFFF;
+  border-color: var(--primary);
+}
+.container {
+  max-width: 720px;
+  margin: 0 auto;
+  padding: 18px 15px;
+}
+.hero-banner {
+  background: linear-gradient(135deg, var(--primary), var(--accent));
+  color: #FFFFFF;
+  border-radius: 20px;
+  padding: 24px 20px;
+  margin-bottom: 18px;
+  box-shadow: var(--shadow);
+}
+.hero-inst {
+  display: inline-block;
+  background: rgba(255,255,255,0.2);
+  border: 1px solid rgba(255,255,255,0.35);
+  padding: 4px 13px;
+  border-radius: 999px;
+  font-size: 14.5px;
+  font-weight: 800;
+  letter-spacing: 0.4px;
+  margin-bottom: 10px;
+}
+h1 {
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: 27px;
+  line-height: 1.25;
+  margin: 0 0 8px 0;
+}
+h2 {
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: 22px;
+  line-height: 1.3;
+  margin: 0 0 12px 0;
+  color: var(--primary);
+}
+[data-theme="oscuro"] h2, [data-theme="dark"] h2 {
+  color: #93C5FD;
+}
+.card {
+  background: var(--card);
+  border: 1.5px solid var(--border);
+  border-radius: 18px;
+  padding: 20px;
+  margin-bottom: 18px;
+  box-shadow: var(--shadow);
+}
+.rules-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 10px;
+  margin: 14px 0;
+}
+.rule-pill {
+  background: var(--primary-soft);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 11px 12px;
+  font-size: 16px;
+}
+.rule-pill strong {
+  display: block;
+  color: var(--primary);
+  font-size: 15px;
+}
+[data-theme="oscuro"] .rule-pill strong, [data-theme="dark"] .rule-pill strong {
+  color: #93C5FD;
+}
+.alert-box {
+  border-radius: 14px;
+  padding: 15px 16px;
+  margin: 14px 0;
+  border-left: 5px solid var(--warn);
+  background: var(--warn-soft);
+  font-size: 17.5px;
+}
+.alert-danger {
+  border-left-color: var(--danger);
+  background: var(--danger-soft);
+}
+.alert-success {
+  border-left-color: var(--success);
+  background: var(--success-soft);
+}
+.btn-primary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  width: 100%;
+  background: var(--primary);
+  color: #FFFFFF;
+  border: none;
+  border-radius: 14px;
+  padding: 15px 20px;
+  font-size: 19px;
+  font-weight: 800;
+  cursor: pointer;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.14);
+  transition: opacity 0.2s, transform 0.1s;
+}
+.btn-primary:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+.btn-primary:not(:disabled):active {
+  transform: scale(0.99);
+}
+.progress-bar-wrap {
+  background: var(--card);
+  border: 1.5px solid var(--border);
+  border-radius: 16px;
+  padding: 14px 16px;
+  margin-bottom: 18px;
+  position: sticky;
+  top: 54px;
+  z-index: 45;
+  box-shadow: var(--shadow);
+}
+.progress-top {
+  display: flex;
+  justify-content: space-between;
+  font-size: 15.5px;
+  font-weight: 700;
+  margin-bottom: 7px;
+}
+.progress-track {
+  width: 100%;
+  height: 11px;
+  background: var(--bg);
+  border-radius: 999px;
+  overflow: hidden;
+  border: 1px solid var(--border);
+}
+.progress-fill {
+  height: 100%;
+  width: 0%;
+  background: linear-gradient(90deg, var(--primary), var(--success));
+  transition: width 0.3s ease;
+}
+.q-card {
+  background: var(--card);
+  border: 1.5px solid var(--border);
+  border-radius: 18px;
+  padding: 20px;
+  margin-bottom: 18px;
+  box-shadow: var(--shadow);
+}
+.q-card.answered {
+  border-color: var(--primary);
+}
+.q-meta {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 10px;
+}
+.q-num {
+  font-weight: 800;
+  font-size: 15.5px;
+  color: var(--muted);
+}
+.dim-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 12px;
+  border-radius: 999px;
+  font-size: 14.5px;
+  font-weight: 800;
+}
+.dim-libro_abierto { background: #E3F2FD; color: #0D47A1; }
+.dim-escudo { background: #EDE7F6; color: #4527A0; }
+.dim-fuego { background: #FFF3E0; color: #E65100; }
+.dim-corona { background: #FCE4EC; color: #880E4F; }
+.q-prompt {
+  font-size: 19.5px;
+  font-weight: 700;
+  margin: 0 0 14px 0;
+}
+.lock-step {
+  background: var(--bg);
+  border: 1.5px solid var(--border);
+  border-radius: 14px;
+  padding: 14px;
+  margin-top: 12px;
+}
+.lock-label {
+  display: inline-block;
+  background: var(--primary);
+  color: #FFF;
+  font-size: 13.5px;
+  font-weight: 800;
+  padding: 3px 10px;
+  border-radius: 999px;
+  margin-bottom: 8px;
+}
+.opt-btn {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  width: 100%;
+  text-align: left;
+  background: var(--bg);
+  color: var(--text);
+  border: 1.5px solid var(--border);
+  border-radius: 12px;
+  padding: 13px 15px;
+  font-size: 18px;
+  line-height: 1.45;
+  margin-top: 9px;
+  cursor: pointer;
+  transition: border-color 0.15s, background 0.15s;
+}
+.lock-step .opt-btn {
+  background: var(--card);
+}
+.opt-btn:hover {
+  border-color: var(--primary);
+}
+.opt-btn.selected {
+  background: var(--primary-soft);
+  border-color: var(--primary);
+  border-width: 2.5px;
+  font-weight: 700;
+}
+.opt-letter {
+  min-width: 28px;
+  height: 28px;
+  border-radius: 8px;
+  background: var(--card);
+  border: 1.5px solid var(--border);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 800;
+  font-size: 15px;
+  flex-shrink: 0;
+}
+.opt-btn.selected .opt-letter {
+  background: var(--primary);
+  color: #FFF;
+  border-color: var(--primary);
+}
+.score-hero {
+  text-align: center;
+  padding: 22px 16px;
+  border-radius: 18px;
+  background: var(--primary-soft);
+  border: 2px solid var(--primary);
+  margin-bottom: 18px;
+}
+.score-big {
+  font-family: Georgia, serif;
+  font-size: 48px;
+  font-weight: 800;
+  color: var(--primary);
+  line-height: 1.1;
+}
+[data-theme="oscuro"] .score-big, [data-theme="dark"] .score-big {
+  color: #93C5FD;
+}
+.medal-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 18px;
+  border-radius: 999px;
+  font-size: 19px;
+  font-weight: 800;
+  margin-top: 10px;
+  background: var(--card);
+  border: 2px solid var(--primary);
+}
+.bar-row {
+  margin-bottom: 14px;
+}
+.bar-header {
+  display: flex;
+  justify-content: space-between;
+  font-weight: 700;
+  font-size: 17px;
+  margin-bottom: 5px;
+}
+.bar-track {
+  width: 100%;
+  height: 20px;
+  background: var(--bg);
+  border-radius: 999px;
+  overflow: hidden;
+  border: 1.5px solid var(--border);
+}
+.bar-fill {
+  height: 100%;
+  border-radius: 999px;
+  transition: width 0.6s ease;
+}
+.identity-box {
+  border: 2px solid var(--primary);
+  background: var(--primary-soft);
+  border-radius: 16px;
+  padding: 18px;
+  margin-top: 14px;
+}
+.reinforce-box {
+  border: 2px solid var(--warn);
+  background: var(--warn-soft);
+  border-radius: 16px;
+  padding: 16px;
+  margin-top: 14px;
+}
+.fb-item {
+  border: 1.5px solid var(--danger);
+  background: var(--danger-soft);
+  border-radius: 14px;
+  padding: 15px;
+  margin-bottom: 12px;
+}
+.hidden { display: none !important; }
+</style>
+</head>
+<body>
+<header class="topbar">
+  <div class="brand-group">
+    <span class="inst-tag">Evaluación Estadística ICCVGD</span>
+    <span class="step-tag">Nivel 1 · Paso 7</span>
+  </div>
+  <div class="theme-controls">
+    <button class="btn-theme active" data-t="original" onclick="setTheme('original')">Original</button>
+    <button class="btn-theme" data-t="pastel" onclick="setTheme('pastel')">Pastel</button>
+    <button class="btn-theme" data-t="oscuro" onclick="setTheme('oscuro')">Oscuro</button>
+  </div>
+</header>
+
+<main class="container">
+  <section class="hero-banner">
+    <div class="hero-inst">📊 Evaluación Estadística ICCVGD</div>
+    <h1>🌱 Autoexamen Exigente: Ofrenda y Diezmo</h1>
+    <p style="margin:0;opacity:0.95;">Diagnóstico riguroso de comprensión bíblica, discernimiento doctrinal, aplicación práctica y criterio integral.</p>
+  </section>
+
+  <!-- PANTALLA DE INICIO -->
+  <section id="view-intro" class="card">
+    <h2 style="margin-top:0;">🧭 Protocolo de Evaluación</h2>
+    <p style="margin-top:0;">Este instrumento evalúa dominio profundo en <strong>12 reactivos de alta exigencia</strong> distribuidos en 4 dimensiones:</p>
+    <div class="rules-grid">
+      <div class="rule-pill"><strong>📖 Libro Abierto (3)</strong>Lectura textual y fundamento</div>
+      <div class="rule-pill"><strong>🛡️ Escudo (3)</strong>Discernimiento y detector de error</div>
+      <div class="rule-pill"><strong>🔥 Fuego (3)</strong>Fe en acción y dilemas reales</div>
+      <div class="rule-pill"><strong>👑 Corona (3)</strong>Doble Candado: Qué y Por qué</div>
+    </div>
+    <div class="rules-grid">
+      <div class="rule-pill"><strong>🎯 Mínimo Aprobatorio</strong>70% requerido</div>
+      <div class="rule-pill"><strong>📉 Techo por Intento</strong>1.º: 100% · 2.º: 85% · 3.º: 75% · 4.º+: 70%</div>
+    </div>
+
+    <div id="intro-status-box"></div>
+    <div id="cooldown-box" class="alert-box hidden"></div>
+
+    <button id="btn-start" class="btn-primary" onclick="startExam()">Comenzar Evaluación</button>
+  </section>
+
+  <!-- PANTALLA DEL EXAMEN -->
+  <section id="view-exam" class="hidden">
+    <div class="progress-bar-wrap">
+      <div class="progress-top">
+        <span id="attempt-indicator">Intento 1 · Techo máximo: 100%</span>
+        <span id="answered-indicator">Respondidas: 0 / 12</span>
+      </div>
+      <div class="progress-track">
+        <div id="progress-fill" class="progress-fill"></div>
+      </div>
+    </div>
+
+    <div id="questions-container"></div>
+
+    <div class="card" style="text-align:center;">
+      <p id="submit-hint" style="margin-top:0;color:var(--muted);font-size:17px;">Responde las 12 preguntas (incluyendo ambos pasos en Corona) para finalizar.</p>
+      <button id="btn-submit" class="btn-primary" disabled onclick="submitExam()">Finalizar y Calificar Evaluación</button>
+    </div>
+  </section>
+
+  <!-- PANTALLA DE RESULTADOS -->
+  <section id="view-results" class="hidden"></section>
+</main>
+
+<script>
+const LESSON_ID = "N1P7";
+const LESSON_TITLE = "Ofrenda y Diezmo";
+const QUESTIONS_DATA = [{"id": "n1p7_la1", "dim": "libro_abierto", "prompt": "Según la lección (Génesis 14:20; Mateo 23:23; 2 Corintios 9:7), ¿qué diferencia y complementa al diezmo y a la ofrenda?", "options": ["El diezmo (10%) expresa fidelidad y orden reconociendo que todo viene de Dios; la ofrenda es el aporte adicional voluntario, libre y alegre según la gratitud del corazón.", "El diezmo es una multa obligatoria por pecar y la ofrenda es un pago para comprar milagros.", "El diezmo aplica solo a agricultores antiguos y la ofrenda es únicamente para visitantes.", "Ambos son impuestos eclesiásticos sin relación con la adoración del corazón."], "correct": 0, "explanation": "El diezmo expresa fidelidad y reconocimiento de la soberanía de Dios, mientras la ofrenda es generosidad libre y alegre (2 Corintios 9:7)."}, {"id": "n1p7_la2", "dim": "libro_abierto", "prompt": "De acuerdo con 1 Corintios 9:14, Gálatas 6:6 y Proverbios 3:9, ¿con qué criterio de orden y propósito damos nuestros recursos?", "options": ["Apartando con orden las primicias para Dios (no lo que sobra) para sostener la predicación, el cuidado pastoral, las misiones y la ayuda al necesitado.", "Dando únicamente si al final del mes sobra dinero después de todos nuestros gastos y gustos.", "Aportando para que Dios esté obligado a multiplicar nuestra cuenta bancaria.", "Entregando recursos solo cuando la iglesia anuncia una emergencia edilicia."], "correct": 0, "explanation": "Proverbios 3:9 y 1 Corintios 16:2 enseñan a honrar a Dios con las primicias y con orden semanal para sostener la obra de su iglesia."}, {"id": "n1p7_la3", "dim": "libro_abierto", "prompt": "Según 2 Corintios 8:5 y 2 Corintios 8:9, ¿qué entrega precede siempre a cualquier aporte financiero agradable a Dios?", "options": ["Darse primeramente a sí mismos al Señor en gratitud porque Cristo, siendo rico, se hizo pobre por nosotros.", "Calcular el porcentaje exacto de retorno económico antes de depositar la ofrenda.", "Comparar nuestro aporte con el de otros miembros de la congregación.", "Realizar un voto público para que la congregación reconozca nuestra generosidad."], "correct": 0, "explanation": "Primero el corazón: en 2 Corintios 8:5 los creyentes se dieron primeramente a sí mismos al Señor y luego compartieron sus bienes con alegría."}, {"id": "n1p7_es1", "dim": "escudo", "prompt": "Un predicador dice: «Si hoy das tu diezmo y una ofrenda grande, Dios queda obligado por contrato a hacerte rico este año y a concederte el milagro que pidas». ¿Cuál es la falla doctrinal grave?", "options": ["Convierte la adoración en un 'negocio mágico' para comprar milagros o riqueza, contradiciendo que damos por gratitud y que Dios suple conforme a su voluntad y riquezas en gloria (Filipenses 4:19).", "Cree que Dios es el dueño del oro y la plata.", "Anima a los creyentes a ser generosos con la obra misionera.", "Cita pasajes del Nuevo Testamento sobre la generosidad."], "correct": 0, "explanation": "Dar a Dios no es un negocio mágico para hacerse rico ni comprar milagros; es una expresión sincera de fe, gratitud y adoración."}, {"id": "n1p7_es2", "dim": "escudo", "prompt": "Un miembro aparta su diezmo cada mes, pero lo entrega quejándose, con enojo y sintiendo que le quitan su dinero. ¿Qué verdad de 2 Corintios 9:7 está violando?", "options": ["Que Dios mira la actitud del corazón y ama al dador alegre, rechazando lo que se da con tristeza o por necesidad forzada.", "Que el diezmo debe entregarse siempre en efectivo y nunca por transferencia.", "Que solo se debe dar cuando los ingresos superan cierto nivel salarial.", "Que el dador alegre está exento de planificar sus finanzas."], "correct": 0, "explanation": "2 Corintios 9:7 establece claramente: 'no con tristeza, ni por necesidad, porque Dios ama al dador alegre'."}, {"id": "n1p7_es3", "dim": "escudo", "prompt": "Alguien afirma: «Como todo mi dinero es fruto de mi esfuerzo laboral y estudios, solo le daré a Dios si me sobra algo después de cubrir todos mis caprichos». ¿Qué principio bíblico niega?", "options": ["Niega que Dios es el dueño y proveedor de todo lo que tenemos y que honrarlo implica darle las primicias y no las sobras (Proverbios 3:9; 1 Corintios 16:2).", "Niega que el trabajo honesto sea importante para sostener a la familia.", "Cree que Dios necesita nuestro dinero para sobrevivir.", "Supone que la ofrenda voluntaria tiene un monto mínimo fijo."], "correct": 0, "explanation": "Dios no necesita nuestro dinero porque Suyo es todo; nos enseña a dar las primicias para librarnos de la avaricia y reconocer su señorío."}, {"id": "n1p7_fu1", "dim": "fuego", "prompt": "Recibes tu salario mensual y notas que si pagas todos tus gastos no esenciales primero, nunca te queda nada para ofrendar o diezmar. ¿Cómo ordenas tus finanzas según Proverbios 3:9 y 1 Corintios 16:2?", "options": ["Elaboras un presupuesto con gratitud apartando primero con orden y alegría lo que corresponde al Señor antes de distribuir los demás gastos.", "Sigues gastando sin control y prometes dar el doble cuando te aumenten el sueldo.", "Dejas de aportar por completo hasta que te sobre dinero sin esfuerzo.", "Das con tristeza sintiendo que descuidas tus gustos personales."], "correct": 0, "explanation": "Apartar lo primero para Dios con orden y alegría ordena nuestras prioridades financieras y vence la avaricia."}, {"id": "n1p7_fu2", "dim": "fuego", "prompt": "Atraviesas un mes con ingresos muy ajustados y sientes temor de ser generoso en la iglesia. ¿Cómo aplicas 2 Corintios 9:7 y Filipenses 4:19?", "options": ["Propones en tu corazón dar con fe, sinceridad y alegría según lo que Dios te ha prosperado, confiando en que Él suplirá todo lo que te falta.", "Das todo el dinero necesario para alimentar a tu familia esperando un milagro inmediato.", "Te abstienes de orar por tus finanzas para no parecer interesado.", "Criticas a la iglesia por enseñar sobre la mayordomía financiera."], "correct": 0, "explanation": "Cada uno da conforme a lo que prosperó (1 Corintios 16:2) con corazón alegre y confianza en la provisión fiel de Dios (Filipenses 4:19)."}, {"id": "n1p7_fu3", "dim": "fuego", "prompt": "Un nuevo creyente te pregunta a dónde van realmente los diezmos y ofrendas de la iglesia local. ¿Cómo le respondes según la enseñanza bíblica?", "options": ["Le explicas con transparencia que sostienen la predicación del evangelio, la enseñanza bíblica, el cuidado pastoral, las misiones y la ayuda al necesitado.", "Le dices que no debe preguntar por el destino de los recursos porque es falta de fe.", "Le respondes que el dinero se guarda sin utilizarse como símbolo de devoción.", "Le aseguras que sirve exclusivamente para pagar eventos sociales."], "correct": 0, "explanation": "La mayordomía transparente sostiene la obra de Cristo, la predicación, las misiones y el servicio al necesitado (1 Corintios 9:14; Gálatas 6:6)."}, {"id": "n1p7_co1", "dim": "corona", "prompt": "Doble Candado · Motivación del Corazón: Un discípulo quiere saber por qué Dios pide diezmos y ofrendas si Él es el dueño del universo.", "paso1": {"question": "¿Cuál es la razón espiritual principal por la que Dios nos enseña a dar?", "options": ["Para librar nuestro corazón de la avaricia, ejercitar nuestra gratitud y hacernos colaboradores activos de su obra.", "Porque Dios carece de recursos materiales para sostener su reino en la tierra.", "Para que podamos pagar la deuda de nuestros pecados mediante aportes económicos."], "correct": 0}, "paso2": {"question": "¿Qué pasajes bíblicos fundamentan esta enseñanza?", "options": ["2 Corintios 9:7 (Dios ama al dador alegre) y 2 Corintios 8:5 (darse primeramente a sí mismos al Señor).", "Mateo 23:23 como único requisito para alcanzar la salvación.", "Génesis 14:20 como contrato comercial para obtener victorias militares."], "correct": 0}, "explanation": "Dios no necesita nuestro dinero; nos enseña a dar para formar un corazón libre de avaricia, agradecido y colaborador."}, {"id": "n1p7_co2", "dim": "corona", "prompt": "Doble Candado · Práctica Semanal Ordenada: Al planificar la mayordomía financiera de un hogar cristiano.", "paso1": {"question": "¿Cuál es el hábito práctico que debe establecerse?", "options": ["Apartar con orden y planificación las primicias de cada ingreso con alegría, antes de destinar recursos a gastos secundarios.", "Dar impulsivamente solo cuando un mensaje genera mucha emoción.", "Aportar únicamente al final del año si hubo ganancias extraordinarias."], "correct": 0}, "paso2": {"question": "¿Qué textos bíblicos respaldan este hábito?", "options": ["Proverbios 3:9 ('Honra a Jehová con tus bienes, y con las primicias de todos tus frutos') y 1 Corintios 16:2 (apartar cada semana según haya prosperado).", "Filipenses 4:19 prohibiendo elaborar presupuestos familiares.", "Gálatas 6:6 limitando el aporte exclusivamente a bienes agrícolas."], "correct": 0}, "explanation": "La fidelidad financiera combina un corazón alegre con orden y primicias para honrar a Dios primero."}, {"id": "n1p7_co3", "dim": "corona", "prompt": "Doble Candado · Sostén de la Misión: Al evaluar el impacto de la generosidad en el cuerpo de Cristo.", "paso1": {"question": "¿Cómo debe ejercer su mayordomía cada miembro de la congregación?", "options": ["Como administrador fiel y transparente que apoya la enseñanza de la Palabra, las misiones y el socorro de los hermanos necesitados.", "Exigiendo privilegios o autoridad en la iglesia proporcionales al monto que aporta.", "Reteniendo su aporte cuando no está de acuerdo con decisiones administrativas menores."], "correct": 0}, "paso2": {"question": "¿Qué fundamento bíblico respalda esta actitud?", "options": ["1 Corintios 9:14 y Gálatas 6:6 enseñan a compartir toda cosa buena con quien instruye en la Palabra y sostener la obra del evangelio.", "2 Corintios 8:9 condiciona la gracia de Cristo al monto de la ofrenda.", "Mateo 23:23 enseña que diezmar exime de practicar la justicia y la misericordia."], "correct": 0}, "explanation": "Somos administradores fieles que sostienen con amor y transparencia la predicación, las misiones y el cuidado mutuo."}];
+
+const DIM_META = {
+  libro_abierto: { name: 'Libro Abierto', emoji: '📖', color: '#1565C0' },
+  escudo: { name: 'Escudo', emoji: '🛡️', color: '#5E35B1' },
+  fuego: { name: 'Fuego', emoji: '🔥', color: '#EF6C00' },
+  corona: { name: 'Corona', emoji: '👑', color: '#AD1457' }
+};
+
+const STORAGE_EXAM_KEY = 'iccvgd_exam_' + LESSON_ID;
+const STORAGE_BADGES_KEY = 'iccvgd_identity_badges_v1';
+
+let state = loadExamState();
+let sessionQuestions = [];
+let userAnswers = {};
+let answerSeqCounter = 0;
+let firstDimSeq = {};
+let cooldownTimer = null;
+
+function setTheme(t) {
+  document.documentElement.setAttribute('data-theme', t);
+  localStorage.setItem('discipulado_theme', t);
+  document.querySelectorAll('.btn-theme').forEach(b => {
+    b.classList.toggle('active', b.dataset.t === t);
+  });
+}
+(function initTheme() {
+  const saved = localStorage.getItem('discipulado_theme') || 'original';
+  setTheme(saved);
+})();
+
+function loadExamState() {
+  try {
+    const raw = localStorage.getItem(STORAGE_EXAM_KEY);
+    if (raw) return JSON.parse(raw);
+  } catch (e) {}
+  return {
+    attempts: 0,
+    lastAttemptTimestamp: 0,
+    lastScore: null,
+    passed: false,
+    failedFirstAttemptDetails: null,
+    weakDimensionsLastAttempt: []
+  };
+}
+
+function saveExamState() {
+  try {
+    localStorage.setItem(STORAGE_EXAM_KEY, JSON.stringify(state));
+  } catch (e) {}
+}
+
+function loadIdentityBadges() {
+  try {
+    const raw = localStorage.getItem(STORAGE_BADGES_KEY);
+    if (raw) {
+      const parsed = JSON.parse(raw);
+      return {
+        libro_abierto: Array.isArray(parsed.libro_abierto) ? parsed.libro_abierto : [],
+        escudo: Array.isArray(parsed.escudo) ? parsed.escudo : [],
+        fuego: Array.isArray(parsed.fuego) ? parsed.fuego : [],
+        corona: Array.isArray(parsed.corona) ? parsed.corona : []
+      };
+    }
+  } catch (e) {}
+  return { libro_abierto: [], escudo: [], fuego: [], corona: [] };
+}
+
+function saveIdentityBadges(badges) {
+  try {
+    localStorage.setItem(STORAGE_BADGES_KEY, JSON.stringify(badges));
+  } catch (e) {}
+}
+
+function getAttemptCap(attemptNum) {
+  if (attemptNum <= 1) return 100;
+  if (attemptNum === 2) return 85;
+  if (attemptNum === 3) return 75;
+  return 70;
+}
+
+function getCooldownSeconds(nextAttemptNum) {
+  if (nextAttemptNum === 3) return 30;
+  if (nextAttemptNum >= 4) return 60;
+  return 0;
+}
+
+function getMedal(score) {
+  if (score >= 95) return { name: 'Diamante', emoji: '💎' };
+  if (score >= 85) return { name: 'Oro', emoji: '🥇' };
+  if (score >= 75) return { name: 'Plata', emoji: '🥈' };
+  if (score >= 70) return { name: 'Bronce', emoji: '🥉' };
+  return { name: 'Sin Medalla', emoji: '📋' };
+}
+
+function shuffleArray(arr) {
+  const copy = arr.slice();
+  for (let i = copy.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [copy[i], copy[j]] = [copy[j], copy[i]];
+  }
+  return copy;
+}
+
+function escapeHtml(str) {
+  return String(str)
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;');
+}
+
+function renderIntro() {
+  const nextAttempt = state.attempts + 1;
+  const cap = getAttemptCap(nextAttempt);
+  const statusBox = document.getElementById('intro-status-box');
+  let html = '';
+
+  if (state.attempts === 0) {
+    html += `<div class="alert-box alert-success"><strong>1.º Intento disponible:</strong> Techo máximo del <strong>100%</strong> (Medalla Diamante alcanzable entre 95% y 100%).</div>`;
+  } else {
+    html += `<div class="alert-box"><strong>Preparando Intento #${nextAttempt}:</strong> El puntaje máximo alcanzable en este intento es <strong>${cap}%</strong>.${state.passed ? ' Ya aprobaste esta lección previamente.' : ''}</div>`;
+  }
+
+  if (nextAttempt === 2 && state.weakDimensionsLastAttempt && state.weakDimensionsLastAttempt.length > 0) {
+    const names = state.weakDimensionsLastAttempt.map(d => `${DIM_META[d].emoji} ${DIM_META[d].name}`).join(', ');
+    html += `<div class="alert-box alert-danger"><strong>Guía breve previa al 2.º Intento:</strong> Refuerza especialmente tus dimensiones falladas en el 1.º intento: <strong>${names}</strong>.</div>`;
+  }
+
+  statusBox.innerHTML = html;
+  setupCooldown(nextAttempt);
+}
+
+function setupCooldown(nextAttempt) {
+  if (cooldownTimer) clearInterval(cooldownTimer);
+  const requiredSec = getCooldownSeconds(nextAttempt);
+  const btnStart = document.getElementById('btn-start');
+  const cdBox = document.getElementById('cooldown-box');
+
+  if (requiredSec <= 0 || !state.lastAttemptTimestamp) {
+    cdBox.classList.add('hidden');
+    btnStart.disabled = false;
+    btnStart.textContent = `Iniciar Intento #${nextAttempt} (Techo ${getAttemptCap(nextAttempt)}%)`;
+    return;
+  }
+
+  function updateTimer() {
+    const elapsed = Math.floor((Date.now() - state.lastAttemptTimestamp) / 1000);
+    const remaining = requiredSec - elapsed;
+    if (remaining > 0) {
+      cdBox.classList.remove('hidden');
+      cdBox.innerHTML = `⏳ <strong>Tiempo obligatorio de repaso (Intento #${nextAttempt}):</strong> Espera <strong>${remaining} segundos</strong> antes de habilitar el examen.`;
+      btnStart.disabled = true;
+      btnStart.textContent = `Espera ${remaining}s para reintentar...`;
+    } else {
+      clearInterval(cooldownTimer);
+      cdBox.classList.add('hidden');
+      btnStart.disabled = false;
+      btnStart.textContent = `Iniciar Intento #${nextAttempt} (Techo ${getAttemptCap(nextAttempt)}%)`;
+    }
+  }
+  updateTimer();
+  cooldownTimer = setInterval(updateTimer, 500);
+}
+
+function startExam() {
+  const currentAttempt = state.attempts + 1;
+  const cap = getAttemptCap(currentAttempt);
+
+  userAnswers = {};
+  answerSeqCounter = 0;
+  firstDimSeq = {};
+
+  sessionQuestions = shuffleArray(QUESTIONS_DATA).map(q => {
+    if (q.dim === 'corona') {
+      const opts1 = shuffleArray(q.paso1.options.map((text, origIdx) => ({ text, isCorrect: origIdx === q.paso1.correct })));
+      const opts2 = shuffleArray(q.paso2.options.map((text, origIdx) => ({ text, isCorrect: origIdx === q.paso2.correct })));
+      return {
+        ...q,
+        shuffledStep1: opts1,
+        shuffledStep2: opts2
+      };
+    } else {
+      const opts = shuffleArray(q.options.map((text, origIdx) => ({ text, isCorrect: origIdx === q.correct })));
+      return {
+        ...q,
+        shuffledOptions: opts
+      };
+    }
+  });
+
+  document.getElementById('attempt-indicator').textContent = `Intento #${currentAttempt} · Techo máximo: ${cap}%`;
+  document.getElementById('view-intro').classList.add('hidden');
+  document.getElementById('view-results').classList.add('hidden');
+  document.getElementById('view-exam').classList.remove('hidden');
+
+  renderQuestions();
+  updateProgress();
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function renderQuestions() {
+  const container = document.getElementById('questions-container');
+  const letters = ['A', 'B', 'C', 'D'];
+  let html = '';
+
+  sessionQuestions.forEach((q, idx) => {
+    const dm = DIM_META[q.dim];
+    html += `<article class="q-card" id="qcard-${q.id}">
+      <div class="q-meta">
+        <span class="q-num">Pregunta ${idx + 1} de 12</span>
+        <span class="dim-badge dim-${q.dim}">${dm.emoji} ${dm.name}${q.dim === 'corona' ? ' · Doble Candado' : ''}</span>
+      </div>
+      <p class="q-prompt">${escapeHtml(q.prompt)}</p>`;
+
+    if (q.dim === 'corona') {
+      html += `<div class="lock-step">
+        <span class="lock-label">🔒 Paso 1 (0.5 pts): ¿Qué hacer?</span>
+        <div style="font-weight:600;margin-bottom:6px;">${escapeHtml(q.paso1.question)}</div>
+        ${q.shuffledStep1.map((opt, oIdx) => `
+          <button type="button" class="opt-btn" data-qid="${q.id}" data-step="1" data-oidx="${oIdx}" onclick="selectCoronaOption('${q.id}', 1, ${oIdx})">
+            <span class="opt-letter">${letters[oIdx]}</span>
+            <span>${escapeHtml(opt.text)}</span>
+          </button>
+        `).join('')}
+      </div>
+      <div class="lock-step">
+        <span class="lock-label">🔐 Paso 2 (0.5 pts): ¿Por qué? (Fundamento)</span>
+        <div style="font-weight:600;margin-bottom:6px;">${escapeHtml(q.paso2.question)}</div>
+        ${q.shuffledStep2.map((opt, oIdx) => `
+          <button type="button" class="opt-btn" data-qid="${q.id}" data-step="2" data-oidx="${oIdx}" onclick="selectCoronaOption('${q.id}', 2, ${oIdx})">
+            <span class="opt-letter">${letters[oIdx]}</span>
+            <span>${escapeHtml(opt.text)}</span>
+          </button>
+        `).join('')}
+      </div>`;
+    } else {
+      html += q.shuffledOptions.map((opt, oIdx) => `
+        <button type="button" class="opt-btn" data-qid="${q.id}" data-oidx="${oIdx}" onclick="selectStandardOption('${q.id}', ${oIdx})">
+          <span class="opt-letter">${letters[oIdx]}</span>
+          <span>${escapeHtml(opt.text)}</span>
+        </button>
+      `).join('');
+    }
+
+    html += `</article>`;
+  });
+
+  container.innerHTML = html;
+}
+
+function recordDimOrder(dim) {
+  if (firstDimSeq[dim] === undefined) {
+    answerSeqCounter += 1;
+    firstDimSeq[dim] = answerSeqCounter;
+  }
+}
+
+function selectStandardOption(qid, oIdx) {
+  const q = sessionQuestions.find(item => item.id === qid);
+  userAnswers[qid] = { selectedIdx: oIdx };
+  recordDimOrder(q.dim);
+
+  document.querySelectorAll(`.opt-btn[data-qid="${qid}"]`).forEach(btn => {
+    btn.classList.toggle('selected', Number(btn.dataset.oidx) === oIdx);
+  });
+  document.getElementById(`qcard-${qid}`).classList.add('answered');
+  updateProgress();
+}
+
+function selectCoronaOption(qid, step, oIdx) {
+  const q = sessionQuestions.find(item => item.id === qid);
+  if (!userAnswers[qid]) userAnswers[qid] = { step1Idx: null, step2Idx: null };
+  if (step === 1) userAnswers[qid].step1Idx = oIdx;
+  if (step === 2) userAnswers[qid].step2Idx = oIdx;
+
+  document.querySelectorAll(`.opt-btn[data-qid="${qid}"][data-step="${step}"]`).forEach(btn => {
+    btn.classList.toggle('selected', Number(btn.dataset.oidx) === oIdx);
+  });
+
+  if (userAnswers[qid].step1Idx !== null && userAnswers[qid].step2Idx !== null) {
+    recordDimOrder(q.dim);
+    document.getElementById(`qcard-${qid}`).classList.add('answered');
+  }
+  updateProgress();
+}
+
+function isQuestionAnswered(q) {
+  const ans = userAnswers[q.id];
+  if (!ans) return false;
+  if (q.dim === 'corona') {
+    return ans.step1Idx !== null && ans.step2Idx !== null;
+  }
+  return ans.selectedIdx !== undefined;
+}
+
+function updateProgress() {
+  const count = sessionQuestions.filter(isQuestionAnswered).length;
+  document.getElementById('answered-indicator').textContent = `Respondidas: ${count} / 12`;
+  document.getElementById('progress-fill').style.width = `${(count / 12) * 100}%`;
+  const btn = document.getElementById('btn-submit');
+  btn.disabled = count < 12;
+  document.getElementById('submit-hint').textContent = count < 12
+    ? `Faltan ${12 - count} pregunta(s) por responder.`
+    : 'Todas las preguntas están respondidas. Puedes calificar tu evaluación.';
+}
+
+function submitExam() {
+  const currentAttempt = state.attempts + 1;
+  const cap = getAttemptCap(currentAttempt);
+
+  const dimPoints = { libro_abierto: 0, escudo: 0, fuego: 0, corona: 0 };
+  const missedQuestions = [];
+
+  sessionQuestions.forEach(q => {
+    const ans = userAnswers[q.id];
+    if (q.dim === 'corona') {
+      const s1Obj = q.shuffledStep1[ans.step1Idx];
+      const s2Obj = q.shuffledStep2[ans.step2Idx];
+      let pts = 0;
+      if (s1Obj.isCorrect) {
+        pts += 0.5;
+        if (s2Obj.isCorrect) {
+          pts += 0.5;
+        }
+      }
+      dimPoints.corona += pts;
+      if (pts < 1.0) {
+        const correctS1 = q.shuffledStep1.find(o => o.isCorrect).text;
+        const correctS2 = q.shuffledStep2.find(o => o.isCorrect).text;
+        missedQuestions.push({
+          dim: q.dim,
+          prompt: q.prompt,
+          chosenText: `Paso 1: "${s1Obj.text}" (${s1Obj.isCorrect ? 'Correcto' : 'Incorrecto'}) | Paso 2: "${s2Obj.text}" (${s2Obj.isCorrect ? 'Correcto' : 'Incorrecto'})`,
+          correctText: `Paso 1: "${correctS1}" | Paso 2: "${correctS2}"`,
+          explanation: q.explanation
+        });
+      }
+    } else {
+      const chosenObj = q.shuffledOptions[ans.selectedIdx];
+      if (chosenObj.isCorrect) {
+        dimPoints[q.dim] += 1.0;
+      } else {
+        const correctObj = q.shuffledOptions.find(o => o.isCorrect);
+        missedQuestions.push({
+          dim: q.dim,
+          prompt: q.prompt,
+          chosenText: chosenObj.text,
+          correctText: correctObj.text,
+          explanation: q.explanation
+        });
+      }
+    }
+  });
+
+  const totalPoints = dimPoints.libro_abierto + dimPoints.escudo + dimPoints.fuego + dimPoints.corona;
+  const rawPct = Math.round((totalPoints / 12) * 100);
+  const notaFinal = Math.min(rawPct, cap);
+  const aprobado = notaFinal >= 70;
+  const medalla = getMedal(notaFinal);
+
+  const stats = {
+    libro_abierto: Math.round((dimPoints.libro_abierto / 3) * 100),
+    escudo: Math.round((dimPoints.escudo / 3) * 100),
+    fuego: Math.round((dimPoints.fuego / 3) * 100),
+    corona: Math.round((dimPoints.corona / 3) * 100)
+  };
+
+  // Análisis de fortalezas y debilidades
+  const dimsOrder = ['libro_abierto', 'escudo', 'fuego', 'corona'];
+  const maxPct = Math.max(...dimsOrder.map(d => stats[d]));
+  const minPct = Math.min(...dimsOrder.map(d => stats[d]));
+
+  const tiedTopDims = dimsOrder.filter(d => stats[d] === maxPct);
+  const isTieTop = tiedTopDims.length > 1;
+  // Desempate único: primera dimensión respondida en el orden del examen
+  tiedTopDims.sort((a, b) => (firstDimSeq[a] || 999) - (firstDimSeq[b] || 999));
+  const topDim = tiedTopDims[0];
+  const isPerfectTie = isTieTop && maxPct === 100;
+
+  const hideReinforce = isPerfectTie || minPct === 100;
+  const tiedBottomDims = hideReinforce ? [] : dimsOrder.filter(d => stats[d] === minPct);
+
+  // Insignias de identidad evolutivas (solo si aprueba)
+  let insigniaGanada = null;
+  let nivelActual = 0;
+  if (aprobado) {
+    insigniaGanada = DIM_META[topDim].name;
+    const badges = loadIdentityBadges();
+    if (!badges[topDim].includes(LESSON_ID)) {
+      badges[topDim].push(LESSON_ID);
+      saveIdentityBadges(badges);
+    }
+    nivelActual = Math.min(4, Math.max(1, badges[topDim].length));
+  }
+
+  // Actualizar persistencia de intentos
+  state.attempts = currentAttempt;
+  state.lastAttemptTimestamp = Date.now();
+  state.lastScore = notaFinal;
+  if (aprobado) state.passed = true;
+  if (currentAttempt === 1 && !aprobado) {
+    state.failedFirstAttemptDetails = missedQuestions;
+  }
+  state.weakDimensionsLastAttempt = dimsOrder.filter(d => stats[d] < 70);
+  saveExamState();
+
+  // Sincronización con app principal vía postMessage
+  try {
+    window.parent.postMessage({
+      type: 'EXAM_COMPLETED',
+      lessonId: LESSON_ID,
+      nota: notaFinal,
+      aprobado: aprobado,
+      medalla: medalla.name,
+      intentos: currentAttempt,
+      insigniaIdentidad: insigniaGanada,
+      insigniaEstrella: aprobado ? isPerfectTie : false,
+      nivelIdentidad: nivelActual,
+      stats: stats
+    }, '*');
+  } catch (e) {}
+
+  renderResults({
+    currentAttempt,
+    cap,
+    rawPct,
+    notaFinal,
+    aprobado,
+    medalla,
+    stats,
+    topDim,
+    maxPct,
+    isTieTop,
+    tiedTopDims,
+    isPerfectTie,
+    hideReinforce,
+    tiedBottomDims,
+    minPct,
+    insigniaGanada,
+    nivelActual,
+    missedQuestions
+  });
+}
+
+function renderResults(res) {
+  const nextAttempt = res.currentAttempt + 1;
+  const nextCap = getAttemptCap(nextAttempt);
+
+  let html = `<div class="card">
+    <div style="text-align:center;margin-bottom:14px;">
+      <span class="inst-tag">Evaluación Estadística ICCVGD</span>
+      <h2 style="margin-top:10px;justify-content:center;">Resultados: ${escapeHtml(LESSON_TITLE)}</h2>
+    </div>
+
+    <div class="score-hero">
+      <div style="font-size:16px;font-weight:700;color:var(--muted);">Intento #${res.currentAttempt} · Techo aplicado: ${res.cap}%</div>
+      <div class="score-big">${res.notaFinal}%</div>
+      ${res.rawPct > res.cap ? `<div style="font-size:15.5px;color:var(--warn);font-weight:700;margin-top:4px;">Puntaje bruto: ${res.rawPct}% (ajustado al tope de ${res.cap}% por intento #${res.currentAttempt})</div>` : ''}
+      <div class="medal-pill">${res.medalla.emoji} Medalla: ${res.medalla.name}</div>
+      <div style="margin-top:10px;font-weight:800;color:${res.aprobado ? 'var(--success)' : 'var(--danger)'};">
+        ${res.aprobado ? '✅ EVALUACIÓN APROBADA (Mínimo 70% alcanzado)' : '❌ NO APROBADA (Se requiere mínimo 70%)'}
+      </div>
+    </div>`;
+
+  // Retroalimentación obligatoria si falló el 1.º intento
+  if (res.currentAttempt === 1 && !res.aprobado && res.missedQuestions.length > 0) {
+    html += `<div style="margin:20px 0;">
+      <h3 style="color:var(--danger);margin-bottom:8px;">📋 Retroalimentación y Aclaración de Preguntas Falladas (1.º Intento)</h3>
+      <p style="font-size:17px;margin-top:0;">Estudia cuidadosamente cada aclaración antes de iniciar tu 2.º intento (techo máximo 85%):</p>
+      ${res.missedQuestions.map((m, i) => `
+        <div class="fb-item">
+          <div style="font-weight:800;font-size:16px;margin-bottom:4px;">${i + 1}. [${DIM_META[m.dim].emoji} ${DIM_META[m.dim].name}] ${escapeHtml(m.prompt)}</div>
+          <div style="font-size:16.5px;margin-bottom:4px;"><strong>Tu selección:</strong> ${escapeHtml(m.chosenText)}</div>
+          <div style="font-size:16.5px;color:var(--success);margin-bottom:6px;"><strong>Fundamento correcto:</strong> ${escapeHtml(m.correctText)}</div>
+          <div style="font-size:16.5px;background:var(--card);padding:10px;border-radius:10px;"><strong>Aclaración:</strong> ${escapeHtml(m.explanation)}</div>
+        </div>
+      `).join('')}
+    </div>`;
+  } else if (res.currentAttempt > 1 && !res.aprobado) {
+    html += `<div class="alert-box">
+      <strong>Nota pedagógica:</strong> En intentos posteriores al 1.º no se muestran las respuestas detalladas para preservar el rigor evaluativo. Repasa la lección y tus áreas con menor puntaje antes del siguiente intento.
+    </div>`;
+  }
+
+  // Diagrama de barras de las 4 dimensiones
+  html += `<h3 style="margin-top:20px;">📊 Diagnóstico por Dimensión (0% a 100%)</h3>
+  <div style="margin-top:12px;">`;
+
+  ['libro_abierto', 'escudo', 'fuego', 'corona'].forEach(dim => {
+    const pct = res.stats[dim];
+    const dm = DIM_META[dim];
+    html += `<div class="bar-row">
+      <div class="bar-header">
+        <span>${dm.emoji} ${dm.name}</span>
+        <span>${pct}%</span>
+      </div>
+      <div class="bar-track">
+        <div class="bar-fill" style="width:${pct}%;background:${dm.color};"></div>
+      </div>
+    </div>`;
+  });
+  html += `</div>`;
+
+  // Fortaleza Principal e Insignia de Identidad
+  const topMeta = DIM_META[res.topDim];
+  html += `<div class="identity-box">
+    <div style="font-size:15px;font-weight:800;text-transform:uppercase;color:var(--primary);">🏆 Fortaleza Principal</div>`;
+
+  if (res.aprobado) {
+    const starBadge = res.isPerfectTie ? ' ⭐ (Insignia + Estrella por Empate Perfecto)' : '';
+    html += `<div style="font-size:21px;font-weight:800;margin:6px 0;">
+      ${topMeta.emoji} Insignia de Identidad: ${topMeta.name}${starBadge} — Nivel ${res.nivelActual} de 4
+    </div>`;
+  } else {
+    html += `<div style="font-size:20px;font-weight:800;margin:6px 0;">
+      ${topMeta.emoji} Dimensión destacada: ${topMeta.name} (${res.maxPct}%) — <em>Aprueba con 70% o más para desbloquear tu insignia evolutiva</em>
+    </div>`;
+  }
+
+  if (res.isTieTop) {
+    const tiedNames = res.tiedTopDims.map(d => `${DIM_META[d].name} (${res.maxPct}%)`).join(', ');
+    html += `<p style="margin:8px 0 0 0;font-size:16.5px;">
+      <strong>Aclaración de desempate:</strong> Se registró un empate de puntaje entre <strong>${tiedNames}</strong>. Conforme al criterio único de desempate, se asignó <strong>${topMeta.name}</strong> por haber sido la primera dimensión respondida en el orden del examen.${res.isPerfectTie ? ' Al tratarse de un empate con puntaje perfecto (100%), se otorga la distinción especial <strong>Insignia + Estrella ⭐</strong>.' : ''}
+    </p>`;
+  }
+  html += `</div>`;
+
+  // Área a Reforzar (omitida por completo si hay empate perfecto en 100% o si todas están en 100%)
+  if (!res.hideReinforce && res.tiedBottomDims.length > 0) {
+    const weakText = res.tiedBottomDims.map(d => `${DIM_META[d].emoji} ${DIM_META[d].name} (${res.minPct}%)`).join(', ');
+    html += `<div class="reinforce-box">
+      <div style="font-size:15px;font-weight:800;text-transform:uppercase;color:var(--warn);">🎯 Área a Reforzar</div>
+      <div style="font-size:18.5px;font-weight:700;margin-top:4px;">${weakText}</div>
+    </div>`;
+  }
+
+  // Botón de reintento con temporizador si aplica
+  html += `<div style="margin-top:20px;">
+    <div id="result-cooldown-box" class="alert-box hidden"></div>
+    <button id="btn-retry" class="btn-primary" onclick="startExam()">Reintentar Evaluación (Intento #${nextAttempt} · Techo ${nextCap}%)</button>
+  </div>`;
+
+  html += `</div>`;
+
+  const resView = document.getElementById('view-results');
+  resView.innerHTML = html;
+  document.getElementById('view-exam').classList.add('hidden');
+  resView.classList.remove('hidden');
+
+  setupResultCooldown(nextAttempt, nextCap);
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function setupResultCooldown(nextAttempt, nextCap) {
+  if (cooldownTimer) clearInterval(cooldownTimer);
+  const requiredSec = getCooldownSeconds(nextAttempt);
+  const btnRetry = document.getElementById('btn-retry');
+  const cdBox = document.getElementById('result-cooldown-box');
+
+  if (requiredSec <= 0) return;
+
+  function tick() {
+    const elapsed = Math.floor((Date.now() - state.lastAttemptTimestamp) / 1000);
+    const remaining = requiredSec - elapsed;
+    if (remaining > 0) {
+      cdBox.classList.remove('hidden');
+      cdBox.innerHTML = `⏳ <strong>Tiempo obligatorio de repaso antes del Intento #${nextAttempt}:</strong> Espera <strong>${remaining} segundos</strong>.`;
+      btnRetry.disabled = true;
+      btnRetry.textContent = `Espera ${remaining}s para iniciar Intento #${nextAttempt}...`;
+    } else {
+      clearInterval(cooldownTimer);
+      cdBox.classList.add('hidden');
+      btnRetry.disabled = false;
+      btnRetry.textContent = `Reintentar Evaluación (Intento #${nextAttempt} · Techo ${nextCap}%)`;
+    }
+  }
+  tick();
+  cooldownTimer = setInterval(tick, 500);
+}
+
+renderIntro();
+</script>
+</body>
+</html>

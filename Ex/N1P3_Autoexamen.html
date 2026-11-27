@@ -1,0 +1,1086 @@
+<!DOCTYPE html>
+<html lang="es" data-theme="original">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>Evaluación Estadística ICCVGD — El Espíritu Santo</title>
+<style>
+:root {
+  --bg: #F4F6F9;
+  --card: #FFFFFF;
+  --text: #1A202C;
+  --muted: #4A5568;
+  --border: #DCE3EC;
+  --primary: #2E7D32;
+  --accent: #1B5E20;
+  --primary-soft: #E8F5E9;
+  --success: #2E7D32;
+  --success-soft: #E8F5E9;
+  --danger: #C62828;
+  --danger-soft: #FFEBEE;
+  --warn: #B45309;
+  --warn-soft: #FEF3C7;
+  --shadow: 0 6px 20px rgba(16, 24, 40, 0.07);
+}
+[data-theme="pastel"] {
+  --bg: #EBF3FA;
+  --card: #F9FCFF;
+  --text: #1E293B;
+  --muted: #475569;
+  --border: #B6D0EB;
+}
+[data-theme="oscuro"], [data-theme="dark"] {
+  --bg: #0F172A;
+  --card: #1E293B;
+  --text: #F1F5F9;
+  --muted: #94A3B8;
+  --border: #334155;
+  --primary-soft: #1E3A5F;
+  --success-soft: #143622;
+  --danger-soft: #3F181D;
+  --warn-soft: #3B2810;
+  --shadow: 0 6px 24px rgba(0,0,0,0.38);
+}
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  font-size: 19px;
+  line-height: 1.6;
+  padding: env(safe-area-inset-top) env(safe-area-inset-right) calc(44px + env(safe-area-inset-bottom)) env(safe-area-inset-left);
+  transition: background 0.25s, color 0.25s;
+}
+.topbar {
+  position: sticky;
+  top: 0;
+  z-index: 60;
+  background: var(--card);
+  border-bottom: 2px solid var(--border);
+  padding: 10px 14px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+.brand-group {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+.inst-tag {
+  background: var(--primary);
+  color: #FFFFFF;
+  font-weight: 800;
+  font-size: 14px;
+  padding: 4px 11px;
+  border-radius: 999px;
+  letter-spacing: 0.3px;
+}
+.step-tag {
+  font-weight: 700;
+  font-size: 15px;
+  color: var(--primary);
+}
+[data-theme="oscuro"] .step-tag, [data-theme="dark"] .step-tag {
+  color: #93C5FD;
+}
+.theme-controls {
+  display: flex;
+  gap: 5px;
+}
+.btn-theme {
+  border: 1.5px solid var(--border);
+  background: var(--bg);
+  color: var(--text);
+  border-radius: 999px;
+  padding: 5px 11px;
+  font-size: 14px;
+  font-weight: 700;
+  cursor: pointer;
+}
+.btn-theme.active {
+  background: var(--primary);
+  color: #FFFFFF;
+  border-color: var(--primary);
+}
+.container {
+  max-width: 720px;
+  margin: 0 auto;
+  padding: 18px 15px;
+}
+.hero-banner {
+  background: linear-gradient(135deg, var(--primary), var(--accent));
+  color: #FFFFFF;
+  border-radius: 20px;
+  padding: 24px 20px;
+  margin-bottom: 18px;
+  box-shadow: var(--shadow);
+}
+.hero-inst {
+  display: inline-block;
+  background: rgba(255,255,255,0.2);
+  border: 1px solid rgba(255,255,255,0.35);
+  padding: 4px 13px;
+  border-radius: 999px;
+  font-size: 14.5px;
+  font-weight: 800;
+  letter-spacing: 0.4px;
+  margin-bottom: 10px;
+}
+h1 {
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: 27px;
+  line-height: 1.25;
+  margin: 0 0 8px 0;
+}
+h2 {
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: 22px;
+  line-height: 1.3;
+  margin: 0 0 12px 0;
+  color: var(--primary);
+}
+[data-theme="oscuro"] h2, [data-theme="dark"] h2 {
+  color: #93C5FD;
+}
+.card {
+  background: var(--card);
+  border: 1.5px solid var(--border);
+  border-radius: 18px;
+  padding: 20px;
+  margin-bottom: 18px;
+  box-shadow: var(--shadow);
+}
+.rules-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 10px;
+  margin: 14px 0;
+}
+.rule-pill {
+  background: var(--primary-soft);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 11px 12px;
+  font-size: 16px;
+}
+.rule-pill strong {
+  display: block;
+  color: var(--primary);
+  font-size: 15px;
+}
+[data-theme="oscuro"] .rule-pill strong, [data-theme="dark"] .rule-pill strong {
+  color: #93C5FD;
+}
+.alert-box {
+  border-radius: 14px;
+  padding: 15px 16px;
+  margin: 14px 0;
+  border-left: 5px solid var(--warn);
+  background: var(--warn-soft);
+  font-size: 17.5px;
+}
+.alert-danger {
+  border-left-color: var(--danger);
+  background: var(--danger-soft);
+}
+.alert-success {
+  border-left-color: var(--success);
+  background: var(--success-soft);
+}
+.btn-primary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  width: 100%;
+  background: var(--primary);
+  color: #FFFFFF;
+  border: none;
+  border-radius: 14px;
+  padding: 15px 20px;
+  font-size: 19px;
+  font-weight: 800;
+  cursor: pointer;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.14);
+  transition: opacity 0.2s, transform 0.1s;
+}
+.btn-primary:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+.btn-primary:not(:disabled):active {
+  transform: scale(0.99);
+}
+.progress-bar-wrap {
+  background: var(--card);
+  border: 1.5px solid var(--border);
+  border-radius: 16px;
+  padding: 14px 16px;
+  margin-bottom: 18px;
+  position: sticky;
+  top: 54px;
+  z-index: 45;
+  box-shadow: var(--shadow);
+}
+.progress-top {
+  display: flex;
+  justify-content: space-between;
+  font-size: 15.5px;
+  font-weight: 700;
+  margin-bottom: 7px;
+}
+.progress-track {
+  width: 100%;
+  height: 11px;
+  background: var(--bg);
+  border-radius: 999px;
+  overflow: hidden;
+  border: 1px solid var(--border);
+}
+.progress-fill {
+  height: 100%;
+  width: 0%;
+  background: linear-gradient(90deg, var(--primary), var(--success));
+  transition: width 0.3s ease;
+}
+.q-card {
+  background: var(--card);
+  border: 1.5px solid var(--border);
+  border-radius: 18px;
+  padding: 20px;
+  margin-bottom: 18px;
+  box-shadow: var(--shadow);
+}
+.q-card.answered {
+  border-color: var(--primary);
+}
+.q-meta {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 10px;
+}
+.q-num {
+  font-weight: 800;
+  font-size: 15.5px;
+  color: var(--muted);
+}
+.dim-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 12px;
+  border-radius: 999px;
+  font-size: 14.5px;
+  font-weight: 800;
+}
+.dim-libro_abierto { background: #E3F2FD; color: #0D47A1; }
+.dim-escudo { background: #EDE7F6; color: #4527A0; }
+.dim-fuego { background: #FFF3E0; color: #E65100; }
+.dim-corona { background: #FCE4EC; color: #880E4F; }
+.q-prompt {
+  font-size: 19.5px;
+  font-weight: 700;
+  margin: 0 0 14px 0;
+}
+.lock-step {
+  background: var(--bg);
+  border: 1.5px solid var(--border);
+  border-radius: 14px;
+  padding: 14px;
+  margin-top: 12px;
+}
+.lock-label {
+  display: inline-block;
+  background: var(--primary);
+  color: #FFF;
+  font-size: 13.5px;
+  font-weight: 800;
+  padding: 3px 10px;
+  border-radius: 999px;
+  margin-bottom: 8px;
+}
+.opt-btn {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  width: 100%;
+  text-align: left;
+  background: var(--bg);
+  color: var(--text);
+  border: 1.5px solid var(--border);
+  border-radius: 12px;
+  padding: 13px 15px;
+  font-size: 18px;
+  line-height: 1.45;
+  margin-top: 9px;
+  cursor: pointer;
+  transition: border-color 0.15s, background 0.15s;
+}
+.lock-step .opt-btn {
+  background: var(--card);
+}
+.opt-btn:hover {
+  border-color: var(--primary);
+}
+.opt-btn.selected {
+  background: var(--primary-soft);
+  border-color: var(--primary);
+  border-width: 2.5px;
+  font-weight: 700;
+}
+.opt-letter {
+  min-width: 28px;
+  height: 28px;
+  border-radius: 8px;
+  background: var(--card);
+  border: 1.5px solid var(--border);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 800;
+  font-size: 15px;
+  flex-shrink: 0;
+}
+.opt-btn.selected .opt-letter {
+  background: var(--primary);
+  color: #FFF;
+  border-color: var(--primary);
+}
+.score-hero {
+  text-align: center;
+  padding: 22px 16px;
+  border-radius: 18px;
+  background: var(--primary-soft);
+  border: 2px solid var(--primary);
+  margin-bottom: 18px;
+}
+.score-big {
+  font-family: Georgia, serif;
+  font-size: 48px;
+  font-weight: 800;
+  color: var(--primary);
+  line-height: 1.1;
+}
+[data-theme="oscuro"] .score-big, [data-theme="dark"] .score-big {
+  color: #93C5FD;
+}
+.medal-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 18px;
+  border-radius: 999px;
+  font-size: 19px;
+  font-weight: 800;
+  margin-top: 10px;
+  background: var(--card);
+  border: 2px solid var(--primary);
+}
+.bar-row {
+  margin-bottom: 14px;
+}
+.bar-header {
+  display: flex;
+  justify-content: space-between;
+  font-weight: 700;
+  font-size: 17px;
+  margin-bottom: 5px;
+}
+.bar-track {
+  width: 100%;
+  height: 20px;
+  background: var(--bg);
+  border-radius: 999px;
+  overflow: hidden;
+  border: 1.5px solid var(--border);
+}
+.bar-fill {
+  height: 100%;
+  border-radius: 999px;
+  transition: width 0.6s ease;
+}
+.identity-box {
+  border: 2px solid var(--primary);
+  background: var(--primary-soft);
+  border-radius: 16px;
+  padding: 18px;
+  margin-top: 14px;
+}
+.reinforce-box {
+  border: 2px solid var(--warn);
+  background: var(--warn-soft);
+  border-radius: 16px;
+  padding: 16px;
+  margin-top: 14px;
+}
+.fb-item {
+  border: 1.5px solid var(--danger);
+  background: var(--danger-soft);
+  border-radius: 14px;
+  padding: 15px;
+  margin-bottom: 12px;
+}
+.hidden { display: none !important; }
+</style>
+</head>
+<body>
+<header class="topbar">
+  <div class="brand-group">
+    <span class="inst-tag">Evaluación Estadística ICCVGD</span>
+    <span class="step-tag">Nivel 1 · Paso 3</span>
+  </div>
+  <div class="theme-controls">
+    <button class="btn-theme active" data-t="original" onclick="setTheme('original')">Original</button>
+    <button class="btn-theme" data-t="pastel" onclick="setTheme('pastel')">Pastel</button>
+    <button class="btn-theme" data-t="oscuro" onclick="setTheme('oscuro')">Oscuro</button>
+  </div>
+</header>
+
+<main class="container">
+  <section class="hero-banner">
+    <div class="hero-inst">📊 Evaluación Estadística ICCVGD</div>
+    <h1>🕊️ Autoexamen Exigente: El Espíritu Santo</h1>
+    <p style="margin:0;opacity:0.95;">Diagnóstico riguroso de comprensión bíblica, discernimiento doctrinal, aplicación práctica y criterio integral.</p>
+  </section>
+
+  <!-- PANTALLA DE INICIO -->
+  <section id="view-intro" class="card">
+    <h2 style="margin-top:0;">🧭 Protocolo de Evaluación</h2>
+    <p style="margin-top:0;">Este instrumento evalúa dominio profundo en <strong>12 reactivos de alta exigencia</strong> distribuidos en 4 dimensiones:</p>
+    <div class="rules-grid">
+      <div class="rule-pill"><strong>📖 Libro Abierto (3)</strong>Lectura textual y fundamento</div>
+      <div class="rule-pill"><strong>🛡️ Escudo (3)</strong>Discernimiento y detector de error</div>
+      <div class="rule-pill"><strong>🔥 Fuego (3)</strong>Fe en acción y dilemas reales</div>
+      <div class="rule-pill"><strong>👑 Corona (3)</strong>Doble Candado: Qué y Por qué</div>
+    </div>
+    <div class="rules-grid">
+      <div class="rule-pill"><strong>🎯 Mínimo Aprobatorio</strong>70% requerido</div>
+      <div class="rule-pill"><strong>📉 Techo por Intento</strong>1.º: 100% · 2.º: 85% · 3.º: 75% · 4.º+: 70%</div>
+    </div>
+
+    <div id="intro-status-box"></div>
+    <div id="cooldown-box" class="alert-box hidden"></div>
+
+    <button id="btn-start" class="btn-primary" onclick="startExam()">Comenzar Evaluación</button>
+  </section>
+
+  <!-- PANTALLA DEL EXAMEN -->
+  <section id="view-exam" class="hidden">
+    <div class="progress-bar-wrap">
+      <div class="progress-top">
+        <span id="attempt-indicator">Intento 1 · Techo máximo: 100%</span>
+        <span id="answered-indicator">Respondidas: 0 / 12</span>
+      </div>
+      <div class="progress-track">
+        <div id="progress-fill" class="progress-fill"></div>
+      </div>
+    </div>
+
+    <div id="questions-container"></div>
+
+    <div class="card" style="text-align:center;">
+      <p id="submit-hint" style="margin-top:0;color:var(--muted);font-size:17px;">Responde las 12 preguntas (incluyendo ambos pasos en Corona) para finalizar.</p>
+      <button id="btn-submit" class="btn-primary" disabled onclick="submitExam()">Finalizar y Calificar Evaluación</button>
+    </div>
+  </section>
+
+  <!-- PANTALLA DE RESULTADOS -->
+  <section id="view-results" class="hidden"></section>
+</main>
+
+<script>
+const LESSON_ID = "N1P3";
+const LESSON_TITLE = "El Espíritu Santo";
+const QUESTIONS_DATA = [{"id": "n1p3_la1", "dim": "libro_abierto", "prompt": "Según Juan 14:16-17 y Efesios 1:13, ¿quién es el Espíritu Santo y desde qué momento habita en el creyente?", "options": ["Es Dios mismo (el Consolador y Espíritu de verdad, una Persona divina) que viene a morar y sellar al creyente desde el instante en que cree en Jesús.", "Es una energía o fuerza impersonal que se recibe meses después del bautismo si se logra suficiente mérito.", "Es una emoción intensa que visita temporalmente al creyente solo durante los cultos dominicales.", "Es un ángel enviado para sustituir la presencia de Cristo mientras la iglesia está en la tierra."], "correct": 0, "explanation": "El Espíritu Santo es Dios mismo habitando dentro de cada persona nacida de nuevo desde el momento en que cree (Juan 14:16-17; Efesios 1:13)."}, {"id": "n1p3_la2", "dim": "libro_abierto", "prompt": "De acuerdo con Juan 14:26 y Gálatas 5:22-23, ¿cuáles son dos obras centrales del Espíritu Santo en el discípulo?", "options": ["Enseñar y recordar todo lo que Jesús dijo en su Palabra, y producir el fruto de su carácter (amor, gozo, paz, paciencia, templanza, etc.).", "Hacer innecesaria la lectura de la Biblia y eliminar por completo cualquier prueba externa.", "Otorgar superioridad espiritual sobre otros hermanos y garantizar éxito financiero.", "Reemplazar nuestra responsabilidad de decidir con obediencia en lo cotidiano."], "correct": 0, "explanation": "Él nos enseña y recuerda la Palabra (Juan 14:26) y transforma nuestro carácter produciendo el fruto del Espíritu (Gálatas 5:22-23)."}, {"id": "n1p3_la3", "dim": "libro_abierto", "prompt": "Según 1 Tesalonicenses 5:17, Gálatas 5:16 y Efesios 4:30, ¿cómo se sostiene una comunión continua sin contristar al Espíritu Santo?", "options": ["Andando en el Espíritu mediante un diálogo continuo con Dios ('orar sin cesar'), confesando rápido el pecado (1 Juan 1:9) y evitando rencor o palabras dañinas.", "Manteniendo una postura física rígida durante todo el día sin hablar con nadie.", "Ocultando nuestras caídas por varios días hasta sentirnos emocionalmente tranquilos.", "Buscando únicamente experiencias emocionales fuertes cada domingo."], "correct": 0, "explanation": "Caminar en el Espíritu implica conversar con Dios en todo lugar, obedecer su guía y confesar al instante cualquier pecado para no contristarlo."}, {"id": "n1p3_es1", "dim": "escudo", "prompt": "Un creyente afirma: «Siento que hoy el Espíritu Santo me guió a tomar una decisión que contradice claramente un mandamiento de la Biblia, pero sentí mucha paz al respecto». ¿Dónde está el error doctrinal?", "options": ["El Espíritu Santo jamás contradice la Palabra escrita que Él mismo inspiró; usar emociones subjetivas por encima de la Escritura es autoengaño.", "El Espíritu Santo nunca produce paz en el corazón del creyente.", "Las decisiones cotidianas no tienen ninguna relación con la guía del Espíritu.", "La Biblia aplica únicamente a situaciones antiguas y no a decisiones actuales."], "correct": 0, "explanation": "Como enseña la lección, el Espíritu Santo nunca contradice la Palabra escrita de Dios; la Escritura es el filtro fiel de su dirección."}, {"id": "n1p3_es2", "dim": "escudo", "prompt": "Alguien sostiene: «Una persona llena del Espíritu Santo se reconoce principalmente por sus emociones intensas en el culto, aunque en su hogar sea rencorosa, impaciente y sin dominio propio». ¿Qué falla conceptual evidencia?", "options": ["Confunde emociones pasajeras con la verdadera evidencia de la vida en el Espíritu: obediencia diaria a la Palabra y el crecimiento visible del fruto de Cristo (Gálatas 5:22-23).", "Cree que en el culto dominical no debe haber alegría ni expresión espiritual.", "Piensa que el carácter se transforma únicamente mediante psicología secular.", "Supone que el Espíritu Santo abandona al creyente cada vez que sale del templo."], "correct": 0, "explanation": "El Espíritu Santo no se mide solo por emociones pasajeras, sino por obediencia diaria y el crecimiento del fruto del Espíritu en el carácter."}, {"id": "n1p3_es3", "dim": "escudo", "prompt": "Un discípulo dice: «Voy a vencer mis malos hábitos y deseos de la carne apretando los dientes con pura fuerza de voluntad, y cuando ya sea fuerte le pediré ayuda al Espíritu Santo». ¿Por qué es un error?", "options": ["Porque Gálatas 5:16 enseña exactamente lo opuesto: 'Andad en el Espíritu, y no satisfagáis los deseos de la carne'; sin su poder nos cansamos y fracasamos.", "Porque la voluntad humana no participa en ninguna decisión de obediencia.", "Porque los deseos de la carne desaparecen automáticamente sin necesidad de andar en el Espíritu.", "Porque pedir ayuda al Espíritu Santo es señal de falta de madurez."], "correct": 0, "explanation": "Intentar agradar a Dios y vencer el pecado con nuestras propias fuerzas lleva al agotamiento; el Espíritu Santo es quien nos da el poder."}, {"id": "n1p3_fu1", "dim": "fuego", "prompt": "En medio de una discusión injusta en el trabajo sientes el impulso de responder con sarcasmo e ira. Aplicando el reto de la lección, ¿cuál es la acción correcta?", "options": ["Hacer una pausa breve, clamar en tu corazón 'Espíritu Santo, guíame hoy' y responder con mansedumbre y templanza reflejando el carácter de Cristo.", "Responder con dureza para imponer respeto y luego pedir perdón por la noche.", "Reprimir el enojo por fuera mientras alimentas rencor en tu interior.", "Abandonar tus responsabilidades laborales para evitar cualquier roce humano."], "correct": 0, "explanation": "Rendirle el control en el instante de presión permite que el Espíritu produzca mansedumbre y templanza en lugar de las obras de la carne."}, {"id": "n1p3_fu2", "dim": "fuego", "prompt": "Te das cuenta de que acabas de decir una palabra hiriente a un familiar y sientes convicción inmediata en tu conciencia. ¿Qué debes hacer para no contristar al Espíritu Santo (Efesios 4:30)?", "options": ["Confesar el pecado al instante ante Dios (1 Juan 1:9) y pedir perdón con humildad a tu familiar para restaurar la paz interior y familiar.", "Esconderte de Dios durante unos días hasta olvidar lo ocurrido.", "Justificar tus palabras culpando al estrés del día o al carácter de tu familiar.", "Esperar al próximo domingo para confesarlo en el culto."], "correct": 0, "explanation": "Si fallamos, no nos escondemos; confesamos rápido el pecado (1 Juan 1:9) y reparamos el daño para mantener limpia la comunión."}, {"id": "n1p3_fu3", "dim": "fuego", "prompt": "Tienes un día lleno de desplazamientos en transporte y reuniones continuas, sin oportunidad de encerrarte una hora. ¿Cómo practicas 'orar sin cesar' (1 Tesalonicenses 5:17)?", "options": ["Manteniendo el corazón atento a su voz con oraciones breves y sinceras en cada actividad, pidiendo sabiduría antes de cada reunión.", "Dando por perdido el día espiritualmente hasta que tengas una hora libre.", "Repitiendo frases mecánicas sin prestar atención a lo que haces.", "Aislándote de tus compañeros de trabajo para no hablar con nadie."], "correct": 0, "explanation": "Orar sin cesar es mantener una conversación breve, continua y sincera con Dios en el trabajo, el transporte o la casa."}, {"id": "n1p3_co1", "dim": "corona", "prompt": "Doble Candado · Identidad y Sello: Un creyente duda de si realmente tiene al Espíritu Santo porque no tuvo una experiencia emocional extraordinaria al creer.", "paso1": {"question": "¿Qué verdad debe afirmar sobre su condición en Cristo?", "options": ["Que al haber creído en el evangelio de Cristo, el Espíritu Santo ya mora en él como sello de pertenencia y Consolador permanente.", "Que debe buscar experiencias emocionales intensas hasta lograr que el Espíritu entre en él.", "Que el Espíritu Santo solo habita en los líderes con muchos años de antigüedad."], "correct": 0}, "paso2": {"question": "¿Qué pasajes bíblicos confirman esta realidad?", "options": ["Efesios 1:13 (sellados con el Espíritu Santo al oír y creer) y Juan 14:16-17 (el Consolador mora con vosotros y estará en vosotros).", "1 Tesalonicenses 5:17 como condición previa para recibir el sello.", "Efesios 4:30 enseñando que el Espíritu abandona al creyente ante cualquier error."], "correct": 0}, "explanation": "Todo creyente nacido de nuevo está sellado por el Espíritu Santo desde el momento en que cree en Jesús."}, {"id": "n1p3_co2", "dim": "corona", "prompt": "Doble Candado · Victoria sobre la Carne: Un discípulo lucha repetidamente contra viejos hábitos pecaminosos que lo dominaban antes de conocer a Cristo.", "paso1": {"question": "¿Cuál es la estrategia bíblica para caminar en libertad?", "options": ["Rendir cada mañana el control al Espíritu Santo, alimentarse de la Palabra que Él recuerda y obedecer su dirección paso a paso.", "Confiar en promesas de autocontrol humano evitando pedir ayuda por vergüenza.", "Resignarse a vivir esclavo de los viejos hábitos porque la naturaleza humana no cambia."], "correct": 0}, "paso2": {"question": "¿Qué fundamento doctrinal sustenta esta estrategia?", "options": ["Gálatas 5:16 ('Andad en el Espíritu, y no satisfagáis los deseos de la carne') y Romanos 8:14 (los guiados por el Espíritu son hijos de Dios).", "2 Corintios 5:17 indica que los hábitos cambian sin participación ni obediencia del creyente.", "Juan 14:26 limita la obra del Espíritu a recordar datos históricos."], "correct": 0}, "explanation": "Andar en el Espíritu cada día sustituye el dominio de la carne por el fruto y el carácter de Cristo."}, {"id": "n1p3_co3", "dim": "corona", "prompt": "Doble Candado · Vida en el Cuerpo: Al analizar cómo obra el Espíritu Santo en las relaciones dentro del hogar y la congregación.", "paso1": {"question": "¿Qué actitud debe cultivar el creyente hacia sus hermanos y familia?", "options": ["Cultivar la paz, el amor fraternal y la edificación mutua, evitando palabras dañinas y rencor.", "Imponer su criterio personal sobre los demás alegando tener mayor discernimiento espiritual.", "Distanciarse de quienes tienen carácter difícil para conservar su tranquilidad."], "correct": 0}, "paso2": {"question": "¿Qué enseñanza bíblica respalda esta conducta?", "options": ["Efesios 4:30 exhorta a no contristar al Espíritu con el cual fuimos sellados, y Gálatas 5:22-23 muestra que su fruto produce amor, paz y benignidad.", "Juan 14:17 enseña que el Espíritu opera exclusivamente en la esfera privada sin impacto relacional.", "Efesios 1:13 limita la obra del Espíritu a la seguridad individual."], "correct": 0}, "explanation": "El Espíritu Santo une nuestros corazones en paz dentro del hogar y la iglesia mediante su fruto y santidad."}];
+
+const DIM_META = {
+  libro_abierto: { name: 'Libro Abierto', emoji: '📖', color: '#1565C0' },
+  escudo: { name: 'Escudo', emoji: '🛡️', color: '#5E35B1' },
+  fuego: { name: 'Fuego', emoji: '🔥', color: '#EF6C00' },
+  corona: { name: 'Corona', emoji: '👑', color: '#AD1457' }
+};
+
+const STORAGE_EXAM_KEY = 'iccvgd_exam_' + LESSON_ID;
+const STORAGE_BADGES_KEY = 'iccvgd_identity_badges_v1';
+
+let state = loadExamState();
+let sessionQuestions = [];
+let userAnswers = {};
+let answerSeqCounter = 0;
+let firstDimSeq = {};
+let cooldownTimer = null;
+
+function setTheme(t) {
+  document.documentElement.setAttribute('data-theme', t);
+  localStorage.setItem('discipulado_theme', t);
+  document.querySelectorAll('.btn-theme').forEach(b => {
+    b.classList.toggle('active', b.dataset.t === t);
+  });
+}
+(function initTheme() {
+  const saved = localStorage.getItem('discipulado_theme') || 'original';
+  setTheme(saved);
+})();
+
+function loadExamState() {
+  try {
+    const raw = localStorage.getItem(STORAGE_EXAM_KEY);
+    if (raw) return JSON.parse(raw);
+  } catch (e) {}
+  return {
+    attempts: 0,
+    lastAttemptTimestamp: 0,
+    lastScore: null,
+    passed: false,
+    failedFirstAttemptDetails: null,
+    weakDimensionsLastAttempt: []
+  };
+}
+
+function saveExamState() {
+  try {
+    localStorage.setItem(STORAGE_EXAM_KEY, JSON.stringify(state));
+  } catch (e) {}
+}
+
+function loadIdentityBadges() {
+  try {
+    const raw = localStorage.getItem(STORAGE_BADGES_KEY);
+    if (raw) {
+      const parsed = JSON.parse(raw);
+      return {
+        libro_abierto: Array.isArray(parsed.libro_abierto) ? parsed.libro_abierto : [],
+        escudo: Array.isArray(parsed.escudo) ? parsed.escudo : [],
+        fuego: Array.isArray(parsed.fuego) ? parsed.fuego : [],
+        corona: Array.isArray(parsed.corona) ? parsed.corona : []
+      };
+    }
+  } catch (e) {}
+  return { libro_abierto: [], escudo: [], fuego: [], corona: [] };
+}
+
+function saveIdentityBadges(badges) {
+  try {
+    localStorage.setItem(STORAGE_BADGES_KEY, JSON.stringify(badges));
+  } catch (e) {}
+}
+
+function getAttemptCap(attemptNum) {
+  if (attemptNum <= 1) return 100;
+  if (attemptNum === 2) return 85;
+  if (attemptNum === 3) return 75;
+  return 70;
+}
+
+function getCooldownSeconds(nextAttemptNum) {
+  if (nextAttemptNum === 3) return 30;
+  if (nextAttemptNum >= 4) return 60;
+  return 0;
+}
+
+function getMedal(score) {
+  if (score >= 95) return { name: 'Diamante', emoji: '💎' };
+  if (score >= 85) return { name: 'Oro', emoji: '🥇' };
+  if (score >= 75) return { name: 'Plata', emoji: '🥈' };
+  if (score >= 70) return { name: 'Bronce', emoji: '🥉' };
+  return { name: 'Sin Medalla', emoji: '📋' };
+}
+
+function shuffleArray(arr) {
+  const copy = arr.slice();
+  for (let i = copy.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [copy[i], copy[j]] = [copy[j], copy[i]];
+  }
+  return copy;
+}
+
+function escapeHtml(str) {
+  return String(str)
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;');
+}
+
+function renderIntro() {
+  const nextAttempt = state.attempts + 1;
+  const cap = getAttemptCap(nextAttempt);
+  const statusBox = document.getElementById('intro-status-box');
+  let html = '';
+
+  if (state.attempts === 0) {
+    html += `<div class="alert-box alert-success"><strong>1.º Intento disponible:</strong> Techo máximo del <strong>100%</strong> (Medalla Diamante alcanzable entre 95% y 100%).</div>`;
+  } else {
+    html += `<div class="alert-box"><strong>Preparando Intento #${nextAttempt}:</strong> El puntaje máximo alcanzable en este intento es <strong>${cap}%</strong>.${state.passed ? ' Ya aprobaste esta lección previamente.' : ''}</div>`;
+  }
+
+  if (nextAttempt === 2 && state.weakDimensionsLastAttempt && state.weakDimensionsLastAttempt.length > 0) {
+    const names = state.weakDimensionsLastAttempt.map(d => `${DIM_META[d].emoji} ${DIM_META[d].name}`).join(', ');
+    html += `<div class="alert-box alert-danger"><strong>Guía breve previa al 2.º Intento:</strong> Refuerza especialmente tus dimensiones falladas en el 1.º intento: <strong>${names}</strong>.</div>`;
+  }
+
+  statusBox.innerHTML = html;
+  setupCooldown(nextAttempt);
+}
+
+function setupCooldown(nextAttempt) {
+  if (cooldownTimer) clearInterval(cooldownTimer);
+  const requiredSec = getCooldownSeconds(nextAttempt);
+  const btnStart = document.getElementById('btn-start');
+  const cdBox = document.getElementById('cooldown-box');
+
+  if (requiredSec <= 0 || !state.lastAttemptTimestamp) {
+    cdBox.classList.add('hidden');
+    btnStart.disabled = false;
+    btnStart.textContent = `Iniciar Intento #${nextAttempt} (Techo ${getAttemptCap(nextAttempt)}%)`;
+    return;
+  }
+
+  function updateTimer() {
+    const elapsed = Math.floor((Date.now() - state.lastAttemptTimestamp) / 1000);
+    const remaining = requiredSec - elapsed;
+    if (remaining > 0) {
+      cdBox.classList.remove('hidden');
+      cdBox.innerHTML = `⏳ <strong>Tiempo obligatorio de repaso (Intento #${nextAttempt}):</strong> Espera <strong>${remaining} segundos</strong> antes de habilitar el examen.`;
+      btnStart.disabled = true;
+      btnStart.textContent = `Espera ${remaining}s para reintentar...`;
+    } else {
+      clearInterval(cooldownTimer);
+      cdBox.classList.add('hidden');
+      btnStart.disabled = false;
+      btnStart.textContent = `Iniciar Intento #${nextAttempt} (Techo ${getAttemptCap(nextAttempt)}%)`;
+    }
+  }
+  updateTimer();
+  cooldownTimer = setInterval(updateTimer, 500);
+}
+
+function startExam() {
+  const currentAttempt = state.attempts + 1;
+  const cap = getAttemptCap(currentAttempt);
+
+  userAnswers = {};
+  answerSeqCounter = 0;
+  firstDimSeq = {};
+
+  sessionQuestions = shuffleArray(QUESTIONS_DATA).map(q => {
+    if (q.dim === 'corona') {
+      const opts1 = shuffleArray(q.paso1.options.map((text, origIdx) => ({ text, isCorrect: origIdx === q.paso1.correct })));
+      const opts2 = shuffleArray(q.paso2.options.map((text, origIdx) => ({ text, isCorrect: origIdx === q.paso2.correct })));
+      return {
+        ...q,
+        shuffledStep1: opts1,
+        shuffledStep2: opts2
+      };
+    } else {
+      const opts = shuffleArray(q.options.map((text, origIdx) => ({ text, isCorrect: origIdx === q.correct })));
+      return {
+        ...q,
+        shuffledOptions: opts
+      };
+    }
+  });
+
+  document.getElementById('attempt-indicator').textContent = `Intento #${currentAttempt} · Techo máximo: ${cap}%`;
+  document.getElementById('view-intro').classList.add('hidden');
+  document.getElementById('view-results').classList.add('hidden');
+  document.getElementById('view-exam').classList.remove('hidden');
+
+  renderQuestions();
+  updateProgress();
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function renderQuestions() {
+  const container = document.getElementById('questions-container');
+  const letters = ['A', 'B', 'C', 'D'];
+  let html = '';
+
+  sessionQuestions.forEach((q, idx) => {
+    const dm = DIM_META[q.dim];
+    html += `<article class="q-card" id="qcard-${q.id}">
+      <div class="q-meta">
+        <span class="q-num">Pregunta ${idx + 1} de 12</span>
+        <span class="dim-badge dim-${q.dim}">${dm.emoji} ${dm.name}${q.dim === 'corona' ? ' · Doble Candado' : ''}</span>
+      </div>
+      <p class="q-prompt">${escapeHtml(q.prompt)}</p>`;
+
+    if (q.dim === 'corona') {
+      html += `<div class="lock-step">
+        <span class="lock-label">🔒 Paso 1 (0.5 pts): ¿Qué hacer?</span>
+        <div style="font-weight:600;margin-bottom:6px;">${escapeHtml(q.paso1.question)}</div>
+        ${q.shuffledStep1.map((opt, oIdx) => `
+          <button type="button" class="opt-btn" data-qid="${q.id}" data-step="1" data-oidx="${oIdx}" onclick="selectCoronaOption('${q.id}', 1, ${oIdx})">
+            <span class="opt-letter">${letters[oIdx]}</span>
+            <span>${escapeHtml(opt.text)}</span>
+          </button>
+        `).join('')}
+      </div>
+      <div class="lock-step">
+        <span class="lock-label">🔐 Paso 2 (0.5 pts): ¿Por qué? (Fundamento)</span>
+        <div style="font-weight:600;margin-bottom:6px;">${escapeHtml(q.paso2.question)}</div>
+        ${q.shuffledStep2.map((opt, oIdx) => `
+          <button type="button" class="opt-btn" data-qid="${q.id}" data-step="2" data-oidx="${oIdx}" onclick="selectCoronaOption('${q.id}', 2, ${oIdx})">
+            <span class="opt-letter">${letters[oIdx]}</span>
+            <span>${escapeHtml(opt.text)}</span>
+          </button>
+        `).join('')}
+      </div>`;
+    } else {
+      html += q.shuffledOptions.map((opt, oIdx) => `
+        <button type="button" class="opt-btn" data-qid="${q.id}" data-oidx="${oIdx}" onclick="selectStandardOption('${q.id}', ${oIdx})">
+          <span class="opt-letter">${letters[oIdx]}</span>
+          <span>${escapeHtml(opt.text)}</span>
+        </button>
+      `).join('');
+    }
+
+    html += `</article>`;
+  });
+
+  container.innerHTML = html;
+}
+
+function recordDimOrder(dim) {
+  if (firstDimSeq[dim] === undefined) {
+    answerSeqCounter += 1;
+    firstDimSeq[dim] = answerSeqCounter;
+  }
+}
+
+function selectStandardOption(qid, oIdx) {
+  const q = sessionQuestions.find(item => item.id === qid);
+  userAnswers[qid] = { selectedIdx: oIdx };
+  recordDimOrder(q.dim);
+
+  document.querySelectorAll(`.opt-btn[data-qid="${qid}"]`).forEach(btn => {
+    btn.classList.toggle('selected', Number(btn.dataset.oidx) === oIdx);
+  });
+  document.getElementById(`qcard-${qid}`).classList.add('answered');
+  updateProgress();
+}
+
+function selectCoronaOption(qid, step, oIdx) {
+  const q = sessionQuestions.find(item => item.id === qid);
+  if (!userAnswers[qid]) userAnswers[qid] = { step1Idx: null, step2Idx: null };
+  if (step === 1) userAnswers[qid].step1Idx = oIdx;
+  if (step === 2) userAnswers[qid].step2Idx = oIdx;
+
+  document.querySelectorAll(`.opt-btn[data-qid="${qid}"][data-step="${step}"]`).forEach(btn => {
+    btn.classList.toggle('selected', Number(btn.dataset.oidx) === oIdx);
+  });
+
+  if (userAnswers[qid].step1Idx !== null && userAnswers[qid].step2Idx !== null) {
+    recordDimOrder(q.dim);
+    document.getElementById(`qcard-${qid}`).classList.add('answered');
+  }
+  updateProgress();
+}
+
+function isQuestionAnswered(q) {
+  const ans = userAnswers[q.id];
+  if (!ans) return false;
+  if (q.dim === 'corona') {
+    return ans.step1Idx !== null && ans.step2Idx !== null;
+  }
+  return ans.selectedIdx !== undefined;
+}
+
+function updateProgress() {
+  const count = sessionQuestions.filter(isQuestionAnswered).length;
+  document.getElementById('answered-indicator').textContent = `Respondidas: ${count} / 12`;
+  document.getElementById('progress-fill').style.width = `${(count / 12) * 100}%`;
+  const btn = document.getElementById('btn-submit');
+  btn.disabled = count < 12;
+  document.getElementById('submit-hint').textContent = count < 12
+    ? `Faltan ${12 - count} pregunta(s) por responder.`
+    : 'Todas las preguntas están respondidas. Puedes calificar tu evaluación.';
+}
+
+function submitExam() {
+  const currentAttempt = state.attempts + 1;
+  const cap = getAttemptCap(currentAttempt);
+
+  const dimPoints = { libro_abierto: 0, escudo: 0, fuego: 0, corona: 0 };
+  const missedQuestions = [];
+
+  sessionQuestions.forEach(q => {
+    const ans = userAnswers[q.id];
+    if (q.dim === 'corona') {
+      const s1Obj = q.shuffledStep1[ans.step1Idx];
+      const s2Obj = q.shuffledStep2[ans.step2Idx];
+      let pts = 0;
+      if (s1Obj.isCorrect) {
+        pts += 0.5;
+        if (s2Obj.isCorrect) {
+          pts += 0.5;
+        }
+      }
+      dimPoints.corona += pts;
+      if (pts < 1.0) {
+        const correctS1 = q.shuffledStep1.find(o => o.isCorrect).text;
+        const correctS2 = q.shuffledStep2.find(o => o.isCorrect).text;
+        missedQuestions.push({
+          dim: q.dim,
+          prompt: q.prompt,
+          chosenText: `Paso 1: "${s1Obj.text}" (${s1Obj.isCorrect ? 'Correcto' : 'Incorrecto'}) | Paso 2: "${s2Obj.text}" (${s2Obj.isCorrect ? 'Correcto' : 'Incorrecto'})`,
+          correctText: `Paso 1: "${correctS1}" | Paso 2: "${correctS2}"`,
+          explanation: q.explanation
+        });
+      }
+    } else {
+      const chosenObj = q.shuffledOptions[ans.selectedIdx];
+      if (chosenObj.isCorrect) {
+        dimPoints[q.dim] += 1.0;
+      } else {
+        const correctObj = q.shuffledOptions.find(o => o.isCorrect);
+        missedQuestions.push({
+          dim: q.dim,
+          prompt: q.prompt,
+          chosenText: chosenObj.text,
+          correctText: correctObj.text,
+          explanation: q.explanation
+        });
+      }
+    }
+  });
+
+  const totalPoints = dimPoints.libro_abierto + dimPoints.escudo + dimPoints.fuego + dimPoints.corona;
+  const rawPct = Math.round((totalPoints / 12) * 100);
+  const notaFinal = Math.min(rawPct, cap);
+  const aprobado = notaFinal >= 70;
+  const medalla = getMedal(notaFinal);
+
+  const stats = {
+    libro_abierto: Math.round((dimPoints.libro_abierto / 3) * 100),
+    escudo: Math.round((dimPoints.escudo / 3) * 100),
+    fuego: Math.round((dimPoints.fuego / 3) * 100),
+    corona: Math.round((dimPoints.corona / 3) * 100)
+  };
+
+  // Análisis de fortalezas y debilidades
+  const dimsOrder = ['libro_abierto', 'escudo', 'fuego', 'corona'];
+  const maxPct = Math.max(...dimsOrder.map(d => stats[d]));
+  const minPct = Math.min(...dimsOrder.map(d => stats[d]));
+
+  const tiedTopDims = dimsOrder.filter(d => stats[d] === maxPct);
+  const isTieTop = tiedTopDims.length > 1;
+  // Desempate único: primera dimensión respondida en el orden del examen
+  tiedTopDims.sort((a, b) => (firstDimSeq[a] || 999) - (firstDimSeq[b] || 999));
+  const topDim = tiedTopDims[0];
+  const isPerfectTie = isTieTop && maxPct === 100;
+
+  const hideReinforce = isPerfectTie || minPct === 100;
+  const tiedBottomDims = hideReinforce ? [] : dimsOrder.filter(d => stats[d] === minPct);
+
+  // Insignias de identidad evolutivas (solo si aprueba)
+  let insigniaGanada = null;
+  let nivelActual = 0;
+  if (aprobado) {
+    insigniaGanada = DIM_META[topDim].name;
+    const badges = loadIdentityBadges();
+    if (!badges[topDim].includes(LESSON_ID)) {
+      badges[topDim].push(LESSON_ID);
+      saveIdentityBadges(badges);
+    }
+    nivelActual = Math.min(4, Math.max(1, badges[topDim].length));
+  }
+
+  // Actualizar persistencia de intentos
+  state.attempts = currentAttempt;
+  state.lastAttemptTimestamp = Date.now();
+  state.lastScore = notaFinal;
+  if (aprobado) state.passed = true;
+  if (currentAttempt === 1 && !aprobado) {
+    state.failedFirstAttemptDetails = missedQuestions;
+  }
+  state.weakDimensionsLastAttempt = dimsOrder.filter(d => stats[d] < 70);
+  saveExamState();
+
+  // Sincronización con app principal vía postMessage
+  try {
+    window.parent.postMessage({
+      type: 'EXAM_COMPLETED',
+      lessonId: LESSON_ID,
+      nota: notaFinal,
+      aprobado: aprobado,
+      medalla: medalla.name,
+      intentos: currentAttempt,
+      insigniaIdentidad: insigniaGanada,
+      insigniaEstrella: aprobado ? isPerfectTie : false,
+      nivelIdentidad: nivelActual,
+      stats: stats
+    }, '*');
+  } catch (e) {}
+
+  renderResults({
+    currentAttempt,
+    cap,
+    rawPct,
+    notaFinal,
+    aprobado,
+    medalla,
+    stats,
+    topDim,
+    maxPct,
+    isTieTop,
+    tiedTopDims,
+    isPerfectTie,
+    hideReinforce,
+    tiedBottomDims,
+    minPct,
+    insigniaGanada,
+    nivelActual,
+    missedQuestions
+  });
+}
+
+function renderResults(res) {
+  const nextAttempt = res.currentAttempt + 1;
+  const nextCap = getAttemptCap(nextAttempt);
+
+  let html = `<div class="card">
+    <div style="text-align:center;margin-bottom:14px;">
+      <span class="inst-tag">Evaluación Estadística ICCVGD</span>
+      <h2 style="margin-top:10px;justify-content:center;">Resultados: ${escapeHtml(LESSON_TITLE)}</h2>
+    </div>
+
+    <div class="score-hero">
+      <div style="font-size:16px;font-weight:700;color:var(--muted);">Intento #${res.currentAttempt} · Techo aplicado: ${res.cap}%</div>
+      <div class="score-big">${res.notaFinal}%</div>
+      ${res.rawPct > res.cap ? `<div style="font-size:15.5px;color:var(--warn);font-weight:700;margin-top:4px;">Puntaje bruto: ${res.rawPct}% (ajustado al tope de ${res.cap}% por intento #${res.currentAttempt})</div>` : ''}
+      <div class="medal-pill">${res.medalla.emoji} Medalla: ${res.medalla.name}</div>
+      <div style="margin-top:10px;font-weight:800;color:${res.aprobado ? 'var(--success)' : 'var(--danger)'};">
+        ${res.aprobado ? '✅ EVALUACIÓN APROBADA (Mínimo 70% alcanzado)' : '❌ NO APROBADA (Se requiere mínimo 70%)'}
+      </div>
+    </div>`;
+
+  // Retroalimentación obligatoria si falló el 1.º intento
+  if (res.currentAttempt === 1 && !res.aprobado && res.missedQuestions.length > 0) {
+    html += `<div style="margin:20px 0;">
+      <h3 style="color:var(--danger);margin-bottom:8px;">📋 Retroalimentación y Aclaración de Preguntas Falladas (1.º Intento)</h3>
+      <p style="font-size:17px;margin-top:0;">Estudia cuidadosamente cada aclaración antes de iniciar tu 2.º intento (techo máximo 85%):</p>
+      ${res.missedQuestions.map((m, i) => `
+        <div class="fb-item">
+          <div style="font-weight:800;font-size:16px;margin-bottom:4px;">${i + 1}. [${DIM_META[m.dim].emoji} ${DIM_META[m.dim].name}] ${escapeHtml(m.prompt)}</div>
+          <div style="font-size:16.5px;margin-bottom:4px;"><strong>Tu selección:</strong> ${escapeHtml(m.chosenText)}</div>
+          <div style="font-size:16.5px;color:var(--success);margin-bottom:6px;"><strong>Fundamento correcto:</strong> ${escapeHtml(m.correctText)}</div>
+          <div style="font-size:16.5px;background:var(--card);padding:10px;border-radius:10px;"><strong>Aclaración:</strong> ${escapeHtml(m.explanation)}</div>
+        </div>
+      `).join('')}
+    </div>`;
+  } else if (res.currentAttempt > 1 && !res.aprobado) {
+    html += `<div class="alert-box">
+      <strong>Nota pedagógica:</strong> En intentos posteriores al 1.º no se muestran las respuestas detalladas para preservar el rigor evaluativo. Repasa la lección y tus áreas con menor puntaje antes del siguiente intento.
+    </div>`;
+  }
+
+  // Diagrama de barras de las 4 dimensiones
+  html += `<h3 style="margin-top:20px;">📊 Diagnóstico por Dimensión (0% a 100%)</h3>
+  <div style="margin-top:12px;">`;
+
+  ['libro_abierto', 'escudo', 'fuego', 'corona'].forEach(dim => {
+    const pct = res.stats[dim];
+    const dm = DIM_META[dim];
+    html += `<div class="bar-row">
+      <div class="bar-header">
+        <span>${dm.emoji} ${dm.name}</span>
+        <span>${pct}%</span>
+      </div>
+      <div class="bar-track">
+        <div class="bar-fill" style="width:${pct}%;background:${dm.color};"></div>
+      </div>
+    </div>`;
+  });
+  html += `</div>`;
+
+  // Fortaleza Principal e Insignia de Identidad
+  const topMeta = DIM_META[res.topDim];
+  html += `<div class="identity-box">
+    <div style="font-size:15px;font-weight:800;text-transform:uppercase;color:var(--primary);">🏆 Fortaleza Principal</div>`;
+
+  if (res.aprobado) {
+    const starBadge = res.isPerfectTie ? ' ⭐ (Insignia + Estrella por Empate Perfecto)' : '';
+    html += `<div style="font-size:21px;font-weight:800;margin:6px 0;">
+      ${topMeta.emoji} Insignia de Identidad: ${topMeta.name}${starBadge} — Nivel ${res.nivelActual} de 4
+    </div>`;
+  } else {
+    html += `<div style="font-size:20px;font-weight:800;margin:6px 0;">
+      ${topMeta.emoji} Dimensión destacada: ${topMeta.name} (${res.maxPct}%) — <em>Aprueba con 70% o más para desbloquear tu insignia evolutiva</em>
+    </div>`;
+  }
+
+  if (res.isTieTop) {
+    const tiedNames = res.tiedTopDims.map(d => `${DIM_META[d].name} (${res.maxPct}%)`).join(', ');
+    html += `<p style="margin:8px 0 0 0;font-size:16.5px;">
+      <strong>Aclaración de desempate:</strong> Se registró un empate de puntaje entre <strong>${tiedNames}</strong>. Conforme al criterio único de desempate, se asignó <strong>${topMeta.name}</strong> por haber sido la primera dimensión respondida en el orden del examen.${res.isPerfectTie ? ' Al tratarse de un empate con puntaje perfecto (100%), se otorga la distinción especial <strong>Insignia + Estrella ⭐</strong>.' : ''}
+    </p>`;
+  }
+  html += `</div>`;
+
+  // Área a Reforzar (omitida por completo si hay empate perfecto en 100% o si todas están en 100%)
+  if (!res.hideReinforce && res.tiedBottomDims.length > 0) {
+    const weakText = res.tiedBottomDims.map(d => `${DIM_META[d].emoji} ${DIM_META[d].name} (${res.minPct}%)`).join(', ');
+    html += `<div class="reinforce-box">
+      <div style="font-size:15px;font-weight:800;text-transform:uppercase;color:var(--warn);">🎯 Área a Reforzar</div>
+      <div style="font-size:18.5px;font-weight:700;margin-top:4px;">${weakText}</div>
+    </div>`;
+  }
+
+  // Botón de reintento con temporizador si aplica
+  html += `<div style="margin-top:20px;">
+    <div id="result-cooldown-box" class="alert-box hidden"></div>
+    <button id="btn-retry" class="btn-primary" onclick="startExam()">Reintentar Evaluación (Intento #${nextAttempt} · Techo ${nextCap}%)</button>
+  </div>`;
+
+  html += `</div>`;
+
+  const resView = document.getElementById('view-results');
+  resView.innerHTML = html;
+  document.getElementById('view-exam').classList.add('hidden');
+  resView.classList.remove('hidden');
+
+  setupResultCooldown(nextAttempt, nextCap);
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function setupResultCooldown(nextAttempt, nextCap) {
+  if (cooldownTimer) clearInterval(cooldownTimer);
+  const requiredSec = getCooldownSeconds(nextAttempt);
+  const btnRetry = document.getElementById('btn-retry');
+  const cdBox = document.getElementById('result-cooldown-box');
+
+  if (requiredSec <= 0) return;
+
+  function tick() {
+    const elapsed = Math.floor((Date.now() - state.lastAttemptTimestamp) / 1000);
+    const remaining = requiredSec - elapsed;
+    if (remaining > 0) {
+      cdBox.classList.remove('hidden');
+      cdBox.innerHTML = `⏳ <strong>Tiempo obligatorio de repaso antes del Intento #${nextAttempt}:</strong> Espera <strong>${remaining} segundos</strong>.`;
+      btnRetry.disabled = true;
+      btnRetry.textContent = `Espera ${remaining}s para iniciar Intento #${nextAttempt}...`;
+    } else {
+      clearInterval(cooldownTimer);
+      cdBox.classList.add('hidden');
+      btnRetry.disabled = false;
+      btnRetry.textContent = `Reintentar Evaluación (Intento #${nextAttempt} · Techo ${nextCap}%)`;
+    }
+  }
+  tick();
+  cooldownTimer = setInterval(tick, 500);
+}
+
+renderIntro();
+</script>
+</body>
+</html>

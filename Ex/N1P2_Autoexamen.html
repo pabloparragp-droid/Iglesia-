@@ -1,0 +1,1086 @@
+<!DOCTYPE html>
+<html lang="es" data-theme="original">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>Evaluación Estadística ICCVGD — La Oración</title>
+<style>
+:root {
+  --bg: #F4F6F9;
+  --card: #FFFFFF;
+  --text: #1A202C;
+  --muted: #4A5568;
+  --border: #DCE3EC;
+  --primary: #BF5B00;
+  --accent: #8D3E00;
+  --primary-soft: #FFF3E0;
+  --success: #2E7D32;
+  --success-soft: #E8F5E9;
+  --danger: #C62828;
+  --danger-soft: #FFEBEE;
+  --warn: #B45309;
+  --warn-soft: #FEF3C7;
+  --shadow: 0 6px 20px rgba(16, 24, 40, 0.07);
+}
+[data-theme="pastel"] {
+  --bg: #EBF3FA;
+  --card: #F9FCFF;
+  --text: #1E293B;
+  --muted: #475569;
+  --border: #B6D0EB;
+}
+[data-theme="oscuro"], [data-theme="dark"] {
+  --bg: #0F172A;
+  --card: #1E293B;
+  --text: #F1F5F9;
+  --muted: #94A3B8;
+  --border: #334155;
+  --primary-soft: #1E3A5F;
+  --success-soft: #143622;
+  --danger-soft: #3F181D;
+  --warn-soft: #3B2810;
+  --shadow: 0 6px 24px rgba(0,0,0,0.38);
+}
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  font-size: 19px;
+  line-height: 1.6;
+  padding: env(safe-area-inset-top) env(safe-area-inset-right) calc(44px + env(safe-area-inset-bottom)) env(safe-area-inset-left);
+  transition: background 0.25s, color 0.25s;
+}
+.topbar {
+  position: sticky;
+  top: 0;
+  z-index: 60;
+  background: var(--card);
+  border-bottom: 2px solid var(--border);
+  padding: 10px 14px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+.brand-group {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+.inst-tag {
+  background: var(--primary);
+  color: #FFFFFF;
+  font-weight: 800;
+  font-size: 14px;
+  padding: 4px 11px;
+  border-radius: 999px;
+  letter-spacing: 0.3px;
+}
+.step-tag {
+  font-weight: 700;
+  font-size: 15px;
+  color: var(--primary);
+}
+[data-theme="oscuro"] .step-tag, [data-theme="dark"] .step-tag {
+  color: #93C5FD;
+}
+.theme-controls {
+  display: flex;
+  gap: 5px;
+}
+.btn-theme {
+  border: 1.5px solid var(--border);
+  background: var(--bg);
+  color: var(--text);
+  border-radius: 999px;
+  padding: 5px 11px;
+  font-size: 14px;
+  font-weight: 700;
+  cursor: pointer;
+}
+.btn-theme.active {
+  background: var(--primary);
+  color: #FFFFFF;
+  border-color: var(--primary);
+}
+.container {
+  max-width: 720px;
+  margin: 0 auto;
+  padding: 18px 15px;
+}
+.hero-banner {
+  background: linear-gradient(135deg, var(--primary), var(--accent));
+  color: #FFFFFF;
+  border-radius: 20px;
+  padding: 24px 20px;
+  margin-bottom: 18px;
+  box-shadow: var(--shadow);
+}
+.hero-inst {
+  display: inline-block;
+  background: rgba(255,255,255,0.2);
+  border: 1px solid rgba(255,255,255,0.35);
+  padding: 4px 13px;
+  border-radius: 999px;
+  font-size: 14.5px;
+  font-weight: 800;
+  letter-spacing: 0.4px;
+  margin-bottom: 10px;
+}
+h1 {
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: 27px;
+  line-height: 1.25;
+  margin: 0 0 8px 0;
+}
+h2 {
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: 22px;
+  line-height: 1.3;
+  margin: 0 0 12px 0;
+  color: var(--primary);
+}
+[data-theme="oscuro"] h2, [data-theme="dark"] h2 {
+  color: #93C5FD;
+}
+.card {
+  background: var(--card);
+  border: 1.5px solid var(--border);
+  border-radius: 18px;
+  padding: 20px;
+  margin-bottom: 18px;
+  box-shadow: var(--shadow);
+}
+.rules-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 10px;
+  margin: 14px 0;
+}
+.rule-pill {
+  background: var(--primary-soft);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 11px 12px;
+  font-size: 16px;
+}
+.rule-pill strong {
+  display: block;
+  color: var(--primary);
+  font-size: 15px;
+}
+[data-theme="oscuro"] .rule-pill strong, [data-theme="dark"] .rule-pill strong {
+  color: #93C5FD;
+}
+.alert-box {
+  border-radius: 14px;
+  padding: 15px 16px;
+  margin: 14px 0;
+  border-left: 5px solid var(--warn);
+  background: var(--warn-soft);
+  font-size: 17.5px;
+}
+.alert-danger {
+  border-left-color: var(--danger);
+  background: var(--danger-soft);
+}
+.alert-success {
+  border-left-color: var(--success);
+  background: var(--success-soft);
+}
+.btn-primary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  width: 100%;
+  background: var(--primary);
+  color: #FFFFFF;
+  border: none;
+  border-radius: 14px;
+  padding: 15px 20px;
+  font-size: 19px;
+  font-weight: 800;
+  cursor: pointer;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.14);
+  transition: opacity 0.2s, transform 0.1s;
+}
+.btn-primary:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+.btn-primary:not(:disabled):active {
+  transform: scale(0.99);
+}
+.progress-bar-wrap {
+  background: var(--card);
+  border: 1.5px solid var(--border);
+  border-radius: 16px;
+  padding: 14px 16px;
+  margin-bottom: 18px;
+  position: sticky;
+  top: 54px;
+  z-index: 45;
+  box-shadow: var(--shadow);
+}
+.progress-top {
+  display: flex;
+  justify-content: space-between;
+  font-size: 15.5px;
+  font-weight: 700;
+  margin-bottom: 7px;
+}
+.progress-track {
+  width: 100%;
+  height: 11px;
+  background: var(--bg);
+  border-radius: 999px;
+  overflow: hidden;
+  border: 1px solid var(--border);
+}
+.progress-fill {
+  height: 100%;
+  width: 0%;
+  background: linear-gradient(90deg, var(--primary), var(--success));
+  transition: width 0.3s ease;
+}
+.q-card {
+  background: var(--card);
+  border: 1.5px solid var(--border);
+  border-radius: 18px;
+  padding: 20px;
+  margin-bottom: 18px;
+  box-shadow: var(--shadow);
+}
+.q-card.answered {
+  border-color: var(--primary);
+}
+.q-meta {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 10px;
+}
+.q-num {
+  font-weight: 800;
+  font-size: 15.5px;
+  color: var(--muted);
+}
+.dim-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 12px;
+  border-radius: 999px;
+  font-size: 14.5px;
+  font-weight: 800;
+}
+.dim-libro_abierto { background: #E3F2FD; color: #0D47A1; }
+.dim-escudo { background: #EDE7F6; color: #4527A0; }
+.dim-fuego { background: #FFF3E0; color: #E65100; }
+.dim-corona { background: #FCE4EC; color: #880E4F; }
+.q-prompt {
+  font-size: 19.5px;
+  font-weight: 700;
+  margin: 0 0 14px 0;
+}
+.lock-step {
+  background: var(--bg);
+  border: 1.5px solid var(--border);
+  border-radius: 14px;
+  padding: 14px;
+  margin-top: 12px;
+}
+.lock-label {
+  display: inline-block;
+  background: var(--primary);
+  color: #FFF;
+  font-size: 13.5px;
+  font-weight: 800;
+  padding: 3px 10px;
+  border-radius: 999px;
+  margin-bottom: 8px;
+}
+.opt-btn {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  width: 100%;
+  text-align: left;
+  background: var(--bg);
+  color: var(--text);
+  border: 1.5px solid var(--border);
+  border-radius: 12px;
+  padding: 13px 15px;
+  font-size: 18px;
+  line-height: 1.45;
+  margin-top: 9px;
+  cursor: pointer;
+  transition: border-color 0.15s, background 0.15s;
+}
+.lock-step .opt-btn {
+  background: var(--card);
+}
+.opt-btn:hover {
+  border-color: var(--primary);
+}
+.opt-btn.selected {
+  background: var(--primary-soft);
+  border-color: var(--primary);
+  border-width: 2.5px;
+  font-weight: 700;
+}
+.opt-letter {
+  min-width: 28px;
+  height: 28px;
+  border-radius: 8px;
+  background: var(--card);
+  border: 1.5px solid var(--border);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 800;
+  font-size: 15px;
+  flex-shrink: 0;
+}
+.opt-btn.selected .opt-letter {
+  background: var(--primary);
+  color: #FFF;
+  border-color: var(--primary);
+}
+.score-hero {
+  text-align: center;
+  padding: 22px 16px;
+  border-radius: 18px;
+  background: var(--primary-soft);
+  border: 2px solid var(--primary);
+  margin-bottom: 18px;
+}
+.score-big {
+  font-family: Georgia, serif;
+  font-size: 48px;
+  font-weight: 800;
+  color: var(--primary);
+  line-height: 1.1;
+}
+[data-theme="oscuro"] .score-big, [data-theme="dark"] .score-big {
+  color: #93C5FD;
+}
+.medal-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 18px;
+  border-radius: 999px;
+  font-size: 19px;
+  font-weight: 800;
+  margin-top: 10px;
+  background: var(--card);
+  border: 2px solid var(--primary);
+}
+.bar-row {
+  margin-bottom: 14px;
+}
+.bar-header {
+  display: flex;
+  justify-content: space-between;
+  font-weight: 700;
+  font-size: 17px;
+  margin-bottom: 5px;
+}
+.bar-track {
+  width: 100%;
+  height: 20px;
+  background: var(--bg);
+  border-radius: 999px;
+  overflow: hidden;
+  border: 1.5px solid var(--border);
+}
+.bar-fill {
+  height: 100%;
+  border-radius: 999px;
+  transition: width 0.6s ease;
+}
+.identity-box {
+  border: 2px solid var(--primary);
+  background: var(--primary-soft);
+  border-radius: 16px;
+  padding: 18px;
+  margin-top: 14px;
+}
+.reinforce-box {
+  border: 2px solid var(--warn);
+  background: var(--warn-soft);
+  border-radius: 16px;
+  padding: 16px;
+  margin-top: 14px;
+}
+.fb-item {
+  border: 1.5px solid var(--danger);
+  background: var(--danger-soft);
+  border-radius: 14px;
+  padding: 15px;
+  margin-bottom: 12px;
+}
+.hidden { display: none !important; }
+</style>
+</head>
+<body>
+<header class="topbar">
+  <div class="brand-group">
+    <span class="inst-tag">Evaluación Estadística ICCVGD</span>
+    <span class="step-tag">Nivel 1 · Paso 2</span>
+  </div>
+  <div class="theme-controls">
+    <button class="btn-theme active" data-t="original" onclick="setTheme('original')">Original</button>
+    <button class="btn-theme" data-t="pastel" onclick="setTheme('pastel')">Pastel</button>
+    <button class="btn-theme" data-t="oscuro" onclick="setTheme('oscuro')">Oscuro</button>
+  </div>
+</header>
+
+<main class="container">
+  <section class="hero-banner">
+    <div class="hero-inst">📊 Evaluación Estadística ICCVGD</div>
+    <h1>🙏 Autoexamen Exigente: La Oración</h1>
+    <p style="margin:0;opacity:0.95;">Diagnóstico riguroso de comprensión bíblica, discernimiento doctrinal, aplicación práctica y criterio integral.</p>
+  </section>
+
+  <!-- PANTALLA DE INICIO -->
+  <section id="view-intro" class="card">
+    <h2 style="margin-top:0;">🧭 Protocolo de Evaluación</h2>
+    <p style="margin-top:0;">Este instrumento evalúa dominio profundo en <strong>12 reactivos de alta exigencia</strong> distribuidos en 4 dimensiones:</p>
+    <div class="rules-grid">
+      <div class="rule-pill"><strong>📖 Libro Abierto (3)</strong>Lectura textual y fundamento</div>
+      <div class="rule-pill"><strong>🛡️ Escudo (3)</strong>Discernimiento y detector de error</div>
+      <div class="rule-pill"><strong>🔥 Fuego (3)</strong>Fe en acción y dilemas reales</div>
+      <div class="rule-pill"><strong>👑 Corona (3)</strong>Doble Candado: Qué y Por qué</div>
+    </div>
+    <div class="rules-grid">
+      <div class="rule-pill"><strong>🎯 Mínimo Aprobatorio</strong>70% requerido</div>
+      <div class="rule-pill"><strong>📉 Techo por Intento</strong>1.º: 100% · 2.º: 85% · 3.º: 75% · 4.º+: 70%</div>
+    </div>
+
+    <div id="intro-status-box"></div>
+    <div id="cooldown-box" class="alert-box hidden"></div>
+
+    <button id="btn-start" class="btn-primary" onclick="startExam()">Comenzar Evaluación</button>
+  </section>
+
+  <!-- PANTALLA DEL EXAMEN -->
+  <section id="view-exam" class="hidden">
+    <div class="progress-bar-wrap">
+      <div class="progress-top">
+        <span id="attempt-indicator">Intento 1 · Techo máximo: 100%</span>
+        <span id="answered-indicator">Respondidas: 0 / 12</span>
+      </div>
+      <div class="progress-track">
+        <div id="progress-fill" class="progress-fill"></div>
+      </div>
+    </div>
+
+    <div id="questions-container"></div>
+
+    <div class="card" style="text-align:center;">
+      <p id="submit-hint" style="margin-top:0;color:var(--muted);font-size:17px;">Responde las 12 preguntas (incluyendo ambos pasos en Corona) para finalizar.</p>
+      <button id="btn-submit" class="btn-primary" disabled onclick="submitExam()">Finalizar y Calificar Evaluación</button>
+    </div>
+  </section>
+
+  <!-- PANTALLA DE RESULTADOS -->
+  <section id="view-results" class="hidden"></section>
+</main>
+
+<script>
+const LESSON_ID = "N1P2";
+const LESSON_TITLE = "La Oración";
+const QUESTIONS_DATA = [{"id": "n1p2_la1", "dim": "libro_abierto", "prompt": "Según la lección (Mateo 6:9; Juan 14:6, 13; Romanos 8:26; Efesios 2:18), ¿cuál es la arquitectura trinitaria auténtica de la oración cristiana?", "options": ["Oramos al Padre celestial, por medio del Hijo (único Mediador y en sus méritos) y en el poder y guía del Espíritu Santo.", "Oramos al Espíritu Santo para que convenza al Hijo de interceder ante un Padre distante.", "Oramos directamente apoyados en nuestros propios méritos religiosos usando el nombre de Jesús como fórmula final.", "Oramos indistintamente sin necesidad de mediación porque el hombre natural tiene acceso libre a Dios."], "correct": 0, "explanation": "Efesios 2:18 enseña que por medio de Cristo tenemos entrada por un mismo Espíritu al Padre."}, {"id": "n1p2_la2", "dim": "libro_abierto", "prompt": "De acuerdo con Mateo 26:41 y Hebreos 4:16, ¿cuál es el propósito central de la oración en la vida del discípulo?", "options": ["Alinear nuestro corazón a la voluntad de Dios, hallar gracia para el oportuno socorro y velar para no caer en tentación.", "Lograr que Dios modifique sus planes eternos para satisfacer nuestros deseos inmediatos.", "Cumplir un requisito horario que evite cualquier dificultad o prueba en la semana.", "Demostrar delante de otros nuestra elocuencia espiritual y dominio de frases bíblicas."], "correct": 0, "explanation": "La oración transforma nuestro corazón, nos acerca confiadamente al trono de la gracia y nos mantiene alerta frente a la tentación."}, {"id": "n1p2_la3", "dim": "libro_abierto", "prompt": "En el esquema A.C.A.S. basado en el Padre Nuestro (Mateo 6:9-13), ¿por qué la Adoración precede a la Súplica y qué lugar ocupa la Confesión?", "options": ["Primero exaltamos quién es Dios (santidad y soberanía), luego limpiamos el corazón sin excusas (Salmo 66:18) antes de presentar peticiones alineadas a su voluntad.", "La adoración es un saludo formal opcional y la confesión solo se hace una vez al año.", "La súplica debe ir primero porque lo urgente para Dios son nuestras necesidades materiales.", "La acción de gracias reemplaza la necesidad de confesar pecados específicos."], "correct": 0, "explanation": "Exaltar primero quién es Dios (Mateo 6:9) y confesar pecados específicos (Salmo 66:18; 1 Juan 1:9) mantiene una comunión sin estorbos."}, {"id": "n1p2_es1", "dim": "escudo", "prompt": "Un creyente dice: «Si repito exactamente una oración veinte veces seguidas con mucha intensidad, Dios se verá obligado a concederme lo que le pido». ¿Qué error doctrinal señala Jesús en Mateo 6:7?", "options": ["Confunde la fe filial con las 'vanas repeticiones' paganas que pretenden manipular a Dios por palabrería en lugar de orar con sinceridad al Padre.", "Piensa que Dios escucha únicamente cuando se ora en voz alta.", "Cree que pedir por necesidades personales está prohibido en la oración.", "Supone que la perseverancia en la oración es innecesaria."], "correct": 0, "explanation": "Jesús advirtió en Mateo 6:7 no usar vanas repeticiones; la oración no es manipular a un Dios reacio, sino comunión sincera con el Padre."}, {"id": "n1p2_es2", "dim": "escudo", "prompt": "Alguien afirma: «Yo oro todos los días pidiendo cosas, pero no leo la Biblia porque me quita tiempo para orar». ¿Por qué esta separación distorsiona la oración bíblica?", "options": ["Porque según 1 Juan 5:14 Dios escucha cuando pedimos conforme a su voluntad, y su voluntad está revelada en su Palabra; Palabra y Oración siempre van unidas.", "Porque Dios no escucha ninguna oración que dure menos de una hora.", "Porque la Biblia solo debe leerse en grupo y nunca en el aposento secreto.", "Porque pedir cosas materiales invalida cualquier oración delante de Dios."], "correct": 0, "explanation": "El Paso 1 (Palabra) y el Paso 2 (Oración) son inseparables: la Escritura revela la voluntad de Dios conforme a la cual oramos con confianza."}, {"id": "n1p2_es3", "dim": "escudo", "prompt": "Una persona ora intensamente en público en las reuniones de la iglesia, pero en su casa pasa semanas sin entrar a su aposento a solas con Dios. ¿Cuál es la falla espiritual?", "options": ["Descuida el altar secreto que Jesús mandó en Mateo 6:6; nadie puede edificar al cuerpo en público con poder espiritual si abandona la intimidad privada con el Padre.", "La oración pública está prohibida en el Nuevo Testamento.", "Orar por otros en la iglesia es menos importante que orar por uno mismo.", "El aposento secreto se refiere exclusivamente a un cuarto sin ventanas."], "correct": 0, "explanation": "La oración secreta sostiene todo servicio público; cerrar la puerta en lo secreto revela si buscamos agradar al Padre o ser vistos por los hombres."}, {"id": "n1p2_fu1", "dim": "fuego", "prompt": "Atraviesas una crisis financiera y familiar muy fuerte que te roba el sueño y te llena de ansiedad. Según Filipenses 4:6 y Hebreos 4:16, ¿cómo debes actuar?", "options": ["Entrar a tu aposento secreto, entregar cada carga específica con acción de gracias y súplica al Padre, descansando en su voluntad y oportuno socorro.", "Guardar silencio ante Dios hasta que resuelvas el problema por tu cuenta para no molestarlo.", "Quejarte constantemente con tus conocidos mientras descuidas tu tiempo diario de oración.", "Exigirle a Dios una solución inmediata bajo tus propios términos y plazos."], "correct": 0, "explanation": "Filipenses 4:6 enseña a no afanarnos por nada, sino presentar nuestras peticiones delante de Dios en toda oración y ruego, con acción de gracias."}, {"id": "n1p2_fu2", "dim": "fuego", "prompt": "Un hermano de la iglesia te ha ofendido y sientes resentimiento hacia él, pero te dispones a hacer tu oración matutina. ¿Qué debes hacer conforme a Salmo 66:18 y el Padre Nuestro?", "options": ["Confesar tu resentimiento delante de Dios, decidir perdonar como Cristo te perdonó y limpiar tu corazón para que no haya estorbos en tu comunión.", "Ignorar el asunto y pedirle a Dios que castigue al hermano por su actitud.", "Dejar de orar durante varios días hasta que se te pase el enojo de forma natural.", "Hacer una oración larga de adoración fingiendo que no existe ningún problema."], "correct": 0, "explanation": "Si en nuestro corazón miramos la iniquidad o la falta de perdón, estorbamos nuestra comunión; la confesión sincera restaura la intimidad con el Padre."}, {"id": "n1p2_fu3", "dim": "fuego", "prompt": "Notas que tus oraciones se han vuelto una lista mecánica de cinco peticiones egoístas repetidas con prisa cada mañana. ¿Cómo reestructuras tus 15 minutos con Dios hoy?", "options": ["Aplicando el modelo A.C.A.S.: iniciar adorando quién es Dios, confesar pecados concretos, agradecer sus fidelidades e interceder por tu familia, tu iglesia y los perdidos.", "Aumentando la lista a veinte peticiones personales para cubrir todas tus necesidades.", "Dejando de orar por tu iglesia para concentrarte únicamente en tus metas personales.", "Repitiendo el Padre Nuestro lo más rápido posible antes de salir de casa."], "correct": 0, "explanation": "Orar 'Padre nuestro' nos saca del individualismo y el esquema A.C.A.S. equilibra adoración, confesión, gratitud e intercesión."}, {"id": "n1p2_co1", "dim": "corona", "prompt": "Doble Candado · Acceso al Padre: Un nuevo creyente siente vergüenza de orar porque falló ayer y cree que Dios no lo recibirá.", "paso1": {"question": "¿Qué paso debe dar inmediatamente en su aposento secreto?", "options": ["Acercarse confiadamente al Padre confesando su pecado específico en el nombre de Jesús para recibir perdón y restauración.", "Alejarse de la oración durante una semana como castigo propio hasta sentirse digno.", "Intentar hacer varias buenas obras primero para pagar su entrada a la presencia de Dios."], "correct": 0}, "paso2": {"question": "¿Cuál es el fundamento bíblico que sostiene este acceso?", "options": ["Oramos por medio de los méritos de Cristo (Juan 14:6, 13; Hebreos 4:16) y al confesar nuestros pecados Él es fiel y justo para perdonarnos (1 Juan 1:9).", "Dios solo escucha a quienes mantienen una semana perfecta sin tropiezos.", "El sentimiento de culpa sustituye la obra mediadora de Jesucristo."], "correct": 0}, "explanation": "Nunca oramos por méritos propios, sino por medio del Hijo; la confesión sincera restaura inmediatamente la comunión."}, {"id": "n1p2_co2", "dim": "corona", "prompt": "Doble Candado · Vigilancia Espiritual: Frente a un ambiente laboral o digital lleno de tentaciones constantes.", "paso1": {"question": "¿Qué práctica preventiva debe sostener el discípulo?", "options": ["Velar y orar diariamente en secreto pidiendo dirección al Espíritu Santo antes de enfrentar la jornada.", "Confiar en que su experiencia cristiana pasada lo protegerá sin necesidad de orar hoy.", "Orar únicamente después de haber caído en la tentación para pedir alivio."], "correct": 0}, "paso2": {"question": "¿Qué enseñanza de Jesús y Pablo respalda esta práctica?", "options": ["Mateo 26:41 ('Velad y orad, para que no entréis en tentación') y Romanos 8:26 (el Espíritu nos ayuda en nuestra debilidad).", "Mateo 6:7 enseña que basta una oración semanal para cubrir toda tentación.", "Filipenses 4:6 indica que la tentación desaparece cuando dejamos de pensar en ella."], "correct": 0}, "explanation": "Sin oración la carne toma el control y perdemos discernimiento espiritual; velar y orar nos sostiene en victoria."}, {"id": "n1p2_co3", "dim": "corona", "prompt": "Doble Candado · Dimensión Comunitaria de la Oración: Al evaluar el impacto de la oración del discípulo en la iglesia local.", "paso1": {"question": "¿Cómo debe ejercerse la súplica en la vida cristiana?", "options": ["Intercediendo fielmente por los hermanos, los líderes y la salvación de los perdidos, no solo por intereses propios.", "Limitando las peticiones a la familia inmediata para no distraerse con problemas ajenos.", "Dejando la intercesión exclusivamente en manos del pastor de la congregación."], "correct": 0}, "paso2": {"question": "¿Qué fundamento bíblico sustenta esta responsabilidad?", "options": ["Jesús enseñó a orar 'Padre nuestro' (Mateo 6:9) y 1 Timoteo 2:1 exhorta a hacer rogativas, oraciones e intercesiones por todos los hombres.", "Mateo 6:6 prohíbe mencionar a otras personas cuando oramos a puerta cerrada.", "Romanos 8:15 limita la oración filial a peticiones estrictamente individuales."], "correct": 0}, "explanation": "La oración filial nos saca del egoísmo e une nuestros corazones en la misión eterna de la Iglesia."}];
+
+const DIM_META = {
+  libro_abierto: { name: 'Libro Abierto', emoji: '📖', color: '#1565C0' },
+  escudo: { name: 'Escudo', emoji: '🛡️', color: '#5E35B1' },
+  fuego: { name: 'Fuego', emoji: '🔥', color: '#EF6C00' },
+  corona: { name: 'Corona', emoji: '👑', color: '#AD1457' }
+};
+
+const STORAGE_EXAM_KEY = 'iccvgd_exam_' + LESSON_ID;
+const STORAGE_BADGES_KEY = 'iccvgd_identity_badges_v1';
+
+let state = loadExamState();
+let sessionQuestions = [];
+let userAnswers = {};
+let answerSeqCounter = 0;
+let firstDimSeq = {};
+let cooldownTimer = null;
+
+function setTheme(t) {
+  document.documentElement.setAttribute('data-theme', t);
+  localStorage.setItem('discipulado_theme', t);
+  document.querySelectorAll('.btn-theme').forEach(b => {
+    b.classList.toggle('active', b.dataset.t === t);
+  });
+}
+(function initTheme() {
+  const saved = localStorage.getItem('discipulado_theme') || 'original';
+  setTheme(saved);
+})();
+
+function loadExamState() {
+  try {
+    const raw = localStorage.getItem(STORAGE_EXAM_KEY);
+    if (raw) return JSON.parse(raw);
+  } catch (e) {}
+  return {
+    attempts: 0,
+    lastAttemptTimestamp: 0,
+    lastScore: null,
+    passed: false,
+    failedFirstAttemptDetails: null,
+    weakDimensionsLastAttempt: []
+  };
+}
+
+function saveExamState() {
+  try {
+    localStorage.setItem(STORAGE_EXAM_KEY, JSON.stringify(state));
+  } catch (e) {}
+}
+
+function loadIdentityBadges() {
+  try {
+    const raw = localStorage.getItem(STORAGE_BADGES_KEY);
+    if (raw) {
+      const parsed = JSON.parse(raw);
+      return {
+        libro_abierto: Array.isArray(parsed.libro_abierto) ? parsed.libro_abierto : [],
+        escudo: Array.isArray(parsed.escudo) ? parsed.escudo : [],
+        fuego: Array.isArray(parsed.fuego) ? parsed.fuego : [],
+        corona: Array.isArray(parsed.corona) ? parsed.corona : []
+      };
+    }
+  } catch (e) {}
+  return { libro_abierto: [], escudo: [], fuego: [], corona: [] };
+}
+
+function saveIdentityBadges(badges) {
+  try {
+    localStorage.setItem(STORAGE_BADGES_KEY, JSON.stringify(badges));
+  } catch (e) {}
+}
+
+function getAttemptCap(attemptNum) {
+  if (attemptNum <= 1) return 100;
+  if (attemptNum === 2) return 85;
+  if (attemptNum === 3) return 75;
+  return 70;
+}
+
+function getCooldownSeconds(nextAttemptNum) {
+  if (nextAttemptNum === 3) return 30;
+  if (nextAttemptNum >= 4) return 60;
+  return 0;
+}
+
+function getMedal(score) {
+  if (score >= 95) return { name: 'Diamante', emoji: '💎' };
+  if (score >= 85) return { name: 'Oro', emoji: '🥇' };
+  if (score >= 75) return { name: 'Plata', emoji: '🥈' };
+  if (score >= 70) return { name: 'Bronce', emoji: '🥉' };
+  return { name: 'Sin Medalla', emoji: '📋' };
+}
+
+function shuffleArray(arr) {
+  const copy = arr.slice();
+  for (let i = copy.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [copy[i], copy[j]] = [copy[j], copy[i]];
+  }
+  return copy;
+}
+
+function escapeHtml(str) {
+  return String(str)
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;');
+}
+
+function renderIntro() {
+  const nextAttempt = state.attempts + 1;
+  const cap = getAttemptCap(nextAttempt);
+  const statusBox = document.getElementById('intro-status-box');
+  let html = '';
+
+  if (state.attempts === 0) {
+    html += `<div class="alert-box alert-success"><strong>1.º Intento disponible:</strong> Techo máximo del <strong>100%</strong> (Medalla Diamante alcanzable entre 95% y 100%).</div>`;
+  } else {
+    html += `<div class="alert-box"><strong>Preparando Intento #${nextAttempt}:</strong> El puntaje máximo alcanzable en este intento es <strong>${cap}%</strong>.${state.passed ? ' Ya aprobaste esta lección previamente.' : ''}</div>`;
+  }
+
+  if (nextAttempt === 2 && state.weakDimensionsLastAttempt && state.weakDimensionsLastAttempt.length > 0) {
+    const names = state.weakDimensionsLastAttempt.map(d => `${DIM_META[d].emoji} ${DIM_META[d].name}`).join(', ');
+    html += `<div class="alert-box alert-danger"><strong>Guía breve previa al 2.º Intento:</strong> Refuerza especialmente tus dimensiones falladas en el 1.º intento: <strong>${names}</strong>.</div>`;
+  }
+
+  statusBox.innerHTML = html;
+  setupCooldown(nextAttempt);
+}
+
+function setupCooldown(nextAttempt) {
+  if (cooldownTimer) clearInterval(cooldownTimer);
+  const requiredSec = getCooldownSeconds(nextAttempt);
+  const btnStart = document.getElementById('btn-start');
+  const cdBox = document.getElementById('cooldown-box');
+
+  if (requiredSec <= 0 || !state.lastAttemptTimestamp) {
+    cdBox.classList.add('hidden');
+    btnStart.disabled = false;
+    btnStart.textContent = `Iniciar Intento #${nextAttempt} (Techo ${getAttemptCap(nextAttempt)}%)`;
+    return;
+  }
+
+  function updateTimer() {
+    const elapsed = Math.floor((Date.now() - state.lastAttemptTimestamp) / 1000);
+    const remaining = requiredSec - elapsed;
+    if (remaining > 0) {
+      cdBox.classList.remove('hidden');
+      cdBox.innerHTML = `⏳ <strong>Tiempo obligatorio de repaso (Intento #${nextAttempt}):</strong> Espera <strong>${remaining} segundos</strong> antes de habilitar el examen.`;
+      btnStart.disabled = true;
+      btnStart.textContent = `Espera ${remaining}s para reintentar...`;
+    } else {
+      clearInterval(cooldownTimer);
+      cdBox.classList.add('hidden');
+      btnStart.disabled = false;
+      btnStart.textContent = `Iniciar Intento #${nextAttempt} (Techo ${getAttemptCap(nextAttempt)}%)`;
+    }
+  }
+  updateTimer();
+  cooldownTimer = setInterval(updateTimer, 500);
+}
+
+function startExam() {
+  const currentAttempt = state.attempts + 1;
+  const cap = getAttemptCap(currentAttempt);
+
+  userAnswers = {};
+  answerSeqCounter = 0;
+  firstDimSeq = {};
+
+  sessionQuestions = shuffleArray(QUESTIONS_DATA).map(q => {
+    if (q.dim === 'corona') {
+      const opts1 = shuffleArray(q.paso1.options.map((text, origIdx) => ({ text, isCorrect: origIdx === q.paso1.correct })));
+      const opts2 = shuffleArray(q.paso2.options.map((text, origIdx) => ({ text, isCorrect: origIdx === q.paso2.correct })));
+      return {
+        ...q,
+        shuffledStep1: opts1,
+        shuffledStep2: opts2
+      };
+    } else {
+      const opts = shuffleArray(q.options.map((text, origIdx) => ({ text, isCorrect: origIdx === q.correct })));
+      return {
+        ...q,
+        shuffledOptions: opts
+      };
+    }
+  });
+
+  document.getElementById('attempt-indicator').textContent = `Intento #${currentAttempt} · Techo máximo: ${cap}%`;
+  document.getElementById('view-intro').classList.add('hidden');
+  document.getElementById('view-results').classList.add('hidden');
+  document.getElementById('view-exam').classList.remove('hidden');
+
+  renderQuestions();
+  updateProgress();
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function renderQuestions() {
+  const container = document.getElementById('questions-container');
+  const letters = ['A', 'B', 'C', 'D'];
+  let html = '';
+
+  sessionQuestions.forEach((q, idx) => {
+    const dm = DIM_META[q.dim];
+    html += `<article class="q-card" id="qcard-${q.id}">
+      <div class="q-meta">
+        <span class="q-num">Pregunta ${idx + 1} de 12</span>
+        <span class="dim-badge dim-${q.dim}">${dm.emoji} ${dm.name}${q.dim === 'corona' ? ' · Doble Candado' : ''}</span>
+      </div>
+      <p class="q-prompt">${escapeHtml(q.prompt)}</p>`;
+
+    if (q.dim === 'corona') {
+      html += `<div class="lock-step">
+        <span class="lock-label">🔒 Paso 1 (0.5 pts): ¿Qué hacer?</span>
+        <div style="font-weight:600;margin-bottom:6px;">${escapeHtml(q.paso1.question)}</div>
+        ${q.shuffledStep1.map((opt, oIdx) => `
+          <button type="button" class="opt-btn" data-qid="${q.id}" data-step="1" data-oidx="${oIdx}" onclick="selectCoronaOption('${q.id}', 1, ${oIdx})">
+            <span class="opt-letter">${letters[oIdx]}</span>
+            <span>${escapeHtml(opt.text)}</span>
+          </button>
+        `).join('')}
+      </div>
+      <div class="lock-step">
+        <span class="lock-label">🔐 Paso 2 (0.5 pts): ¿Por qué? (Fundamento)</span>
+        <div style="font-weight:600;margin-bottom:6px;">${escapeHtml(q.paso2.question)}</div>
+        ${q.shuffledStep2.map((opt, oIdx) => `
+          <button type="button" class="opt-btn" data-qid="${q.id}" data-step="2" data-oidx="${oIdx}" onclick="selectCoronaOption('${q.id}', 2, ${oIdx})">
+            <span class="opt-letter">${letters[oIdx]}</span>
+            <span>${escapeHtml(opt.text)}</span>
+          </button>
+        `).join('')}
+      </div>`;
+    } else {
+      html += q.shuffledOptions.map((opt, oIdx) => `
+        <button type="button" class="opt-btn" data-qid="${q.id}" data-oidx="${oIdx}" onclick="selectStandardOption('${q.id}', ${oIdx})">
+          <span class="opt-letter">${letters[oIdx]}</span>
+          <span>${escapeHtml(opt.text)}</span>
+        </button>
+      `).join('');
+    }
+
+    html += `</article>`;
+  });
+
+  container.innerHTML = html;
+}
+
+function recordDimOrder(dim) {
+  if (firstDimSeq[dim] === undefined) {
+    answerSeqCounter += 1;
+    firstDimSeq[dim] = answerSeqCounter;
+  }
+}
+
+function selectStandardOption(qid, oIdx) {
+  const q = sessionQuestions.find(item => item.id === qid);
+  userAnswers[qid] = { selectedIdx: oIdx };
+  recordDimOrder(q.dim);
+
+  document.querySelectorAll(`.opt-btn[data-qid="${qid}"]`).forEach(btn => {
+    btn.classList.toggle('selected', Number(btn.dataset.oidx) === oIdx);
+  });
+  document.getElementById(`qcard-${qid}`).classList.add('answered');
+  updateProgress();
+}
+
+function selectCoronaOption(qid, step, oIdx) {
+  const q = sessionQuestions.find(item => item.id === qid);
+  if (!userAnswers[qid]) userAnswers[qid] = { step1Idx: null, step2Idx: null };
+  if (step === 1) userAnswers[qid].step1Idx = oIdx;
+  if (step === 2) userAnswers[qid].step2Idx = oIdx;
+
+  document.querySelectorAll(`.opt-btn[data-qid="${qid}"][data-step="${step}"]`).forEach(btn => {
+    btn.classList.toggle('selected', Number(btn.dataset.oidx) === oIdx);
+  });
+
+  if (userAnswers[qid].step1Idx !== null && userAnswers[qid].step2Idx !== null) {
+    recordDimOrder(q.dim);
+    document.getElementById(`qcard-${qid}`).classList.add('answered');
+  }
+  updateProgress();
+}
+
+function isQuestionAnswered(q) {
+  const ans = userAnswers[q.id];
+  if (!ans) return false;
+  if (q.dim === 'corona') {
+    return ans.step1Idx !== null && ans.step2Idx !== null;
+  }
+  return ans.selectedIdx !== undefined;
+}
+
+function updateProgress() {
+  const count = sessionQuestions.filter(isQuestionAnswered).length;
+  document.getElementById('answered-indicator').textContent = `Respondidas: ${count} / 12`;
+  document.getElementById('progress-fill').style.width = `${(count / 12) * 100}%`;
+  const btn = document.getElementById('btn-submit');
+  btn.disabled = count < 12;
+  document.getElementById('submit-hint').textContent = count < 12
+    ? `Faltan ${12 - count} pregunta(s) por responder.`
+    : 'Todas las preguntas están respondidas. Puedes calificar tu evaluación.';
+}
+
+function submitExam() {
+  const currentAttempt = state.attempts + 1;
+  const cap = getAttemptCap(currentAttempt);
+
+  const dimPoints = { libro_abierto: 0, escudo: 0, fuego: 0, corona: 0 };
+  const missedQuestions = [];
+
+  sessionQuestions.forEach(q => {
+    const ans = userAnswers[q.id];
+    if (q.dim === 'corona') {
+      const s1Obj = q.shuffledStep1[ans.step1Idx];
+      const s2Obj = q.shuffledStep2[ans.step2Idx];
+      let pts = 0;
+      if (s1Obj.isCorrect) {
+        pts += 0.5;
+        if (s2Obj.isCorrect) {
+          pts += 0.5;
+        }
+      }
+      dimPoints.corona += pts;
+      if (pts < 1.0) {
+        const correctS1 = q.shuffledStep1.find(o => o.isCorrect).text;
+        const correctS2 = q.shuffledStep2.find(o => o.isCorrect).text;
+        missedQuestions.push({
+          dim: q.dim,
+          prompt: q.prompt,
+          chosenText: `Paso 1: "${s1Obj.text}" (${s1Obj.isCorrect ? 'Correcto' : 'Incorrecto'}) | Paso 2: "${s2Obj.text}" (${s2Obj.isCorrect ? 'Correcto' : 'Incorrecto'})`,
+          correctText: `Paso 1: "${correctS1}" | Paso 2: "${correctS2}"`,
+          explanation: q.explanation
+        });
+      }
+    } else {
+      const chosenObj = q.shuffledOptions[ans.selectedIdx];
+      if (chosenObj.isCorrect) {
+        dimPoints[q.dim] += 1.0;
+      } else {
+        const correctObj = q.shuffledOptions.find(o => o.isCorrect);
+        missedQuestions.push({
+          dim: q.dim,
+          prompt: q.prompt,
+          chosenText: chosenObj.text,
+          correctText: correctObj.text,
+          explanation: q.explanation
+        });
+      }
+    }
+  });
+
+  const totalPoints = dimPoints.libro_abierto + dimPoints.escudo + dimPoints.fuego + dimPoints.corona;
+  const rawPct = Math.round((totalPoints / 12) * 100);
+  const notaFinal = Math.min(rawPct, cap);
+  const aprobado = notaFinal >= 70;
+  const medalla = getMedal(notaFinal);
+
+  const stats = {
+    libro_abierto: Math.round((dimPoints.libro_abierto / 3) * 100),
+    escudo: Math.round((dimPoints.escudo / 3) * 100),
+    fuego: Math.round((dimPoints.fuego / 3) * 100),
+    corona: Math.round((dimPoints.corona / 3) * 100)
+  };
+
+  // Análisis de fortalezas y debilidades
+  const dimsOrder = ['libro_abierto', 'escudo', 'fuego', 'corona'];
+  const maxPct = Math.max(...dimsOrder.map(d => stats[d]));
+  const minPct = Math.min(...dimsOrder.map(d => stats[d]));
+
+  const tiedTopDims = dimsOrder.filter(d => stats[d] === maxPct);
+  const isTieTop = tiedTopDims.length > 1;
+  // Desempate único: primera dimensión respondida en el orden del examen
+  tiedTopDims.sort((a, b) => (firstDimSeq[a] || 999) - (firstDimSeq[b] || 999));
+  const topDim = tiedTopDims[0];
+  const isPerfectTie = isTieTop && maxPct === 100;
+
+  const hideReinforce = isPerfectTie || minPct === 100;
+  const tiedBottomDims = hideReinforce ? [] : dimsOrder.filter(d => stats[d] === minPct);
+
+  // Insignias de identidad evolutivas (solo si aprueba)
+  let insigniaGanada = null;
+  let nivelActual = 0;
+  if (aprobado) {
+    insigniaGanada = DIM_META[topDim].name;
+    const badges = loadIdentityBadges();
+    if (!badges[topDim].includes(LESSON_ID)) {
+      badges[topDim].push(LESSON_ID);
+      saveIdentityBadges(badges);
+    }
+    nivelActual = Math.min(4, Math.max(1, badges[topDim].length));
+  }
+
+  // Actualizar persistencia de intentos
+  state.attempts = currentAttempt;
+  state.lastAttemptTimestamp = Date.now();
+  state.lastScore = notaFinal;
+  if (aprobado) state.passed = true;
+  if (currentAttempt === 1 && !aprobado) {
+    state.failedFirstAttemptDetails = missedQuestions;
+  }
+  state.weakDimensionsLastAttempt = dimsOrder.filter(d => stats[d] < 70);
+  saveExamState();
+
+  // Sincronización con app principal vía postMessage
+  try {
+    window.parent.postMessage({
+      type: 'EXAM_COMPLETED',
+      lessonId: LESSON_ID,
+      nota: notaFinal,
+      aprobado: aprobado,
+      medalla: medalla.name,
+      intentos: currentAttempt,
+      insigniaIdentidad: insigniaGanada,
+      insigniaEstrella: aprobado ? isPerfectTie : false,
+      nivelIdentidad: nivelActual,
+      stats: stats
+    }, '*');
+  } catch (e) {}
+
+  renderResults({
+    currentAttempt,
+    cap,
+    rawPct,
+    notaFinal,
+    aprobado,
+    medalla,
+    stats,
+    topDim,
+    maxPct,
+    isTieTop,
+    tiedTopDims,
+    isPerfectTie,
+    hideReinforce,
+    tiedBottomDims,
+    minPct,
+    insigniaGanada,
+    nivelActual,
+    missedQuestions
+  });
+}
+
+function renderResults(res) {
+  const nextAttempt = res.currentAttempt + 1;
+  const nextCap = getAttemptCap(nextAttempt);
+
+  let html = `<div class="card">
+    <div style="text-align:center;margin-bottom:14px;">
+      <span class="inst-tag">Evaluación Estadística ICCVGD</span>
+      <h2 style="margin-top:10px;justify-content:center;">Resultados: ${escapeHtml(LESSON_TITLE)}</h2>
+    </div>
+
+    <div class="score-hero">
+      <div style="font-size:16px;font-weight:700;color:var(--muted);">Intento #${res.currentAttempt} · Techo aplicado: ${res.cap}%</div>
+      <div class="score-big">${res.notaFinal}%</div>
+      ${res.rawPct > res.cap ? `<div style="font-size:15.5px;color:var(--warn);font-weight:700;margin-top:4px;">Puntaje bruto: ${res.rawPct}% (ajustado al tope de ${res.cap}% por intento #${res.currentAttempt})</div>` : ''}
+      <div class="medal-pill">${res.medalla.emoji} Medalla: ${res.medalla.name}</div>
+      <div style="margin-top:10px;font-weight:800;color:${res.aprobado ? 'var(--success)' : 'var(--danger)'};">
+        ${res.aprobado ? '✅ EVALUACIÓN APROBADA (Mínimo 70% alcanzado)' : '❌ NO APROBADA (Se requiere mínimo 70%)'}
+      </div>
+    </div>`;
+
+  // Retroalimentación obligatoria si falló el 1.º intento
+  if (res.currentAttempt === 1 && !res.aprobado && res.missedQuestions.length > 0) {
+    html += `<div style="margin:20px 0;">
+      <h3 style="color:var(--danger);margin-bottom:8px;">📋 Retroalimentación y Aclaración de Preguntas Falladas (1.º Intento)</h3>
+      <p style="font-size:17px;margin-top:0;">Estudia cuidadosamente cada aclaración antes de iniciar tu 2.º intento (techo máximo 85%):</p>
+      ${res.missedQuestions.map((m, i) => `
+        <div class="fb-item">
+          <div style="font-weight:800;font-size:16px;margin-bottom:4px;">${i + 1}. [${DIM_META[m.dim].emoji} ${DIM_META[m.dim].name}] ${escapeHtml(m.prompt)}</div>
+          <div style="font-size:16.5px;margin-bottom:4px;"><strong>Tu selección:</strong> ${escapeHtml(m.chosenText)}</div>
+          <div style="font-size:16.5px;color:var(--success);margin-bottom:6px;"><strong>Fundamento correcto:</strong> ${escapeHtml(m.correctText)}</div>
+          <div style="font-size:16.5px;background:var(--card);padding:10px;border-radius:10px;"><strong>Aclaración:</strong> ${escapeHtml(m.explanation)}</div>
+        </div>
+      `).join('')}
+    </div>`;
+  } else if (res.currentAttempt > 1 && !res.aprobado) {
+    html += `<div class="alert-box">
+      <strong>Nota pedagógica:</strong> En intentos posteriores al 1.º no se muestran las respuestas detalladas para preservar el rigor evaluativo. Repasa la lección y tus áreas con menor puntaje antes del siguiente intento.
+    </div>`;
+  }
+
+  // Diagrama de barras de las 4 dimensiones
+  html += `<h3 style="margin-top:20px;">📊 Diagnóstico por Dimensión (0% a 100%)</h3>
+  <div style="margin-top:12px;">`;
+
+  ['libro_abierto', 'escudo', 'fuego', 'corona'].forEach(dim => {
+    const pct = res.stats[dim];
+    const dm = DIM_META[dim];
+    html += `<div class="bar-row">
+      <div class="bar-header">
+        <span>${dm.emoji} ${dm.name}</span>
+        <span>${pct}%</span>
+      </div>
+      <div class="bar-track">
+        <div class="bar-fill" style="width:${pct}%;background:${dm.color};"></div>
+      </div>
+    </div>`;
+  });
+  html += `</div>`;
+
+  // Fortaleza Principal e Insignia de Identidad
+  const topMeta = DIM_META[res.topDim];
+  html += `<div class="identity-box">
+    <div style="font-size:15px;font-weight:800;text-transform:uppercase;color:var(--primary);">🏆 Fortaleza Principal</div>`;
+
+  if (res.aprobado) {
+    const starBadge = res.isPerfectTie ? ' ⭐ (Insignia + Estrella por Empate Perfecto)' : '';
+    html += `<div style="font-size:21px;font-weight:800;margin:6px 0;">
+      ${topMeta.emoji} Insignia de Identidad: ${topMeta.name}${starBadge} — Nivel ${res.nivelActual} de 4
+    </div>`;
+  } else {
+    html += `<div style="font-size:20px;font-weight:800;margin:6px 0;">
+      ${topMeta.emoji} Dimensión destacada: ${topMeta.name} (${res.maxPct}%) — <em>Aprueba con 70% o más para desbloquear tu insignia evolutiva</em>
+    </div>`;
+  }
+
+  if (res.isTieTop) {
+    const tiedNames = res.tiedTopDims.map(d => `${DIM_META[d].name} (${res.maxPct}%)`).join(', ');
+    html += `<p style="margin:8px 0 0 0;font-size:16.5px;">
+      <strong>Aclaración de desempate:</strong> Se registró un empate de puntaje entre <strong>${tiedNames}</strong>. Conforme al criterio único de desempate, se asignó <strong>${topMeta.name}</strong> por haber sido la primera dimensión respondida en el orden del examen.${res.isPerfectTie ? ' Al tratarse de un empate con puntaje perfecto (100%), se otorga la distinción especial <strong>Insignia + Estrella ⭐</strong>.' : ''}
+    </p>`;
+  }
+  html += `</div>`;
+
+  // Área a Reforzar (omitida por completo si hay empate perfecto en 100% o si todas están en 100%)
+  if (!res.hideReinforce && res.tiedBottomDims.length > 0) {
+    const weakText = res.tiedBottomDims.map(d => `${DIM_META[d].emoji} ${DIM_META[d].name} (${res.minPct}%)`).join(', ');
+    html += `<div class="reinforce-box">
+      <div style="font-size:15px;font-weight:800;text-transform:uppercase;color:var(--warn);">🎯 Área a Reforzar</div>
+      <div style="font-size:18.5px;font-weight:700;margin-top:4px;">${weakText}</div>
+    </div>`;
+  }
+
+  // Botón de reintento con temporizador si aplica
+  html += `<div style="margin-top:20px;">
+    <div id="result-cooldown-box" class="alert-box hidden"></div>
+    <button id="btn-retry" class="btn-primary" onclick="startExam()">Reintentar Evaluación (Intento #${nextAttempt} · Techo ${nextCap}%)</button>
+  </div>`;
+
+  html += `</div>`;
+
+  const resView = document.getElementById('view-results');
+  resView.innerHTML = html;
+  document.getElementById('view-exam').classList.add('hidden');
+  resView.classList.remove('hidden');
+
+  setupResultCooldown(nextAttempt, nextCap);
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function setupResultCooldown(nextAttempt, nextCap) {
+  if (cooldownTimer) clearInterval(cooldownTimer);
+  const requiredSec = getCooldownSeconds(nextAttempt);
+  const btnRetry = document.getElementById('btn-retry');
+  const cdBox = document.getElementById('result-cooldown-box');
+
+  if (requiredSec <= 0) return;
+
+  function tick() {
+    const elapsed = Math.floor((Date.now() - state.lastAttemptTimestamp) / 1000);
+    const remaining = requiredSec - elapsed;
+    if (remaining > 0) {
+      cdBox.classList.remove('hidden');
+      cdBox.innerHTML = `⏳ <strong>Tiempo obligatorio de repaso antes del Intento #${nextAttempt}:</strong> Espera <strong>${remaining} segundos</strong>.`;
+      btnRetry.disabled = true;
+      btnRetry.textContent = `Espera ${remaining}s para iniciar Intento #${nextAttempt}...`;
+    } else {
+      clearInterval(cooldownTimer);
+      cdBox.classList.add('hidden');
+      btnRetry.disabled = false;
+      btnRetry.textContent = `Reintentar Evaluación (Intento #${nextAttempt} · Techo ${nextCap}%)`;
+    }
+  }
+  tick();
+  cooldownTimer = setInterval(tick, 500);
+}
+
+renderIntro();
+</script>
+</body>
+</html>
