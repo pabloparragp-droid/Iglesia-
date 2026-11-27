@@ -2872,6 +2872,7 @@ function renderLessonReader(l,list){
   var trBody=TRANSVERSALES.map(function(t){return'<p style="margin:8px 0"><b>'+t.e+' '+esc(t.t)+'</b> ('+esc(t.v)+'): '+esc(t.d)+'</p>'}).join("");
   h+=foldBtn("dl_tr_"+l.id,"🧭","Principios transversales aplicados",4,"#8E4FC7",trBody,false);
 
+  var hasIframeExam = !!(l.content_html && /<iframe\b/i.test(l.content_html));
   if(quiz.length){
     var qHtml='<p class="note">'+(done?"Ya aprobaste este autoexamen y habilitaste la siguiente lección. Puedes repasarlo cuando quieras.":"Presenta y aprueba este autoexamen para habilitar la siguiente lección del discipulado.")+'</p>';
     quiz.forEach(function(q,qi){
@@ -2884,7 +2885,9 @@ function renderLessonReader(l,list){
     });
     qHtml+='<button class="btn" onclick="submitLessonQuiz('+l.id+')">'+(l.is_final?"🎓 Presentar Examen Final":"✅ Presentar autoexamen y habilitar siguiente")+'</button>';
     h+=foldBtn("dl_quiz_"+l.id,l.is_final?"🎓":"📝",l.is_final?"Examen Final del Nivel 1":"Autoexamen obligatorio",quiz.length+" preg.","#1565C0",qHtml,true);
-  }else if(!done){
+  }else if(hasIframeExam && !done){
+    h+='<div class="alert">🔒 <b>Autoexamen requerido:</b> Completa y aprueba el autoexamen interactivo de arriba (mínimo 70%) para habilitar automáticamente la siguiente lección.</div>';
+  }else if(!done && !hasIframeExam){
     h+='<button class="btn" onclick="markLessonComplete('+l.id+')">✅ Confirmar lectura y habilitar siguiente</button>';
   }
   h+='<button class="btn alt" style="margin-top:10px" onclick="S.dl_open=null;S.dl_ans={};draw()">← Volver</button>';
