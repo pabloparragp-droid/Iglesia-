@@ -224,6 +224,20 @@ details{margin:10px 0}summary{cursor:pointer;font-weight:700;color:var(--acc);fo
   .card,.sec-fold{box-shadow:none!important;border:1px solid #ccc!important;break-inside:avoid}
   .stat{border:1px solid #999!important;color:#000!important;background:#f4f4f4!important}
 }
+
+/* ===== PUNTOS DE NOTIFICACIÓN DE ACTIVIDAD DEL EQUIPO ===== */
+.notif-dot{position:absolute;top:5px;right:10px;width:11px;height:11px;border-radius:50%;background:#E53935;border:2px solid var(--card);box-shadow:0 0 0 2px rgba(229,57,53,.28);animation:pulseDot 1.8s infinite;pointer-events:none;z-index:2}
+.notif-dot-inline{display:inline-block;width:10px;height:10px;border-radius:50%;background:#E53935;box-shadow:0 0 0 2px rgba(229,57,53,.25);animation:pulseDot 1.8s infinite;flex:none}
+.hub-tile .notif-dot{top:10px;right:10px;width:12px;height:12px}
+.more-item{position:relative}
+.more-item .notif-dot{top:8px;right:12px;width:12px;height:12px}
+@keyframes pulseDot{0%{transform:scale(1);opacity:1}50%{transform:scale(1.22);opacity:.85}100%{transform:scale(1);opacity:1}}
+
+/* ===== MODAL DE SALUDO ESPECIAL (PRIMERA VEZ) ===== */
+.welcome-first-box{background:linear-gradient(155deg,var(--card) 0%,var(--soft) 100%);border:2.5px solid #D4AF37;border-radius:24px;padding:22px 18px;max-width:560px;width:100%;max-height:88vh;overflow-y:auto;box-shadow:0 16px 40px rgba(0,0,0,.35);position:relative}
+.welcome-pillar{background:var(--card);border:1.5px solid var(--line);border-left:5px solid #1565C0;border-radius:14px;padding:11px 13px;margin:9px 0}
+.welcome-pillar.p2{border-left-color:#2F9E5B}
+.welcome-pillar.p3{border-left-color:#E07B12}
 </style></head><body><main><header id="hdr"></header><div id="app"><p class="note">Cargando...</p></div></main><nav class="nav" id="nav" style="display:none"></nav><div id="more_box"></div><div id="modal_box"></div>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.js"></script>
 <script>
@@ -368,7 +382,178 @@ function getWeeklyRS(){
 }
 var RS=getWeeklyRS();
 
-var S={tab:"ini",ui_mode:safeGet("iccvgd_ui_mode","simple"),im:null,rd:null,rm:null,mm:null,ft:null,fm:null,fy:"all",rec:false,pw:false,q:"",aq:"",f:"Todos",fc:"Todas",fb:"Todos",sel:null,tb:null,lv:1,ia:null,cm:"or",pn:false,tn:false,T:{},rs:null,ri:0,cl:1,bad:[],ok:false,ev:"Culto dominical",dl_view:null,dl_open:null,dl_ans:{},dl_ed:null,dl_q:[],am:"lista",gd:null,more:false,pcell:"Todas",prayed:{},grad_name:"",tb_fold:{1:true},tb_lvl_filter:0,tb_disc_filter:"todos",lux_edit:false,ev_view:"tarjetas",dev_modal:false,tr_modal:false,chat_ch:"general",chat_priv_target:"",chat_msgs:[],worship_prog:[],worship_inv:[],worship_funds:[],worship_sub:null,wp_files:[],img_modal:null,retiro_cfg:{nombre:"Retiro Espiritual Iglesia ICCVGD",fecha:"",tarifa:0,lugar:"",notas:""},retiro_list:[],retiro_q:"",retiro_f:"todos",uno_view:false,uno_rooms:[],uno_room:null,uno_wild_idx:null,uno_join_code:"",uno_sub:null,uno_poll:null},U=null,ME=null,P=[],AT=[],EQ=[],AN=[],PR=[],TE=[],AR=[],AM=[],MR=[],RP=[],IC=[],EC=[],FN=[],DL=[],DP=[],AG=[],AGM=[],R0={};
+var S={tab:"ini",ui_mode:(safeGet("iccvgd_ui_mode","simple")==="clasica"?"clasica":"simple"),first_welcome_modal:false,mod_notifs:{},im:null,rd:null,rm:null,mm:null,ft:null,fm:null,fy:"all",rec:false,pw:false,q:"",aq:"",f:"Todos",fc:"Todas",fb:"Todos",sel:null,tb:null,lv:1,ia:null,cm:"or",pn:false,tn:false,T:{},rs:null,ri:0,cl:1,bad:[],ok:false,ev:"Culto dominical",dl_view:null,dl_open:null,dl_ans:{},dl_ed:null,dl_q:[],am:"lista",gd:null,more:false,pcell:"Todas",prayed:{},grad_name:"",tb_fold:{1:true},tb_lvl_filter:0,tb_disc_filter:"todos",lux_edit:false,ev_view:"tarjetas",dev_modal:false,tr_modal:false,chat_ch:"general",chat_priv_target:"",chat_msgs:[],worship_prog:[],worship_inv:[],worship_funds:[],worship_sub:null,wp_files:[],img_modal:null,retiro_cfg:{nombre:"Retiro Espiritual Iglesia ICCVGD",fecha:"",tarifa:0,lugar:"",notas:""},retiro_list:[],retiro_q:"",retiro_f:"todos",uno_view:false,uno_rooms:[],uno_room:null,uno_wild_idx:null,uno_join_code:"",uno_sub:null,uno_poll:null},U=null,ME=null,P=[],AT=[],EQ=[],AN=[],PR=[],TE=[],AR=[],AM=[],MR=[],RP=[],IC=[],EC=[],FN=[],DL=[],DP=[],AG=[],AGM=[],R0={};
+
+
+// ===== SALUDO ESPECIAL DE PRIMERA VEZ (METAS, PROPÓSITOS Y CRECIMIENTO EN EQUIPO) =====
+function checkFirstTimeWelcome(){
+  if(!U||!ME||ME.role==="pendiente")return;
+  var key="iccvgd_first_welcome_v1_"+U.id;
+  if(!safeGet(key,"")){
+    S.first_welcome_modal=true;
+  }
+}
+function dismissFirstTimeWelcome(){
+  if(U){
+    safeSet("iccvgd_first_welcome_v1_"+U.id, new Date().toISOString());
+  }
+  S.first_welcome_modal=false;
+  toast("🙌 ¡Bienvenido(a) al equipo ICCVGD!");
+  draw();
+}
+function renderFirstTimeWelcomeModal(){
+  if(!S.first_welcome_modal||!ME)return"";
+  var firstName=(ME.name||U.email||"Hermano(a)").trim().split(/\s+/)[0];
+  return'<div class="modal-bg" style="z-index:40">'
+    +'<div class="welcome-first-box">'
+    +'<div style="text-align:center;margin-bottom:10px">'
+    +'<span class="pill" style="background:#D4AF37;color:#1F2430;font-size:13px">✨ Bienvenida Especial · Iglesia ICCVGD</span>'
+    +'<h2 style="font-size:26px;margin-top:10px;color:var(--acc)">¡Qué alegría tenerte aquí, '+esc(firstName)+'!</h2>'
+    +'<p class="note" style="margin:6px 0 0;font-size:17px">Hoy comienza una etapa especial para caminar, servir y edificar juntos como familia en Cristo.</p>'
+    +'</div>'
+    +'<div class="welcome-pillar">'
+    +'<b style="font-size:18px;color:#1565C0">🎯 Metas claras en Cristo</b>'
+    +'<p style="margin:4px 0 0;font-size:16px">Cada paso en la oración, la Palabra, las células y el discipulado tiene dirección: avanzar con constancia hacia la estatura de Cristo.</p>'
+    +'</div>'
+    +'<div class="welcome-pillar p2">'
+    +'<b style="font-size:18px;color:#2F9E5B">🧭 Propósito que transforma</b>'
+    +'<p style="margin:4px 0 0;font-size:16px">No caminamos por rutina; somos nueva creación llamados a reflejar el amor de Dios, cuidar vidas y llevar fruto que permanezca.</p>'
+    +'</div>'
+    +'<div class="welcome-pillar p3">'
+    +'<b style="font-size:18px;color:#E07B12">🤝 Crecimiento en equipo</b>'
+    +'<p style="margin:4px 0 0;font-size:16px">Nadie crece solo: cuando cada miembro aporta su don en unidad, toda la iglesia se fortalece y avanza en un mismo Espíritu (Efesios 4:16).</p>'
+    +'</div>'
+    +'<button class="btn" style="margin-top:14px;background:linear-gradient(135deg,#1565C0,#2F9E5B)" onclick="dismissFirstTimeWelcome()">🚀 ¡Comencemos juntos!</button>'
+    +'</div></div>';
+}
+
+// ===== PUNTOS DE NOTIFICACIÓN EN MÓDULOS POR ACCIONES DEL EQUIPO =====
+var _teamRealtimeSub=null;
+var _teamPollTimer=null;
+var TABLE_TO_MOD={
+  announcements:"ini",
+  people:"reg",
+  attendance:"asis",
+  attendance_general:"asis",
+  cells:"cel",
+  disciple_progress:"tabl",
+  disciple_lessons:"tabl",
+  monthly_reports:"rend",
+  prayers:"com",
+  testimonies:"com",
+  uno_games:"retos",
+  finance_entries:"fin",
+  profiles:"equipo"
+};
+var MOD_LABELS={
+  ini:"Inicio / Cartelera",
+  reg:"Registro",
+  asis:"Asistencia",
+  cel:"Células",
+  tabl:"Tablero de Discipulado",
+  rend:"Rendición",
+  com:"Comunidad",
+  retos:"Retos / UNO",
+  fin:"Finanzas",
+  equipo:"Equipo"
+};
+
+function getSeenMap(){
+  return lget("mod_seen_"+(U?U.id:"anon"),{});
+}
+function markModuleSeen(modId){
+  if(!modId)return;
+  var seen=getSeenMap();
+  seen[modId]=new Date().toISOString();
+  lset("mod_seen_"+(U?U.id:"anon"),seen);
+  if(S.mod_notifs&&S.mod_notifs[modId]){
+    delete S.mod_notifs[modId];
+  }
+}
+function triggerModuleDot(modId,desc,silent){
+  if(!modId)return;
+  var al=allowedTabsForMe();
+  if(al.indexOf(modId)<0)return;
+  if(S.tab===modId&&!S.more){
+    markModuleSeen(modId);
+    return;
+  }
+  S.mod_notifs[modId]={desc:desc||"Nueva acción del equipo",at:new Date().toISOString()};
+  if(!silent){
+    toast("🔴 Actividad en "+(MOD_LABELS[modId]||modId));
+  }
+  if(typeof draw==="function")draw();
+}
+function evaluateSnapshotsForDots(){
+  if(!U||!ME||ME.role==="pendiente")return;
+  var seen=getSeenMap();
+  var initFlagKey="iccvgd_seen_init_"+U.id;
+  if(!safeGet(initFlagKey,"")){
+    var nowIso=new Date().toISOString();
+    ["ini","reg","asis","cel","tabl","rend","com","retos","fin","equipo"].forEach(function(m){seen[m]=nowIso;});
+    lset("mod_seen_"+U.id,seen);
+    safeSet(initFlagKey,"1");
+    return;
+  }
+  var latestByMod={};
+  function consider(mod,ts,label){
+    if(!ts)return;
+    var iso=new Date(ts).toISOString();
+    if(!latestByMod[mod]||iso>latestByMod[mod].ts){
+      latestByMod[mod]={ts:iso,label:label};
+    }
+  }
+  (AN||[]).forEach(function(a){consider("ini",a.updated_at||a.created_at,"Nuevo anuncio o evento")});
+  (P||[]).forEach(function(p){consider("reg",p.updated_at||p.created_at,"Actualización en registro")});
+  (AT||[]).forEach(function(a){consider("asis",a.created_at||(a.event_date?a.event_date+"T12:00:00Z":null),"Asistencia registrada")});
+  (AG||[]).forEach(function(g){consider("asis",g.created_at||(g.event_date?g.event_date+"T12:00:00Z":null),"Conteo general registrado")});
+  (PR||[]).forEach(function(p){consider("com",p.created_at,"Nueva petición de oración")});
+  (TE||[]).forEach(function(t){consider("com",t.created_at,"Nuevo testimonio")});
+  (RP||[]).forEach(function(r){consider("rend",r.updated_at||r.created_at,"Nuevo informe de rendición")});
+  (MR||[]).forEach(function(r){consider("rend",r.updated_at||r.created_at,"Informe mensual actualizado")});
+  (DL||[]).forEach(function(l){consider("tabl",l.updated_at||l.created_at,"Lección de discipulado actualizada")});
+  (FN||[]).forEach(function(f){consider("fin",f.created_at,"Nuevo movimiento financiero")});
+
+  var al=allowedTabsForMe();
+  Object.keys(latestByMod).forEach(function(mod){
+    if(al.indexOf(mod)<0)return;
+    if(S.tab===mod){markModuleSeen(mod);return;}
+    var lastSeen=seen[mod]||"1970-01-01T00:00:00.000Z";
+    if(latestByMod[mod].ts>lastSeen){
+      S.mod_notifs[mod]={desc:latestByMod[mod].label,at:latestByMod[mod].ts};
+    }
+  });
+}
+function startTeamActivityWatcher(){
+  if(!SB||!U||!ME||ME.role==="pendiente")return;
+  if(_teamRealtimeSub){try{SB.removeChannel(_teamRealtimeSub);}catch(e){}_teamRealtimeSub=null;}
+  try{
+    var ch=SB.channel("iccvgd_team_activity_"+U.id);
+    Object.keys(TABLE_TO_MOD).forEach(function(tbl){
+      ch=ch.on("postgres_changes",{event:"*",schema:"public",table:tbl},function(payload){
+        var mod=TABLE_TO_MOD[tbl];
+        var rec=(payload&&(payload.new||payload.old))||{};
+        if(rec.user_id&&rec.user_id===U.id)return;
+        if(rec.author_id&&rec.author_id===U.id)return;
+        triggerModuleDot(mod,"Acción reciente en "+(MOD_LABELS[mod]||tbl),false);
+      });
+    });
+    _teamRealtimeSub=ch.subscribe();
+  }catch(e){}
+
+  if(_teamPollTimer)clearInterval(_teamPollTimer);
+  _teamPollTimer=setInterval(async function(){
+    if(!U||!ME||ME.role==="pendiente")return;
+    try{
+      var prevNotifs=JSON.stringify(S.mod_notifs||{});
+      await load();
+      evaluateSnapshotsForDots();
+      if(JSON.stringify(S.mod_notifs||{})!==prevNotifs && typeof draw==="function"){
+        draw();
+      }
+    }catch(e){}
+  }, 30000);
+}
 
 // ===== TEMA CLARO / PASTEL / OSCURO =====
 function getTheme(){return safeGet("iccvgd_theme",null)||(window.matchMedia&&window.matchMedia("(prefers-color-scheme:dark)").matches?"dark":"light")}
@@ -671,6 +856,10 @@ async function boot(){
     if(ME.role!=="pendiente"){
       if($("app"))$("app").innerHTML='<p class="note">Cargando datos de la iglesia…</p>';
       await load();
+      evaluateSnapshotsForDots();
+      markModuleSeen(S.tab);
+      checkFirstTimeWelcome();
+      startTeamActivityWatcher();
     }
     draw();
     checkSub();
@@ -2386,6 +2575,7 @@ function renderSimpleInicio(ctx){
         g.tips.forEach(function(tp){if(!seenTips[tp.t]){seenTips[tp.t]=1;tips.push(tp)}});
       });
       return back+'<div class="card t-verde"><h3>🧭 Guía rápida para tu rol</h3><p class="note"><b>'+esc(roleNames)+'</b> · '+esc(descs.join(" "))+'</p>'
+        +'<button class="btn sm" style="background:linear-gradient(135deg,#1565C0,#2F9E5B);margin-bottom:8px" onclick="S.first_welcome_modal=true;draw()">✨ Ver mensaje de metas, propósitos y equipo</button>'
         +tips.map(function(tp){return'<button class="btn alt sm" style="text-align:left;display:flex;align-items:center;justify-content:space-between;gap:8px;margin:8px 0" onclick="'+tp.fn+'"><span>'+tp.e+' '+esc(tp.t)+'</span><span>→</span></button>'}).join("")
         +'</div>'+notiCard();
     }
@@ -2407,15 +2597,18 @@ function renderSimpleInicio(ctx){
       +'<div class="hub-tile-top"><span class="hub-ico" style="background:#1565C0">🌅</span><span class="hub-badge">Hoy</span></div>'
       +'<div><span class="hub-title">Devocional</span><span class="hub-sub">'+esc(dev.v)+'</span></div>'
     +'</button>'
-    +'<button class="hub-tile" onclick="S.ini_sub=\'anuncios\';draw()">'
+    +'<button class="hub-tile" onclick="markModuleSeen(\'ini\');S.ini_sub=\'anuncios\';draw()">'
+      +(S.mod_notifs.ini?'<span class="notif-dot" title="Nueva actividad"></span>':'')
       +'<div class="hub-tile-top"><span class="hub-ico" style="background:#E07B12">📢</span><span class="hub-badge">'+totalAvisos+'</span></div>'
       +'<div><span class="hub-title">Cartelera</span><span class="hub-sub">Anuncios y eventos</span></div>'
     +'</button>'
     +'<button class="hub-tile" onclick="switchTab(\'tabl\')">'
+      +(S.mod_notifs.tabl?'<span class="notif-dot" title="Nueva actividad"></span>':'')
       +'<div class="hub-tile-top"><span class="hub-ico" style="background:#2F9E5B">📖</span><span class="hub-badge">Ruta</span></div>'
       +'<div><span class="hub-title">Discipulado</span><span class="hub-sub">Lecciones y tablero</span></div>'
     +'</button>'
     +'<button class="hub-tile" onclick="switchTab(\'com\')">'
+      +(S.mod_notifs.com?'<span class="notif-dot" title="Nueva actividad"></span>':'')
       +'<div class="hub-tile-top"><span class="hub-ico" style="background:#8E4FC7">🙌</span><span class="hub-badge">Orar</span></div>'
       +'<div><span class="hub-title">Comunidad</span><span class="hub-sub">Oración, chat y fe</span></div>'
     +'</button>'
@@ -2427,23 +2620,25 @@ function renderSimpleInicio(ctx){
   if(can)menuItems.push({emo:"➕",t:"Publicar anuncio o evento",s:"Crear aviso en cartelera",b:null,fn:"S.ia=0;draw()"});
   menuItems.push({emo:"🎂",t:"Cumpleaños del mes",s:MS[+curM-1]+" · Sincronizar calendario",b:bdCnt>0?bdCnt:null,fn:"S.ini_sub=\'cumple\';draw()"});
   menuItems.push({emo:"🗓️",t:"Calendario anual "+yr,s:"Actividades principales del año",b:an.length>0?an.length:null,fn:"S.ini_sub=\'calendario\';draw()"});
-  if(al.indexOf("asis")>-1)menuItems.push({emo:"✅",t:"Tomar asistencia",s:"Lista o conteo general",b:null,fn:"switchTab(\'asis\')"});
-  if(al.indexOf("alabanza")>-1)menuItems.push({emo:"🎸",t:"Alabanza",s:"Programación, partituras e inventario",b:S.worship_prog.length||null,fn:"switchTab(\'alabanza\')"});
-  if(al.indexOf("retiro")>-1)menuItems.push({emo:"⛺",t:"Control de Retiro",s:"Confirmados, abonos y saldos",b:S.retiro_list.length||null,fn:"switchTab(\'retiro\')"});
-  if(al.indexOf("cel")>-1)menuItems.push({emo:"🏘️",t:"Células de cuidado",s:"Grupos y reuniones",b:CE.length||null,fn:"switchTab(\'cel\')"});
-  if(al.indexOf("panel")>-1)menuItems.push({emo:"📊",t:"Panel pastoral",s:"Indicadores y seguimiento",b:null,fn:"switchTab(\'panel\')"});
-  if(al.indexOf("inf")>-1)menuItems.push({emo:"📄",t:"Informe mensual",s:"Resumen de cultos y células",b:null,fn:"switchTab(\'inf\')"});
-  if(al.indexOf("rend")>-1)menuItems.push({emo:"📝",t:"Rendición de cuentas",s:"Reportes mensuales",b:null,fn:"switchTab(\'rend\')"});
-  if(al.indexOf("retos")>-1)menuItems.push({emo:"🧩",t:"Retos bíblicos",s:"Desafíos semanales",b:pts()?pts()+" pts":null,fn:"switchTab(\'retos\')"});
-  if(al.indexOf("fin")>-1&&canEditFinanzas())menuItems.push({emo:"💰",t:"Finanzas",s:"Ingresos, egresos y balance",b:null,fn:"switchTab(\'fin\')"});
-  if(al.indexOf("equipo")>-1&&isPastor())menuItems.push({emo:"⚙️",t:"Equipo y roles",s:"Permisos de líderes",b:EQ.length||null,fn:"switchTab(\'equipo\')"});
+  if(al.indexOf("reg")>-1)menuItems.push({mod:"reg",emo:"👥",t:"Directorio y Registro",s:"Miembros, visitantes y cumpleaños",b:P.length||null,fn:"switchTab(\'reg\')"});
+  if(al.indexOf("asis")>-1)menuItems.push({mod:"asis",emo:"✅",t:"Tomar asistencia",s:"Lista o conteo general",b:null,fn:"switchTab(\'asis\')"});
+  if(al.indexOf("alabanza")>-1)menuItems.push({mod:"alabanza",emo:"🎸",t:"Alabanza",s:"Programación, partituras e inventario",b:S.worship_prog.length||null,fn:"switchTab(\'alabanza\')"});
+  if(al.indexOf("retiro")>-1)menuItems.push({mod:"retiro",emo:"⛺",t:"Control de Retiro",s:"Confirmados, abonos y saldos",b:S.retiro_list.length||null,fn:"switchTab(\'retiro\')"});
+  if(al.indexOf("cel")>-1)menuItems.push({mod:"cel",emo:"🏘️",t:"Células de cuidado",s:"Grupos y reuniones",b:CE.length||null,fn:"switchTab(\'cel\')"});
+  if(al.indexOf("panel")>-1)menuItems.push({mod:"panel",emo:"📊",t:"Panel pastoral",s:"Indicadores y seguimiento",b:null,fn:"switchTab(\'panel\')"});
+  if(al.indexOf("inf")>-1)menuItems.push({mod:"inf",emo:"📄",t:"Informe mensual",s:"Resumen de cultos y células",b:null,fn:"switchTab(\'inf\')"});
+  if(al.indexOf("rend")>-1)menuItems.push({mod:"rend",emo:"📝",t:"Rendición de cuentas",s:"Reportes mensuales",b:null,fn:"switchTab(\'rend\')"});
+  if(al.indexOf("retos")>-1)menuItems.push({mod:"retos",emo:"🧩",t:"Retos bíblicos y UNO",s:"Desafíos semanales y sala en vivo",b:pts()?pts()+" pts":null,fn:"switchTab(\'retos\')"});
+  if(al.indexOf("fin")>-1&&canEditFinanzas())menuItems.push({mod:"fin",emo:"💰",t:"Finanzas",s:"Ingresos, egresos y balance",b:null,fn:"switchTab(\'fin\')"});
+  if(al.indexOf("equipo")>-1&&isPastor())menuItems.push({mod:"equipo",emo:"⚙️",t:"Equipo y roles",s:"Permisos de líderes",b:EQ.length||null,fn:"switchTab(\'equipo\')"});
   menuItems.push({emo:"🧭",t:"Principios transversales",s:"Fundamento doctrinal",b:null,fn:"S.tr_modal=true;draw()"});
 
   h+='<div class="menu-list">'
     +menuItems.map(function(it){
+      var hasDot=it.mod&&S.mod_notifs[it.mod];
       return'<button class="menu-item" onclick="'+it.fn+'">'
         +'<span class="menu-item-l"><span class="menu-item-emo">'+it.emo+'</span><span class="menu-item-txt"><b>'+it.t+'</b><small>'+it.s+'</small></span></span>'
-        +'<span class="menu-item-r">'+(it.b!==null?'<span class="pill" style="background:#1565C0;font-size:13px">'+it.b+'</span>':'')+'<span>›</span></span>'
+        +'<span class="menu-item-r">'+(hasDot?'<span class="notif-dot-inline" title="Nueva actividad"></span>':'')+(it.b!==null?'<span class="pill" style="background:#1565C0;font-size:13px">'+it.b+'</span>':'')+'<span>›</span></span>'
         +'</button>';
     }).join("")
     +'</div>';
@@ -3363,6 +3558,7 @@ function retiro(){
 // ===== NAVEGACIÓN INFERIOR COMPACTA CON PÍLDORA ACTIVA Y MENÚ "MÁS" =====
 function switchTab(id){
   S.tab=id;S.sel=null;S.tb=null;S.ce=null;S.ia=null;S.pn=false;S.tn=false;S.ft=null;S.dl_view=null;S.dl_open=null;S.dl_ed=null;S.more=false;S.ini_sub=null;
+  markModuleSeen(id);
   if(id!=="retos")stopUnoSync();
   draw();
 }
@@ -3371,7 +3567,7 @@ function draw(){
   var T=[["ini","🏠","Inicio"],["reg","👥","Registro"],["asis","✅","Asistencia"],["alabanza","🎸","Alabanza"],["retiro","⛺","Retiro"],["panel","📊","Panel"],["cel","🏘️","Células"],["tabl","🗂️","Tablero"],["inf","📄","Informe"],["rend","📝","Rendición"],["com","🙌","Comunidad"],["retos","🧩","Retos"],["fin","💰","Finanzas"],["equipo","⚙️","Equipo"]];
   $("nav").style.display=ME?"flex":"none";
   $("more_box").innerHTML="";
-  $("modal_box").innerHTML=S.img_modal?renderImagePreviewModal():(S.dev_modal?renderDevotionalModal():(S.tr_modal?renderTransversalesModal():""));
+  $("modal_box").innerHTML=S.first_welcome_modal?renderFirstTimeWelcomeModal():(S.img_modal?renderImagePreviewModal():(S.dev_modal?renderDevotionalModal():(S.tr_modal?renderTransversalesModal():"")));
   if(S.rec||(S.pw&&ME)){$("nav").style.display="none";$("app").innerHTML=pwform();return}
   if(!ME){$("app").innerHTML=authv();return}
   if(ME.role==="pendiente"&&myRoles().length===1&&myRoles()[0]==="pendiente"){$("nav").style.display="none";$("app").innerHTML='<div class="card"><h3>⏳ Tu cuenta espera aprobación</h3><p>El pastor debe asignarte un rol para que puedas ver la información de la iglesia. Cuando lo haga, toca Salir y vuelve a entrar.</p></div>';return}
@@ -3381,17 +3577,20 @@ function draw(){
   var primaryTabs=allowedTabs.filter(function(t){return primaryIds.indexOf(t[0])>-1});
   var extraTabs=allowedTabs.filter(function(t){return primaryIds.indexOf(t[0])<0});
   var isExtraActive=extraTabs.some(function(t){return t[0]===S.tab});
+  var hasExtraDot=extraTabs.some(function(t){return !!S.mod_notifs[t[0]]});
 
   var navHtml=primaryTabs.map(function(t){
-    return'<button aria-current="'+(S.tab===t[0])+'" onclick="switchTab(\''+t[0]+'\')"><span>'+t[1]+'</span>'+t[2]+'</button>';
+    var dot=S.mod_notifs[t[0]]?'<span class="notif-dot" title="Nueva acción del equipo"></span>':'';
+    return'<button aria-current="'+(S.tab===t[0])+'" onclick="switchTab(\''+t[0]+'\')">'+dot+'<span>'+t[1]+'</span>'+t[2]+'</button>';
   }).join("");
   if(extraTabs.length){
-    navHtml+='<button aria-current="'+(isExtraActive||S.more)+'" onclick="S.more=!S.more;draw()"><span>⋯</span>Más</button>';
+    var mDot=hasExtraDot?'<span class="notif-dot" title="Novedades en Más"></span>':'';
+    navHtml+='<button aria-current="'+(isExtraActive||S.more)+'" onclick="S.more=!S.more;draw()">'+mDot+'<span>⋯</span>Más</button>';
   }
   $("nav").innerHTML=navHtml;
 
   if(S.more&&extraTabs.length){
-    $("more_box").innerHTML='<div class="more-pop" onclick="if(event.target===this){S.more=false;draw()}"><div class="more-sheet"><div style="display:flex;justify-content:space-between;align-items:center"><b>Más secciones</b><button class="chip" onclick="S.more=false;draw()">✕ Cerrar</button></div><div class="more-grid">'+extraTabs.map(function(t){return'<button class="more-item" aria-current="'+(S.tab===t[0])+'" onclick="switchTab(\''+t[0]+'\')"><span>'+t[1]+'</span>'+t[2]+'</button>'}).join("")+'</div></div></div>';
+    $("more_box").innerHTML='<div class="more-pop" onclick="if(event.target===this){S.more=false;draw()}"><div class="more-sheet"><div style="display:flex;justify-content:space-between;align-items:center"><b>Más secciones</b><button class="chip" onclick="S.more=false;draw()">✕ Cerrar</button></div><div class="more-grid">'+extraTabs.map(function(t){var dot=S.mod_notifs[t[0]]?'<span class="notif-dot" title="Nueva acción"></span>':'';return'<button class="more-item" aria-current="'+(S.tab===t[0])+'" onclick="switchTab(\''+t[0]+'\')">'+dot+'<span>'+t[1]+'</span>'+t[2]+'</button>'}).join("")+'</div></div></div>';
   }
 
   $("app").innerHTML=S.tab==="reg"?reg():S.tab==="asis"?asis():S.tab==="alabanza"?renderAlabanzaModule():S.tab==="retiro"?retiro():S.tab==="ini"?inicio():S.tab==="inf"?informe():S.tab==="rend"?rendicion():S.tab==="fin"&&canEditFinanzas()?finanzas():S.tab==="com"?comunidad():S.tab==="cel"?celulas():S.tab==="tabl"?tablero():S.tab==="retos"?retos():S.tab==="equipo"&&isPastor()?equipo():panel();
@@ -3586,7 +3785,7 @@ window.addEventListener("message", function(event) {
 
 if(location.hash.indexOf("type=recovery")>-1)S.rec=true;
 if(SB&&SB.auth&&SB.auth.onAuthStateChange){SB.auth.onAuthStateChange(function(ev){if(ev==="PASSWORD_RECOVERY"){S.rec=true;draw()}});}
-var APP_VERSION = "2026.11.27.1";
+var APP_VERSION = "2026.11.27.2";
 var _swReloading = false;
 
 (function cleanUpdQuery(){
@@ -3687,8 +3886,10 @@ function setupAutoUpdate(){
       if(document.visibilityState === "visible") checkRemoteVersion(true);
     });
   }
-  setTimeout(function(){ checkRemoteVersion(true); }, 3500);
-  setInterval(function(){ checkRemoteVersion(true); }, 90000);
+  window.addEventListener("focus", function(){ checkRemoteVersion(true); });
+  window.addEventListener("online", function(){ checkRemoteVersion(true); });
+  setTimeout(function(){ checkRemoteVersion(true); }, 2000);
+  setInterval(function(){ checkRemoteVersion(true); }, 45000);
 }
 
 setupAutoUpdate();
