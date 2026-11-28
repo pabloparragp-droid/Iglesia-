@@ -2126,6 +2126,10 @@ function renderDiscipleCardInBoard(p,tc,st,cid,sStyle,codeMap){
     if(tc.lv<5)card+='<button style="background:#2F9E5B;color:#fff;border-color:#2F9E5B" onclick="quickMoveDisciple('+p.id+',0,1)" title="Subir de nivel">⬆️ Nivel '+(tc.lv+1)+'</button>';
     card+='</div>';
   }
+  var syncedLessonObj=(tc.lv===1)?n1Lessons().filter(function(x){return !x.is_final&&x.step===st})[0]:null;
+  if(syncedLessonObj){
+    card+='<button class="btn sm" style="margin-top:8px;background:#00897B" onclick="S.dl_view=\'lessons\';S.dl_open='+syncedLessonObj.id+';S.dl_ans={};draw()">📖 Abrir Lección '+st+' en módulo de estudio</button>';
+  }
   card+='<button class="btn alt sm" style="margin-top:8px" onclick="S.tb='+p.id+';draw()">⚙️ Editar nivel, lección, insignias y discipuladores</button>';
   card+='</div></details>';
   return card;
@@ -3029,6 +3033,102 @@ var DEFAULT_BASE_PREVIA_1={
     {q:"¿Para qué sirve el discipulado en el cuerpo de Cristo?",o:["Para competir por títulos","Para crecer en Cristo y servir en amor y unidad","Para estudiar teoría sin práctica"],a:1}
   ]
 };
+function normPersonName(s){
+  return String(s||"").trim().toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g,"");
+}
+function findMyDiscipleRecord(){
+  if(!P||!P.length)return null;
+  if(U&&U.id){
+    var byUid=P.filter(function(p){return p.user_id===U.id})[0];
+    if(byUid)return byUid;
+  }
+  var myName=ME&&ME.name?normPersonName(ME.name):"";
+  if(myName){
+    var byExact=P.filter(function(p){return normPersonName(p.name)===myName})[0];
+    if(byExact)return byExact;
+  }
+  var myEmail=U&&U.email?String(U.email).trim().toLowerCase():"";
+  if(myEmail){
+    var byEmail=P.filter(function(p){return(p.email&&String(p.email).trim().toLowerCase()===myEmail)})[0];
+    if(byEmail)return byEmail;
+  }
+  return null;
+}
+function getBoardSyncedStepForLevel(lv){
+  var rec=findMyDiscipleRecord();
+  if(!rec||!rec.level)return 0;
+  if(rec.level>lv)return 999;
+  if(rec.level===lv)return Math.max(1,rec.step||1);
+  return 0;
+}
+async function syncPersonBoardFromLesson(level,nextStep,isGraduated,earnedBadge){
+  var lv=level||1;
+  var st=Math.max(1,nextStep||1);
+  var myRec=findMyDiscipleRecord();
+  if(myRec&&SB){
+    var curLv=myRec.level||1;
+    var curSt=myRec.step||1;
+    var targetLv=curLv;
+    var targetSt=curSt;
+    var targetStatus=myRec.status||"al_dia";
+    if(isGraduated){
+      if(curLv<=lv){
+        targetLv=Math.min(5,lv+1);
+        targetSt=1;
+        targetStatus="listo";
+      }
+    }else{
+      if(curLv<lv){
+        targetLv=lv;
+        targetSt=st;
+        targetStatus="al_dia";
+      }else if(curLv===lv&&st>curSt){
+        targetSt=st;
+        targetStatus="al_dia";
+      }
+    }
+    var newLvlStr=targetLv<5?("Nivel "+targetLv+" · Paso "+targetSt):"Sirviendo en la iglesia";
+    try{
+      var upd=await SB.from("people").update({
+        level:targetLv,
+        step:targetSt,
+        status:targetStatus,
+        lvl:newLvlStr
+      }).eq("id",myRec.id);
+      if(upd&&upd.error&&typeof SB.rpc==="function"){
+        await SB.rpc("move_disciple",{
+          p_id:myRec.id,
+          p_level:targetLv,
+          p_step:targetSt,
+          p_status:targetStatus,
+          p_companion:myRec.companion||"",
+          p_started:myRec.started||null,
+          p_lvl:newLvlStr
+        });
+      }
+    }catch(e){}
+    if(earnedBadge){
+      try{
+        var dBadgesMap=lget("disciple_badges",{});
+        var curList=Array.isArray(dBadgesMap[myRec.id])?dBadgesMap[myRec.id].slice():[];
+        if(curList.indexOf(earnedBadge)<0){
+          curList.push(earnedBadge);
+          dBadgesMap[myRec.id]=curList;
+          lset("disciple_badges",dBadgesMap);
+        }
+      }catch(e){}
+    }
+  }
+  if(SB&&U&&typeof SB.rpc==="function"){
+    try{
+      await SB.rpc("sync_disciple_level_progress",{
+        p_level:lv,
+        p_next_step:st,
+        p_graduated:!!isGraduated
+      });
+    }catch(e){}
+  }
+}
 function n1Lessons(){
   var dbList=DL.filter(function(x){return x.level===1}).sort(function(a,b){if(a.is_final!==b.is_final)return a.is_final?1:-1;return a.step-b.step});
   var hasBp1=dbList.some(function(x){return x.step===0||/base\s*previa\s*1/i.test(x.title||"")});
@@ -3037,7 +3137,18 @@ function n1Lessons(){
 function isLessonDone(id){
   if(DP.some(function(p){return p.lesson_id===id}))return true;
   var localDone=lget("dl_done_"+(U?U.id:"anon"),[]);
-  return localDone.indexOf(id)>-1;
+  if(localDone.indexOf(id)>-1)return true;
+  // Sincronización desde Tablero -> Lecciones: si el discípulo ya avanzó en el tablero, las lecciones previas constan como aprobadas
+  var boardSt=getBoardSyncedStepForLevel(1);
+  if(boardSt>1){
+    var list=n1Lessons();
+    var item=list.filter(function(x){return x.id===id})[0];
+    if(item){
+      if(boardSt>=999)return true;
+      if(!item.is_final&&item.step<boardSt)return true;
+    }
+  }
+  return false;
 }
 function saveLocalLessonDone(id){
   var k="dl_done_"+(U?U.id:"anon");
@@ -3050,18 +3161,39 @@ function canOpenLesson(idx,list){
   var curLesson = list[idx];
   if(curLesson && (unlocked["step_" + curLesson.step] || unlocked[normalizeExamLessonKey(curLesson.title)])) return true;
   if(unlocked["N1P1"] && curLesson && curLesson.step <= 1) return true;
+  // Sincronización Tablero -> Lecciones: habilita hasta el paso actual registrado en el tablero
+  var boardSt=getBoardSyncedStepForLevel(1);
+  if(curLesson&&boardSt>=1){
+    if(boardSt>=999)return true;
+    if(!curLesson.is_final&&curLesson.step<=boardSt)return true;
+  }
   return isLessonDone(list[idx-1].id);
+}
+function notifyIframeLessonContext(ifr,lessonId,level,step){
+  try{
+    if(!ifr||!ifr.contentWindow)return;
+    ifr.contentWindow.postMessage({
+      type:"ICCVGD_PARENT_CONTEXT",
+      userId:U?U.id:null,
+      userName:ME&&ME.name?ME.name:(U?U.email:""),
+      lessonId:lessonId,
+      level:level,
+      step:step
+    },"*");
+  }catch(e){}
 }
 function renderLessonReader(l,list){
   var done=isLessonDone(l.id);
   var quiz=Array.isArray(l.quiz)?l.quiz:[];
   var stepBadge=l.is_final?"Cierre · Examen Final":(l.step===0?"Base Previa 1":"Nivel 1 · Lección "+l.step);
+  var contentHtml=l.content_html||'<p class="note">Sin contenido cargado aún.</p>';
+  contentHtml=contentHtml.replace(/<iframe\b/gi,'<iframe onload="notifyIframeLessonContext(this,'+l.id+','+(l.level||1)+','+(l.step||0)+')"');
   var h='<button class="btn alt" style="margin:8px 0" onclick="S.dl_open=null;S.dl_ans={};draw()">← Volver al listado de lecciones</button>';
   h+='<div class="card t-azul">';
   h+='<span class="pill" style="background:'+(l.is_final?"#D6336C":"#1565C0")+'">'+stepBadge+'</span>';
-  if(done)h+=' <span class="pill" style="background:#2F9E5B">✓ Autoexamen aprobado</span>';
+  if(done)h+=' <span class="pill" style="background:#2F9E5B">✓ Autoexamen aprobado · Sincronizado</span>';
   h+='<h3 style="margin-top:8px">'+esc(l.title)+'</h3>';
-  h+='<div class="lbody">'+(l.content_html||'<p class="note">Sin contenido cargado aún.</p>')+'</div>';
+  h+='<div class="lbody">'+contentHtml+'</div>';
   h+='</div>';
 
   var trBody=TRANSVERSALES.map(function(t){return'<p style="margin:8px 0"><b>'+t.e+' '+esc(t.t)+'</b> ('+esc(t.v)+'): '+esc(t.d)+'</p>'}).join("");
@@ -3069,7 +3201,7 @@ function renderLessonReader(l,list){
 
   var hasIframeExam = !!(l.content_html && /<iframe\b/i.test(l.content_html));
   if(quiz.length){
-    var qHtml='<p class="note">'+(done?"Ya aprobaste este autoexamen y habilitaste la siguiente lección. Puedes repasarlo cuando quieras.":"Presenta y aprueba este autoexamen para habilitar la siguiente lección del discipulado.")+'</p>';
+    var qHtml='<p class="note">'+(done?"Ya aprobaste este autoexamen y habilitaste la siguiente lección en el tablero. Puedes repasarlo cuando quieras.":"Presenta y aprueba este autoexamen para habilitar la siguiente lección y sincronizar tu avance en el tablero.")+'</p>';
     quiz.forEach(function(q,qi){
       qHtml+='<div style="margin:12px 0"><b>'+(qi+1)+'. '+esc(q.q)+'</b>';
       (q.o||[]).forEach(function(opt,oi){
@@ -3078,12 +3210,12 @@ function renderLessonReader(l,list){
       });
       qHtml+='</div>';
     });
-    qHtml+='<button class="btn" onclick="submitLessonQuiz('+l.id+')">'+(l.is_final?"🎓 Presentar Examen Final":"✅ Presentar autoexamen y habilitar siguiente")+'</button>';
+    qHtml+='<button class="btn" onclick="submitLessonQuiz('+l.id+')">'+(l.is_final?"🎓 Presentar Examen Final":"✅ Presentar autoexamen y sincronizar tablero")+'</button>';
     h+=foldBtn("dl_quiz_"+l.id,l.is_final?"🎓":"📝",l.is_final?"Examen Final del Nivel 1":"Autoexamen obligatorio",quiz.length+" preg.","#1565C0",qHtml,true);
   }else if(hasIframeExam && !done){
-    h+='<div class="alert">🔒 <b>Autoexamen requerido:</b> Completa y aprueba el autoexamen interactivo de arriba (mínimo 70%) para habilitar automáticamente la siguiente lección.</div>';
+    h+='<div class="alert">🔒 <b>Autoexamen requerido:</b> Completa y aprueba el autoexamen interactivo de arriba (mínimo 70%) para sincronizar automáticamente el tablero y habilitar la siguiente lección.</div>';
   }else if(!done && !hasIframeExam){
-    h+='<button class="btn" onclick="markLessonComplete('+l.id+')">✅ Confirmar lectura y habilitar siguiente</button>';
+    h+='<button class="btn" onclick="markLessonComplete('+l.id+')">✅ Confirmar lectura y sincronizar tablero</button>';
   }
   h+='<button class="btn alt" style="margin-top:10px" onclick="S.dl_open=null;S.dl_ans={};draw()">← Volver</button>';
   return h;
@@ -3100,24 +3232,30 @@ async function submitLessonQuiz(lessonId){
 async function markLessonComplete(lessonId){
   var list=n1Lessons(),idx=list.findIndex(function(x){return x.id===lessonId}),l=list[idx];if(!l)return;
   var badge=l.is_final?"🛡️ Escudo de la Fe · Nivel 1 Completado":(l.step===0?"Base Previa 1 aprobada":"Lección "+l.step+" completada");
+  var nextStep=idx+1<list.length?Math.max(1,list[idx+1].step):Math.min(8,(l.step||1)+1);
   saveLocalLessonDone(l.id);
-  if(l.id>0){
-    var r=await SB.from("disciple_progress").upsert({user_id:U.id,lesson_id:l.id,level:l.level,step:l.step,is_final:l.is_final,score:100,badge:badge},{onConflict:"user_id,lesson_id"});
-    if(!r.error){
-      var nextStep=idx+1<list.length?list[idx+1].step:l.step;
-      await SB.rpc("sync_disciple_level_progress",{p_level:l.level,p_next_step:nextStep,p_graduated:!!l.is_final});
-      await load();
-    }
+  if(l.id>0&&SB&&U){
+    await SB.from("disciple_progress").upsert({
+      user_id:U.id,
+      lesson_id:l.id,
+      level:l.level,
+      step:l.step,
+      is_final:!!l.is_final,
+      score:100,
+      badge:badge
+    },{onConflict:"user_id,lesson_id"});
   }
+  await syncPersonBoardFromLesson(l.level||1,nextStep,!!l.is_final,badge);
+  if(SB&&U)await load();
   S.dl_ans={};
   if(l.is_final){
-    toast("🎉 ¡Felicitaciones! Aprobaste el Nivel 1 y ganaste tu insignia.");
+    toast("🎉 ¡Felicitaciones! Aprobaste el Nivel 1 y se sincronizó tu tablero.");
     S.dl_open=null;
   }else if(idx+1<list.length){
-    toast("¡Autoexamen aprobado! Se habilitó la siguiente lección.");
+    toast("✅ ¡Aprobado y sincronizado con el tablero! Se habilitó la siguiente lección.");
     S.dl_open=list[idx+1].id;
   }else{
-    toast("¡Lección completada!");
+    toast("✅ ¡Lección completada y sincronizada con el tablero!");
     S.dl_open=null;
   }
   draw();
@@ -3139,15 +3277,15 @@ function renderDiscipuladoHub(embedded){
   var graduated=finalItem&&isLessonDone(finalItem.id);
   var pct=stepsOnly.length?Math.round((doneCount/stepsOnly.length)*100):0;
   if(!S.grad_name)S.grad_name=ME.name||U.email;
+  var myPersonRec=findMyDiscipleRecord();
 
   var h=embedded?'<button class="btn alt no-print" style="margin:8px 0" onclick="S.dl_view=null;draw()">← Volver al Tablero de seguimiento</button>':'';
-  h+='<div class="card"><h3>📖 Discipulado · Ruta Progresiva</h3>';
-  h+='<p class="note">Nadie puede ver las siguientes lecciones sin aprobar antes su autoexamen, empezando por la <b>Base Previa 1</b>.</p>';
+  h+='<div class="card"><h3>📖 Discipulado · Ruta Progresiva Sincronizada</h3>';
+  h+='<p class="note">Tu avance en las lecciones y autoexámenes se sincroniza automáticamente con el <b>Tablero de Discipulado</b>'+(myPersonRec&&myPersonRec.lvl?' (Estado actual: <b>'+esc(myPersonRec.lvl)+'</b>)':'')+'.</p>';
   h+='<div class="pbar"><i style="width:'+pct+'%"></i></div>';
   h+='<small><b>'+doneCount+' de '+stepsOnly.length+' aprobadas ('+pct+'%)</b></small>';
   if(graduated)h+='<div style="margin-top:8px"><span class="badge">🛡️ Escudo de la Fe · Nivel 1 Completado</span></div>';
   else if(doneCount>0)h+='<div style="margin-top:8px"><span class="badge">🌱 En progreso ('+doneCount+'/'+stepsOnly.length+')</span></div>';
-  var myPersonRec=P.filter(function(x){return(ME&&ME.name&&x.name&&x.name.toLowerCase()===ME.name.toLowerCase())})[0];
   var myAssignedBadges=myPersonRec?getDiscipleBadges(myPersonRec.id):[];
   if(myAssignedBadges.length){
     h+='<div style="margin-top:8px"><b>🏅 Tus insignias otorgadas:</b><br>'+myAssignedBadges.map(function(bg){return'<span class="badge-chip">'+esc(bg)+'</span>'}).join("")+'</div>';
@@ -3164,7 +3302,7 @@ function renderDiscipuladoHub(embedded){
   var stepsHtml=list.map(function(l,idx){
     var unlocked=canOpenLesson(idx,list);
     var done=isLessonDone(l.id);
-    var stText=done?"Autoexamen aprobado ✓":(unlocked?"Habilitada · Ver y presentar autoexamen":"Bloqueada · Presenta el autoexamen anterior");
+    var stText=done?"Autoexamen aprobado ✓ · Sincronizado en tablero":(unlocked?"Habilitada · Ver y presentar autoexamen":"Bloqueada · Presenta el autoexamen anterior");
     var icon=l.is_final?"🎓":(done?"✅":(unlocked?"📖":"🔒"));
     var bg=l.is_final?"#D6336C":(done?"#2F9E5B":(unlocked?"#1565C0":"#90A4AE"));
     var itemTitle=l.is_final?esc(l.title):(l.step===0?esc(l.title):"Lección "+l.step+": "+esc(l.title));
@@ -3598,7 +3736,7 @@ function draw(){
   var aq=$("aq");if(aq)aq.oninput=function(){S.aq=aq.value;var p=aq.selectionStart;draw();var n=$("aq");if(n){n.focus();n.setSelectionRange(p,p)}}
 }
 
-// ===== RECEPTOR postMessage + RESPALDO localStorage PARA AUTOEXÁMENES (Ex/N1P1_Autoexamen.html) =====
+// ===== RECEPTOR postMessage + RESPALDO localStorage + SINCRONIZACIÓN TABLERO-LECCIONES =====
 var EXAM_NEXT_MAP = {
   "N1P1": { nextStep: 1, nextTitle: "Lección 1", badgeFallback: "🏅 Insignia de Identidad · N1P1" },
   "N1P1_Autoexamen": { nextStep: 1, nextTitle: "Lección 1", badgeFallback: "🏅 Insignia de Identidad · N1P1" },
@@ -3623,12 +3761,14 @@ function resolveNextLessonForExam(rawId) {
     var lv = parseInt(m[1], 10);
     var st = parseInt(m[2], 10);
     return {
+      level: lv,
+      step: st,
       nextStep: st + 1,
       nextTitle: "Nivel " + lv + " · Paso " + (st + 1),
       badgeFallback: "🏅 Insignia de Identidad · " + norm
     };
   }
-  return { nextStep: 1, nextTitle: "Siguiente lección", badgeFallback: "🏅 Insignia de Identidad" };
+  return { level: 1, step: 0, nextStep: 1, nextTitle: "Siguiente lección", badgeFallback: "🏅 Insignia de Identidad" };
 }
 
 function getExamGradesStore() {
@@ -3643,7 +3783,7 @@ function getUnlockedLessonsStore() {
   return lget("unlocked_lessons", {});
 }
 
-function persistExamApproval(payload) {
+async function persistExamApproval(payload) {
   if (!payload || typeof payload !== "object") return false;
   var rawLessonId = payload.lessonId || payload.lesson_id || "N1P1";
   var normKey = normalizeExamLessonKey(rawLessonId) || String(rawLessonId);
@@ -3675,6 +3815,7 @@ function persistExamApproval(payload) {
   var badgeBase = payload.insigniaIdentidad || payload.badge || cfg.badgeFallback;
   var badgeLevel = payload.nivelIdentidad || payload.badgeLevel || 1;
   var hasStar = !!(payload.insigniaEstrella || payload.hasStar);
+  var badgeFormatted = (hasStar ? "⭐ " : "🏅 ") + badgeBase + " (Nv." + badgeLevel + ")";
   var badgeRecord = {
     lessonId: rawLessonId,
     normKey: normKey,
@@ -3689,24 +3830,7 @@ function persistExamApproval(payload) {
   badges[rawLessonId] = badgeRecord;
   lset("exam_badges", badges);
 
-  // También reflejar la insignia en la ficha/perfil local del discípulo si coincide
-  try {
-    var badgeFormatted = (hasStar ? "⭐ " : "🏅 ") + badgeBase + " (Nv." + badgeLevel + ")";
-    var myRec = P.filter(function(p) {
-      return ME && ME.name && p.name && p.name.trim().toLowerCase() === ME.name.trim().toLowerCase();
-    })[0];
-    if (myRec) {
-      var dBadgesMap = lget("disciple_badges", {});
-      var curList = Array.isArray(dBadgesMap[myRec.id]) ? dBadgesMap[myRec.id].slice() : [];
-      if (curList.indexOf(badgeFormatted) < 0) {
-        curList.push(badgeFormatted);
-        dBadgesMap[myRec.id] = curList;
-        lset("disciple_badges", dBadgesMap);
-      }
-    }
-  } catch (e) {}
-
-  // 3. Desbloquear automáticamente la siguiente lección y marcar N1P1 / Base Previa 1 como aprobada
+  // 3. Desbloquear automáticamente la siguiente lección y marcar como aprobada en ruta local
   var unlocked = getUnlockedLessonsStore();
   unlocked[normKey] = {
     unlockedNext: true,
@@ -3718,10 +3842,9 @@ function persistExamApproval(payload) {
   unlocked["step_" + cfg.nextStep] = true;
   lset("unlocked_lessons", unlocked);
 
-  // Marcar como completada en la ruta local de discipulado (Base Previa 1 / step 0 y lección coincidente)
   try {
     var matchedLessons = DL.filter(function(l) {
-      return l.level === 1 && (l.step === 0 || l.step === cfg.nextStep || (l.title && l.title.toUpperCase().indexOf(normKey) > -1));
+      return l.level === (cfg.level || 1) && (l.step === 0 || l.step === cfg.step || (l.title && l.title.toUpperCase().indexOf(normKey) > -1));
     });
     matchedLessons.forEach(function(l) { saveLocalLessonDone(l.id); });
     if (normKey === "N1P1") {
@@ -3734,40 +3857,35 @@ function persistExamApproval(payload) {
     }
   } catch (e) {}
 
-  // Sincronizar con Supabase si hay sesión activa y tablas disponibles
+  // 4. Sincronizar directamente con el Tablero (tabla people + disciple_progress + RPC) en Supabase
   if (SB && U) {
     try {
       var targetLesson = DL.filter(function(l) {
-        return l.level === 1 && (l.step === 0 || (l.title && l.title.toUpperCase().indexOf(normKey) > -1));
+        return l.level === (cfg.level || 1) && (l.step === 0 || l.step === cfg.step || (l.title && l.title.toUpperCase().indexOf(normKey) > -1));
       })[0];
       if (targetLesson && targetLesson.id > 0) {
-        SB.from("disciple_progress").upsert({
+        await SB.from("disciple_progress").upsert({
           user_id: U.id,
           lesson_id: targetLesson.id,
           level: targetLesson.level,
           step: targetLesson.step,
           is_final: !!targetLesson.is_final,
           score: nota,
-          badge: badgeBase
-        }, { onConflict: "user_id,lesson_id" }).then(function() {});
+          badge: badgeFormatted
+        }, { onConflict: "user_id,lesson_id" });
       }
-      if (typeof SB.rpc === "function") {
-        SB.rpc("sync_disciple_level_progress", {
-          p_level: 1,
-          p_next_step: cfg.nextStep,
-          p_graduated: false
-        }).then(function() {}, function() {});
-      }
+      await syncPersonBoardFromLesson(cfg.level || 1, cfg.nextStep, !!payload.isFinal, badgeFormatted);
+      await load();
     } catch (e) {}
   }
 
   return true;
 }
 
-window.addEventListener("message", function(event) {
+window.addEventListener("message", async function(event) {
   if (!event || !event.data || typeof event.data !== "object") return;
   var data = event.data;
-  var isExamMsg = data.type === "EXAM_COMPLETED" || data.type === "AUTOEXAMEN_APROBADO" || data.type === "EXAM_PASSED";
+  var isExamMsg = data.type === "EXAM_COMPLETED" || data.type === "AUTOEXAMEN_APROBADO" || data.type === "EXAM_PASSED" || data.type === "ICCVGD_EXAM_RESULT";
   if (!isExamMsg) return;
 
   var nota = Number(data.nota != null ? data.nota : (data.score != null ? data.score : 0));
@@ -3776,16 +3894,28 @@ window.addEventListener("message", function(event) {
 
   var rawId = data.lessonId || data.lesson_id || "Ex/N1P1_Autoexamen.html";
   var cfg = resolveNextLessonForExam(rawId);
-  var ok = persistExamApproval(data);
+  var ok = await persistExamApproval(data);
   if (ok) {
-    toast("🎉 ¡Aprobado (" + nota + "%)! Nota e insignia guardadas · " + cfg.nextTitle + " desbloqueada");
+    toast("🎉 ¡Aprobado (" + nota + "%)! Tablero sincronizado · " + cfg.nextTitle + " desbloqueada");
     if (typeof draw === "function") draw();
+  }
+});
+
+// Respaldo adicional: detecta escrituras en localStorage desde autoexámenes en el mismo dominio
+window.addEventListener("storage", async function(ev) {
+  if (!ev || !ev.key || !ev.newValue) return;
+  if (ev.key.indexOf("iccvgd_exam_result") > -1 || ev.key.indexOf("AUTOEXAMEN_RESULT") > -1) {
+    try {
+      var parsed = JSON.parse(ev.newValue);
+      var ok = await persistExamApproval(parsed);
+      if (ok && typeof draw === "function") draw();
+    } catch (e) {}
   }
 });
 
 if(location.hash.indexOf("type=recovery")>-1)S.rec=true;
 if(SB&&SB.auth&&SB.auth.onAuthStateChange){SB.auth.onAuthStateChange(function(ev){if(ev==="PASSWORD_RECOVERY"){S.rec=true;draw()}});}
-var APP_VERSION = "2026.11.27.2";
+var APP_VERSION = "2026.11.27.4";
 var _swReloading = false;
 
 (function cleanUpdQuery(){
@@ -3808,7 +3938,7 @@ async function clearAppCaches(){
 async function forceAppUpdate(){
   var btn = $("btn_upd_app");
   if(btn){ btn.disabled = true; btn.textContent = "⏳ Actualizando..."; }
-  toast("🔄 Buscando la versión más reciente...");
+  toast("🔄 Descargando la última versión en tu celular...");
   try{
     await clearAppCaches();
     if("serviceWorker" in navigator){
@@ -3831,7 +3961,7 @@ async function checkRemoteVersion(silent){
   try{
     var res = await fetch(location.pathname + "?nocache=" + Date.now(), {
       cache: "no-store",
-      headers: { "Cache-Control": "no-cache" }
+      headers: { "Cache-Control": "no-cache", "Pragma": "no-cache" }
     });
     if(!res || !res.ok) return;
     var txt = await res.text();
@@ -3840,11 +3970,17 @@ async function checkRemoteVersion(silent){
       var appliedKey = "iccvgd_applied_v_" + m[1];
       if(sessionStorage.getItem(appliedKey)) return;
       sessionStorage.setItem(appliedKey, "1");
-      toast("✨ Nueva versión disponible (" + m[1] + "). Actualizando...");
+      toast("✨ Actualizando app a versión " + m[1] + "...");
       await clearAppCaches();
+      if("serviceWorker" in navigator){
+        var regs = await navigator.serviceWorker.getRegistrations();
+        for(var i=0;i<regs.length;i++){
+          try{ await regs[i].unregister(); }catch(e){}
+        }
+      }
       setTimeout(function(){
         window.location.replace(location.pathname + "?upd=" + Date.now() + location.hash);
-      }, 900);
+      }, 800);
     }
   }catch(e){}
 }
@@ -3860,6 +3996,7 @@ function setupAutoUpdate(){
 
     navigator.serviceWorker.register("sw.js?v=" + APP_VERSION, { updateViaCache: "none" })
       .then(function(reg){
+        reg.update().catch(function(){});
         if(reg.waiting){
           reg.waiting.postMessage({ type: "SKIP_WAITING" });
         }
@@ -3872,7 +4009,7 @@ function setupAutoUpdate(){
             }
           });
         });
-        setInterval(function(){ reg.update().catch(function(){}); }, 60000);
+        setInterval(function(){ reg.update().catch(function(){}); }, 45000);
         document.addEventListener("visibilitychange", function(){
           if(document.visibilityState === "visible"){
             reg.update().catch(function(){});
@@ -3886,10 +4023,11 @@ function setupAutoUpdate(){
       if(document.visibilityState === "visible") checkRemoteVersion(true);
     });
   }
+  window.addEventListener("pageshow", function(ev){ if(ev && ev.persisted) checkRemoteVersion(true); });
   window.addEventListener("focus", function(){ checkRemoteVersion(true); });
   window.addEventListener("online", function(){ checkRemoteVersion(true); });
-  setTimeout(function(){ checkRemoteVersion(true); }, 2000);
-  setInterval(function(){ checkRemoteVersion(true); }, 45000);
+  setTimeout(function(){ checkRemoteVersion(true); }, 1500);
+  setInterval(function(){ checkRemoteVersion(true); }, 35000);
 }
 
 setupAutoUpdate();
